@@ -1,0 +1,44 @@
+{
+  "n_images": 200,
+  "backbones": {
+    "rad-dino": {
+      "num_layers": 12,
+      "embed_dim": 768,
+      "l1_vs_lmax": 0.203,
+      "lhalf_vs_lmax": 0.7694,
+      "mean_off_diagonal": 0.7112
+    },
+    "radiodino-s16": {
+      "num_layers": 12,
+      "embed_dim": 384,
+      "l1_vs_lmax": 0.3986,
+      "lhalf_vs_lmax": 0.8936,
+      "mean_off_diagonal": 0.7848
+    },
+    "dinov2-base": {
+      "num_layers": 12,
+      "embed_dim": 768,
+      "l1_vs_lmax": 0.3904,
+      "lhalf_vs_lmax": 0.6722,
+      "mean_off_diagonal": 0.6633
+    },
+    "pubmed-clip": {
+      "num_layers": 12,
+      "embed_dim": 768,
+      "l1_vs_lmax": 0.5812,
+      "lhalf_vs_lmax": 0.6182,
+      "mean_off_diagonal": 0.7589
+    },
+    "resnet50": {
+      "num_layers": 4,
+      "embed_dim": 256,
+      "l1_vs_lmax": 0.455,
+      "lhalf_vs_lmax": 0.7482,
+      "mean_off_diagonal": 0.6924
+    }
+  },
+  "plots": {
+    "combined": "results/cka_analysis\\cka_all_backbones.png",
+    "distinctiveness": "results/cka_analysis\\cka_l1_vs_lmax.png"
+  }
+}

@@ -1,0 +1,374 @@
+{
+    "noise": {
+        "levels": [
+            0.0,
+            0.01,
+            0.02,
+            0.05,
+            0.1,
+            0.2,
+            0.5
+        ],
+        "metric_values": [
+            {
+                "sigma": 0.0,
+                "m3": 0.0,
+                "fid": 0.1307,
+                "kid": 0.0,
+                "ssim": 1.0,
+                "psnr": 100.0,
+                "ms_ssim": 1.0,
+                "lpips": 0.0,
+                "precision": 1.0,
+                "recall": 1.0
+            },
+            {
+                "sigma": 0.01,
+                "m3": 0.144673,
+                "fid": 28.0317,
+                "kid": 0.018068,
+                "ssim": 0.881692,
+                "psnr": 41.9091,
+                "ms_ssim": 0.996572,
+                "lpips": 0.201254,
+                "precision": 1.0,
+                "recall": 1.0
+            },
+            {
+                "sigma": 0.02,
+                "m3": 0.213427,
+                "fid": 38.2294,
+                "kid": 0.02357,
+                "ssim": 0.680052,
+                "psnr": 35.9046,
+                "ms_ssim": 0.986863,
+                "lpips": 0.256463,
+                "precision": 0.975,
+                "recall": 0.99
+            },
+            {
+                "sigma": 0.05,
+                "m3": 0.758069,
+                "fid": 83.0737,
+                "kid": 0.057426,
+                "ssim": 0.341467,
+                "psnr": 27.9661,
+                "ms_ssim": 0.933057,
+                "lpips": 0.384238,
+                "precision": 0.45,
+                "recall": 0.5
+            },
+            {
+                "sigma": 0.1,
+                "m3": 1.029574,
+                "fid": 155.1804,
+                "kid": 0.136885,
+                "ssim": 0.185002,
+                "psnr": 21.9885,
+                "ms_ssim": 0.820093,
+                "lpips": 0.514692,
+                "precision": 0.025,
+                "recall": 0.06
+            },
+            {
+                "sigma": 0.2,
+                "m3": 2.300464,
+                "fid": 302.7347,
+                "kid": 0.38781,
+                "ssim": 0.093808,
+                "psnr": 16.1307,
+                "ms_ssim": 0.639359,
+                "lpips": 0.649544,
+                "precision": 0.0,
+                "recall": 0.0
+            },
+            {
+                "sigma": 0.5,
+                "m3": 4.092034,
+                "fid": 529.0678,
+                "kid": 0.890138,
+                "ssim": 0.03127,
+                "psnr": 9.2896,
+                "ms_ssim": 0.380933,
+                "lpips": 0.749448,
+                "precision": 0.0,
+                "recall": 0.0
+            }
+        ],
+        "spearman": {
+            "m3": {
+                "spearman_r": 1.0,
+                "spearman_p": 0.0,
+                "ci_95": [
+                    1.0,
+                    1.0
+                ],
+                "sample_size": 7,
+                "monotone": true,
+                "expected_direction": "increase"
+            },
+            "fid": {
+                "spearman_r": 1.0,
+                "spearman_p": 0.0,
+                "ci_95": [
+                    1.0,
+                    1.0
+                ],
+                "sample_size": 7,
+                "monotone": true,
+                "expected_direction": "increase"
+            },
+            "kid": {
+                "spearman_r": 1.0,
+                "spearman_p": 0.0,
+                "ci_95": [
+                    1.0,
+                    1.0
+                ],
+                "sample_size": 7,
+                "monotone": true,
+                "expected_direction": "increase"
+            },
+            "ssim": {
+                "spearman_r": -1.0,
+                "spearman_p": 0.0,
+                "ci_95": [
+                    -1.0,
+                    -1.0
+                ],
+                "sample_size": 7,
+                "monotone": true,
+                "expected_direction": "decrease"
+            },
+            "psnr": {
+                "spearman_r": -1.0,
+                "spearman_p": 0.0,
+                "ci_95": [
+                    -1.0,
+                    -1.0
+                ],
+                "sample_size": 7,
+                "monotone": true,
+                "expected_direction": "decrease"
+            },
+            "ms_ssim": {
+                "spearman_r": -1.0,
+                "spearman_p": 0.0,
+                "ci_95": [
+                    -1.0,
+                    -1.0
+                ],
+                "sample_size": 7,
+                "monotone": true,
+                "expected_direction": "decrease"
+            },
+            "lpips": {
+                "spearman_r": 1.0,
+                "spearman_p": 0.0,
+                "ci_95": [
+                    1.0,
+                    1.0
+                ],
+                "sample_size": 7,
+                "monotone": true,
+                "expected_direction": "increase"
+            },
+            "precision": {
+                "spearman_r": -0.982,
+                "spearman_p": 8.290963420193975e-05,
+                "ci_95": [
+                    -0.9974,
+                    -0.8787
+                ],
+                "sample_size": 7,
+                "monotone": true,
+                "expected_direction": "decrease"
+            },
+            "recall": {
+                "spearman_r": -0.982,
+                "spearman_p": 8.290963420193975e-05,
+                "ci_95": [
+                    -0.9974,
+                    -0.8787
+                ],
+                "sample_size": 7,
+                "monotone": true,
+                "expected_direction": "decrease"
+            }
+        },
+        "plot": "C:\\Users\\nisha\\OneDrive\\Desktop\\Generativemodels\\MRI-ImageGenration\\results\\radiodino_run4\\noise_robustness\\noise_robustness.png"
+    },
+    "blur": {
+        "levels": [
+            0,
+            1,
+            2,
+            3,
+            4
+        ],
+        "metric_values": [
+            {
+                "radius": 0.0,
+                "m3": 0.0,
+                "fid": 0.1307,
+                "kid": 0.0,
+                "ssim": 1.0,
+                "psnr": 100.0,
+                "ms_ssim": 1.0,
+                "lpips": 0.0,
+                "precision": 1.0,
+                "recall": 1.0
+            },
+            {
+                "radius": 1.0,
+                "m3": 0.148058,
+                "fid": 44.6776,
+                "kid": 0.018717,
+                "ssim": 0.962575,
+                "psnr": 33.3397,
+                "ms_ssim": 0.99307,
+                "lpips": 0.063529,
+                "precision": 0.915,
+                "recall": 0.945
+            },
+            {
+                "radius": 2.0,
+                "m3": 0.600283,
+                "fid": 157.0502,
+                "kid": 0.127735,
+                "ssim": 0.870057,
+                "psnr": 27.8357,
+                "ms_ssim": 0.963643,
+                "lpips": 0.142176,
+                "precision": 0.02,
+                "recall": 0.035
+            },
+            {
+                "radius": 3.0,
+                "m3": 0.831625,
+                "fid": 231.7844,
+                "kid": 0.22574,
+                "ssim": 0.803887,
+                "psnr": 25.5076,
+                "ms_ssim": 0.925717,
+                "lpips": 0.190202,
+                "precision": 0.0,
+                "recall": 0.0
+            },
+            {
+                "radius": 4.0,
+                "m3": 0.517016,
+                "fid": 277.7054,
+                "kid": 0.297933,
+                "ssim": 0.758208,
+                "psnr": 24.1007,
+                "ms_ssim": 0.887149,
+                "lpips": 0.227843,
+                "precision": 0.0,
+                "recall": 0.0
+            }
+        ],
+        "spearman": {
+            "m3": {
+                "spearman_r": 0.7,
+                "spearman_p": 0.1881204043741873,
+                "ci_95": [
+                    -0.4766,
+                    0.9782
+                ],
+                "sample_size": 5,
+                "monotone": true,
+                "expected_direction": "increase"
+            },
+            "fid": {
+                "spearman_r": 1.0,
+                "spearman_p": 1.4042654220543672e-24,
+                "ci_95": [
+                    1.0,
+                    1.0
+                ],
+                "sample_size": 5,
+                "monotone": true,
+                "expected_direction": "increase"
+            },
+            "kid": {
+                "spearman_r": 1.0,
+                "spearman_p": 1.4042654220543672e-24,
+                "ci_95": [
+                    1.0,
+                    1.0
+                ],
+                "sample_size": 5,
+                "monotone": true,
+                "expected_direction": "increase"
+            },
+            "ssim": {
+                "spearman_r": -1.0,
+                "spearman_p": 1.4042654220543672e-24,
+                "ci_95": [
+                    -1.0,
+                    -1.0
+                ],
+                "sample_size": 5,
+                "monotone": true,
+                "expected_direction": "decrease"
+            },
+            "psnr": {
+                "spearman_r": -1.0,
+                "spearman_p": 1.4042654220543672e-24,
+                "ci_95": [
+                    -1.0,
+                    -1.0
+                ],
+                "sample_size": 5,
+                "monotone": true,
+                "expected_direction": "decrease"
+            },
+            "ms_ssim": {
+                "spearman_r": -1.0,
+                "spearman_p": 1.4042654220543672e-24,
+                "ci_95": [
+                    -1.0,
+                    -1.0
+                ],
+                "sample_size": 5,
+                "monotone": true,
+                "expected_direction": "decrease"
+            },
+            "lpips": {
+                "spearman_r": 1.0,
+                "spearman_p": 1.4042654220543672e-24,
+                "ci_95": [
+                    1.0,
+                    1.0
+                ],
+                "sample_size": 5,
+                "monotone": true,
+                "expected_direction": "increase"
+            },
+            "precision": {
+                "spearman_r": -0.9747,
+                "spearman_p": 0.004818230468198537,
+                "ci_95": [
+                    -0.9984,
+                    -0.6597
+                ],
+                "sample_size": 5,
+                "monotone": true,
+                "expected_direction": "decrease"
+            },
+            "recall": {
+                "spearman_r": -0.9747,
+                "spearman_p": 0.004818230468198537,
+                "ci_95": [
+                    -0.9984,
+                    -0.6597
+                ],
+                "sample_size": 5,
+                "monotone": true,
+                "expected_direction": "decrease"
+            }
+        },
+        "plot": "C:\\Users\\nisha\\OneDrive\\Desktop\\Generativemodels\\MRI-ImageGenration\\results\\radiodino_run4\\noise_robustness\\blur_robustness.png"
+    }
+}

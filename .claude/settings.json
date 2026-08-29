@@ -1,0 +1,36 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(grep -nE \"^#{1,3} \" EXPERIMENT_FINDINGS.md)",
+      "Bash(grep -nE \"^#{1,3} \" METHODOLOGY_AND_DIRECTION.md)",
+      "Bash(awk '/\\\\\\\\begin\\\\{abstract\\\\}/,/\\\\\\\\section\\\\{Related|\\\\\\\\section\\\\{Method|\\\\\\\\section\\\\{The M/' paper.tex)",
+      "Bash(grep -nE \"\\\\\\\\\\\\\\\\title|\\\\\\\\\\\\\\\\begin\\\\{abstract\\\\}|\\\\\\\\\\\\\\\\end\\\\{abstract\\\\}|\\\\\\\\\\\\\\\\section|\\\\\\\\\\\\\\\\subsection|contribution\" paper.tex)",
+      "Bash(python -c \"import torch; print\\('torch', torch.__version__, 'cuda', torch.cuda.is_available\\(\\), torch.cuda.get_device_name\\(0\\) if torch.cuda.is_available\\(\\) else 'no-gpu'\\)\")",
+      "Bash(timeout 15 python -c \"import urllib.request as u; print\\('HF status', u.urlopen\\('https://huggingface.co', timeout=8\\).status\\)\")",
+      "Bash(python -c \"import timm; print\\('timm', timm.__version__\\)\")",
+      "Bash(python \"C:\\\\Users\\\\nisha\\\\AppData\\\\Local\\\\Temp\\\\claude\\\\c--Users-nisha-Desktop-Generativemodels-MRI-ImageGenration\\\\ee5753f5-4b42-442c-90a6-a091baa4f990\\\\scratchpad\\\\smoke_test.py\")",
+      "Bash(grep -vE \"^\\\\s*$\")",
+      "Bash(python experiments/debug_metric_ablation.py --n 300 --n_perm 200 --n_boot 200)",
+      "Bash(grep -vE \"Loading backbone|Extracting|Computing metrics|^\\\\s*$|it/s\\\\]|%\\\\|\")",
+      "Bash(python -c ' *)",
+      "Bash(python experiments/debug_metric_ablation.py --n 250 --seed 7 --n_perm 200 --n_boot 200 --out results/debug_metric_seed7)",
+      "Bash(python -c \"print\\(open\\('data_mri/lgg_download/Brain-MRI-LGG-Segmentation.zip','rb'\\).read\\(16\\).hex\\(\\)\\)\")",
+      "Bash(timeout 60 python -c ' *)",
+      "Bash(rm -f data_mri/lgg_download/Brain-MRI-LGG-Segmentation.zip)",
+      "Bash(python tools/download_lgg_masks.py --zip_path data_mri/lgg_download/Brain-MRI-LGG-Segmentation.zip --output_dir data_mri/lgg_with_masks --max_samples 600 --min_mask_ratio 0.005)",
+      "Bash(python experiments/lgg_lesion_specificity.py --n 300 --perturb erase --n_perm 200)",
+      "Bash(grep -vE \"Loading backbone|Extracting|Computing|^\\\\s*$|it/s\\\\]|Downloading|%\\\\|\")",
+      "Bash(python -u experiments/lgg_lesion_specificity.py --n 300 --perturb erase --n_perm 200)",
+      "Bash(nvidia-smi --query-gpu=memory.used,memory.total,utilization.gpu --format=csv)",
+      "Bash(nvidia-smi --query-compute-apps=pid,used_memory --format=csv)",
+      "Bash(powershell -c \"\\(Get-Process python -ErrorAction SilentlyContinue\\).Count\")",
+      "Bash(nvidia-smi --query-gpu=memory.used,utilization.gpu --format=csv)",
+      "Bash(python -u experiments/lgg_lesion_specificity.py --n 250 --perturb noise --seed 7 --n_perm 100 --out results/lgg_pathology_s7)",
+      "Bash(echo \"EXIT $?\")",
+      "Bash(powershell -c \"\\(Get-Process python -ErrorAction SilentlyContinue | Measure-Object\\).Count\")",
+      "Bash(powershell -c \"Get-Process python -ErrorAction SilentlyContinue | Sort-Object StartTime | Select-Object Id,StartTime -Last 4 | Format-Table -HideTableHeaders\")",
+      "Bash(python -c \"import json,sys; d=json.load\\(sys.stdin\\); m=d['modes']['noise']; print\\('M3 ratio', round\\(m['M3_L12']['specificity_ratio'],3\\), '| KID ratio', round\\(m['KID_inception']['specificity_ratio'],3\\)\\)\")",
+      "Bash(nvidia-smi --query-compute-apps=pid --format=csv)"
+    ]
+  }
+}

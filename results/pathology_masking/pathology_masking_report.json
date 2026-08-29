@@ -1,0 +1,30 @@
+{
+  "n": 200,
+  "mask_fill": "zero",
+  "use_real_masks": false,
+  "condition_a": {
+    "m3": 0.1732956352983112,
+    "fid": 122.98366328535928,
+    "cmmd": 0.15051740407943726
+  },
+  "condition_b": {
+    "m3": 0.07904590815641538,
+    "fid": 247.64761147719983,
+    "cmmd": 0.43917155265808105
+  },
+  "condition_c": {
+    "m3": 0.2146455604815178,
+    "fid": 267.66067387997145,
+    "cmmd": 0.49311918020248413
+  },
+  "sensitivity_b_vs_a": {
+    "m3": -0.5439,
+    "fid": 1.0137,
+    "cmmd": 1.9177
+  },
+  "heatmap_iou_mean": null,
+  "heatmap_iou_list": [],
+  "plots": {
+    "scores": "results/pathology_masking\\pathology_masking_scores.png"
+  }
+}

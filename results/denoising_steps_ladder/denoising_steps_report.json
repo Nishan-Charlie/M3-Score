@@ -1,0 +1,60 @@
+{
+  "config": {
+    "real_dir": "data_mri/brats_axial_multislice",
+    "checkpoint_dir": null,
+    "gen_dir": "output/generated_500_best",
+    "num_images": 150,
+    "t_steps": [
+      10,
+      20,
+      50,
+      100,
+      1000
+    ],
+    "mode": "noise_proxy",
+    "mode_note": "Gaussian noise proxy (sigma inversely proportional to T). NOT real DDPM steps."
+  },
+  "results": [
+    {
+      "t_steps": 10,
+      "m3": 0.6155365603352505,
+      "fid": 358.78663317029975,
+      "cmmd": 0.4693755507469177,
+      "n": 150
+    },
+    {
+      "t_steps": 20,
+      "m3": 0.6136953730530388,
+      "fid": 357.4700268292731,
+      "cmmd": 0.46737754344940186,
+      "n": 150
+    },
+    {
+      "t_steps": 50,
+      "m3": 0.6080423496457591,
+      "fid": 353.78466410215174,
+      "cmmd": 0.4616440534591675,
+      "n": 150
+    },
+    {
+      "t_steps": 100,
+      "m3": 0.5983769208875819,
+      "fid": 347.5564526523369,
+      "cmmd": 0.4515276551246643,
+      "n": 150
+    },
+    {
+      "t_steps": 1000,
+      "m3": 0.18675594198016918,
+      "fid": 132.36276921132355,
+      "cmmd": 0.11230778694152832,
+      "n": 150
+    }
+  ],
+  "monotonicity": {
+    "m3": true,
+    "fid": true,
+    "cmmd": true,
+    "note": "True means metric correctly orders the T ladder (higher T = lower metric)."
+  }
+}

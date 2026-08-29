@@ -1,0 +1,63 @@
+[
+  {
+    "name": "BraTS_held_out",
+    "severity": 0,
+    "expected": "near-zero (same distribution)",
+    "n_ref": 500,
+    "n_gen": 500,
+    "m3": 0.015302762583765336,
+    "fid": 39.54788589477539,
+    "kid": 0.8620534092187881,
+    "cmmd": 0.01853734254837036
+  },
+  {
+    "name": "BraTS_DDPM_gen",
+    "severity": 1,
+    "expected": "small (same modality, trained on BraTS)",
+    "n_ref": 500,
+    "n_gen": 500,
+    "m3": 0.08304762064541102,
+    "fid": 70.1184310913086,
+    "kid": 4.211029037833214,
+    "cmmd": 0.10087132453918457
+  },
+  {
+    "name": "BraTS_WDM3D_gen",
+    "severity": 2,
+    "expected": "moderate (same modality, different model)",
+    "n_ref": 500,
+    "n_gen": 500,
+    "m3": 0.20552319286508586,
+    "fid": 165.7183074951172,
+    "kid": 14.636459946632385,
+    "cmmd": 0.6858586072921753
+  },
+  {
+    "name": "Retinal_real",
+    "severity": 3,
+    "expected": "large (different anatomy: fundus vs brain)",
+    "n_ref": 500,
+    "n_gen": 500,
+    "m3": 0.46450890554745483,
+    "fid": 298.12158203125,
+    "kid": 34.27281081676483,
+    "cmmd": 0.840458869934082
+  },
+  {
+    "name": "LIDC_CT_gen",
+    "severity": 4,
+    "expected": "very large (CT lung \u2014 cross-modality OOD)",
+    "n_ref": 500,
+    "n_gen": 500,
+    "m3": 0.38491481435547353,
+    "fid": 318.2929382324219,
+    "kid": 37.22992539405823,
+    "cmmd": 0.6752622127532959
+  },
+  {
+    "name": "bootstrap_auc_cpu",
+    "m3": 1.0,
+    "in_mean": 0.019438898589714867,
+    "ood_mean": 0.4274951237170401
+  }
+]

@@ -1,0 +1,24 @@
+{
+  "coverage": 0.0,
+  "novelty": 1.0,
+  "memorization_rate": 0.0,
+  "radius_rr_k": 0.08119955658912659,
+  "memorize_threshold": 0.011402606964111328,
+  "n_real": 500.0,
+  "n_gen": 500.0,
+  "k_neighbors": 5.0,
+  "pct_memorize": 5.0,
+  "wdm3d": {
+    "wdm3d_brats": {
+      "coverage": 0.0,
+      "novelty": 1.0,
+      "memorization_rate": 0.0,
+      "radius_rr_k": 0.08119955658912659,
+      "memorize_threshold": 0.011402606964111328,
+      "n_real": 500.0,
+      "n_gen": 500.0,
+      "k_neighbors": 5.0,
+      "pct_memorize": 5.0
+    }
+  }
+}

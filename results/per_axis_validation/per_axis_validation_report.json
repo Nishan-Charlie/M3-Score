@@ -1,0 +1,125 @@
+{
+  "config": {
+    "real_dir": "data_mri/brats_axial_multislice",
+    "gen_dir": "output/generated_500_best",
+    "num_images": 150,
+    "device": "cpu",
+    "injection_rates": [
+      0.0,
+      0.1,
+      0.2,
+      0.3,
+      0.5
+    ],
+    "drop_fractions": [
+      0.0,
+      0.1,
+      0.2,
+      0.3,
+      0.5
+    ]
+  },
+  "memorization_experiment": {
+    "rows": [
+      {
+        "injection_rate": 0.0,
+        "n_injected": 0,
+        "fidelity/mmd2": 0.18675597012043,
+        "memorization/rate": 0.0,
+        "memorization/mean_nn": 60.62749481201172,
+        "coverage/precision": 0.0,
+        "coverage/recall": 0.18000000715255737
+      },
+      {
+        "injection_rate": 0.1,
+        "n_injected": 15,
+        "fidelity/mmd2": 0.15001888573169708,
+        "memorization/rate": 0.10000000149011612,
+        "memorization/mean_nn": 54.34687805175781,
+        "coverage/precision": 0.10000000149011612,
+        "coverage/recall": 0.8866666555404663
+      },
+      {
+        "injection_rate": 0.2,
+        "n_injected": 30,
+        "fidelity/mmd2": 0.11557265371084213,
+        "memorization/rate": 0.20000000298023224,
+        "memorization/mean_nn": 48.21144485473633,
+        "coverage/precision": 0.20000000298023224,
+        "coverage/recall": 0.9333333373069763
+      },
+      {
+        "injection_rate": 0.3,
+        "n_injected": 45,
+        "fidelity/mmd2": 0.09010938555002213,
+        "memorization/rate": 0.30000001192092896,
+        "memorization/mean_nn": 42.30900955200195,
+        "coverage/precision": 0.30000001192092896,
+        "coverage/recall": 1.0
+      },
+      {
+        "injection_rate": 0.5,
+        "n_injected": 75,
+        "fidelity/mmd2": 0.042622245848178864,
+        "memorization/rate": 0.5,
+        "memorization/mean_nn": 30.419349670410156,
+        "coverage/precision": 0.5,
+        "coverage/recall": 0.9866666793823242
+      }
+    ],
+    "pass_rate_increases_monotonically": true,
+    "pass_fidelity_stable": false,
+    "passed": true
+  },
+  "coverage_experiment": {
+    "rows": [
+      {
+        "drop_fraction": 0.0,
+        "n_gen": 150,
+        "fidelity/mmd2": 0.18675597012043,
+        "memorization/rate": 0.0,
+        "coverage/precision": 0.0,
+        "coverage/recall": 0.18000000715255737
+      },
+      {
+        "drop_fraction": 0.1,
+        "n_gen": 135,
+        "fidelity/mmd2": 0.1905137449502945,
+        "memorization/rate": 0.0,
+        "coverage/precision": 0.0,
+        "coverage/recall": 0.2199999988079071
+      },
+      {
+        "drop_fraction": 0.2,
+        "n_gen": 120,
+        "fidelity/mmd2": 0.18884459137916565,
+        "memorization/rate": 0.0,
+        "coverage/precision": 0.0,
+        "coverage/recall": 0.2199999988079071
+      },
+      {
+        "drop_fraction": 0.3,
+        "n_gen": 105,
+        "fidelity/mmd2": 0.18383708596229553,
+        "memorization/rate": 0.0,
+        "coverage/precision": 0.0,
+        "coverage/recall": 0.23333333432674408
+      },
+      {
+        "drop_fraction": 0.5,
+        "n_gen": 75,
+        "fidelity/mmd2": 0.17564265429973602,
+        "memorization/rate": 0.0,
+        "coverage/precision": 0.0,
+        "coverage/recall": 0.2800000011920929
+      }
+    ],
+    "pass_recall_decreases_monotonically": false,
+    "passed": false
+  },
+  "summary": {
+    "memorization_axis_valid": true,
+    "coverage_axis_valid": false,
+    "both_axes_valid": false
+  }
+}

@@ -1,0 +1,981 @@
+{
+    "active_layers": [
+        12
+    ],
+    "device": "cuda",
+    "core_m3": {
+        "m3_score": 0.15014650022265563,
+        "layer_distances": {
+            "L12": 0.1501465141773224
+        },
+        "layer_weights": {
+            "L12": 0.9999999070596688
+        },
+        "semanticity": {
+            "L12": 0.004991593906910217
+        },
+        "stability": {
+            "L12": 21.55542040027572
+        },
+        "uniqueness": {
+            "L12": 1.0
+        }
+    },
+    "permutation_test": {
+        "null_mean": 0.0003335198103770733,
+        "null_std": 0.0005409490944495637,
+        "S_obs": 0.15014650022265563,
+        "Z_score": 276.94,
+        "empirical_p": 0.0,
+        "n_perm": 50
+    },
+    "ood": {
+        "m3_backbone": "radiodino-s16",
+        "m3_roc_auc": 0.9743,
+        "m3_pr_auc": 0.988,
+        "inceptionv3_roc_auc": 0.7781,
+        "inceptionv3_pr_auc": 0.8736,
+        "clip_mmd_roc_auc": 0.6449,
+        "clip_mmd_pr_auc": 0.736,
+        "m3_vs_fid_roc_pct": 25.22,
+        "m3_vs_cmmd_roc_pct": 51.08,
+        "pct_ood": 18.6,
+        "spearman_m3_rho": 0.2709,
+        "spearman_m3_p": 7.419115527521556e-10,
+        "spearman_inc_rho": 0.3973,
+        "spearman_inc_p": 2.348202564467633e-20,
+        "spearman_clip_rho": 0.1343,
+        "spearman_clip_p": 0.002613931634432305,
+        "centroid_fit_n": 250,
+        "centroid_eval_n": 250
+    },
+    "noise_robustness": {
+        "noise": {
+            "levels": [
+                0.0,
+                0.01,
+                0.02,
+                0.05,
+                0.1,
+                0.2,
+                0.5
+            ],
+            "metric_values": [
+                {
+                    "sigma": 0.0,
+                    "m3": 0.0,
+                    "fid": 0.1307,
+                    "kid": 0.0,
+                    "ssim": NaN,
+                    "psnr": NaN,
+                    "ms_ssim": NaN,
+                    "lpips": NaN,
+                    "precision": 1.0,
+                    "recall": 1.0
+                },
+                {
+                    "sigma": 0.01,
+                    "m3": 0.043612,
+                    "fid": 28.1327,
+                    "kid": 0.018297,
+                    "ssim": NaN,
+                    "psnr": NaN,
+                    "ms_ssim": NaN,
+                    "lpips": NaN,
+                    "precision": 1.0,
+                    "recall": 1.0
+                },
+                {
+                    "sigma": 0.02,
+                    "m3": 0.12159,
+                    "fid": 38.5863,
+                    "kid": 0.023805,
+                    "ssim": NaN,
+                    "psnr": NaN,
+                    "ms_ssim": NaN,
+                    "lpips": NaN,
+                    "precision": 0.985,
+                    "recall": 0.985
+                },
+                {
+                    "sigma": 0.05,
+                    "m3": 0.18899,
+                    "fid": 81.2481,
+                    "kid": 0.057065,
+                    "ssim": NaN,
+                    "psnr": NaN,
+                    "ms_ssim": NaN,
+                    "lpips": NaN,
+                    "precision": 0.47,
+                    "recall": 0.505
+                },
+                {
+                    "sigma": 0.1,
+                    "m3": 0.279114,
+                    "fid": 153.7241,
+                    "kid": 0.134539,
+                    "ssim": NaN,
+                    "psnr": NaN,
+                    "ms_ssim": NaN,
+                    "lpips": NaN,
+                    "precision": 0.02,
+                    "recall": 0.045
+                },
+                {
+                    "sigma": 0.2,
+                    "m3": 0.393602,
+                    "fid": 303.934,
+                    "kid": 0.386353,
+                    "ssim": NaN,
+                    "psnr": NaN,
+                    "ms_ssim": NaN,
+                    "lpips": NaN,
+                    "precision": 0.0,
+                    "recall": 0.0
+                },
+                {
+                    "sigma": 0.5,
+                    "m3": 0.606744,
+                    "fid": 521.9592,
+                    "kid": 0.868215,
+                    "ssim": NaN,
+                    "psnr": NaN,
+                    "ms_ssim": NaN,
+                    "lpips": NaN,
+                    "precision": 0.0,
+                    "recall": 0.0
+                }
+            ],
+            "spearman": {
+                "m3": {
+                    "spearman_r": 1.0,
+                    "spearman_p": 0.0,
+                    "ci_95": [
+                        1.0,
+                        1.0
+                    ],
+                    "sample_size": 7,
+                    "monotone": true,
+                    "expected_direction": "increase"
+                },
+                "fid": {
+                    "spearman_r": 1.0,
+                    "spearman_p": 0.0,
+                    "ci_95": [
+                        1.0,
+                        1.0
+                    ],
+                    "sample_size": 7,
+                    "monotone": true,
+                    "expected_direction": "increase"
+                },
+                "kid": {
+                    "spearman_r": 1.0,
+                    "spearman_p": 0.0,
+                    "ci_95": [
+                        1.0,
+                        1.0
+                    ],
+                    "sample_size": 7,
+                    "monotone": true,
+                    "expected_direction": "increase"
+                },
+                "precision": {
+                    "spearman_r": -0.982,
+                    "spearman_p": 8.290963420193975e-05,
+                    "ci_95": [
+                        -0.9974,
+                        -0.8787
+                    ],
+                    "sample_size": 7,
+                    "monotone": true,
+                    "expected_direction": "decrease"
+                },
+                "recall": {
+                    "spearman_r": -0.982,
+                    "spearman_p": 8.290963420193975e-05,
+                    "ci_95": [
+                        -0.9974,
+                        -0.8787
+                    ],
+                    "sample_size": 7,
+                    "monotone": true,
+                    "expected_direction": "decrease"
+                }
+            },
+            "plot": "C:\\Users\\nisha\\OneDrive\\Desktop\\Generativemodels\\MRI-ImageGenration\\results\\radiodino-s16_run5\\noise_robustness\\noise_robustness.png"
+        },
+        "blur": {
+            "levels": [
+                0,
+                1,
+                2,
+                3,
+                4
+            ],
+            "metric_values": [
+                {
+                    "radius": 0.0,
+                    "m3": 0.0,
+                    "fid": 0.1307,
+                    "kid": 0.0,
+                    "ssim": NaN,
+                    "psnr": NaN,
+                    "ms_ssim": NaN,
+                    "lpips": NaN,
+                    "precision": 1.0,
+                    "recall": 1.0
+                },
+                {
+                    "radius": 1.0,
+                    "m3": 0.003369,
+                    "fid": 44.6776,
+                    "kid": 0.018717,
+                    "ssim": NaN,
+                    "psnr": NaN,
+                    "ms_ssim": NaN,
+                    "lpips": NaN,
+                    "precision": 0.915,
+                    "recall": 0.945
+                },
+                {
+                    "radius": 2.0,
+                    "m3": 0.041309,
+                    "fid": 157.0502,
+                    "kid": 0.127735,
+                    "ssim": NaN,
+                    "psnr": NaN,
+                    "ms_ssim": NaN,
+                    "lpips": NaN,
+                    "precision": 0.02,
+                    "recall": 0.035
+                },
+                {
+                    "radius": 3.0,
+                    "m3": 0.236171,
+                    "fid": 231.7844,
+                    "kid": 0.22574,
+                    "ssim": NaN,
+                    "psnr": NaN,
+                    "ms_ssim": NaN,
+                    "lpips": NaN,
+                    "precision": 0.0,
+                    "recall": 0.0
+                },
+                {
+                    "radius": 4.0,
+                    "m3": 0.455646,
+                    "fid": 277.7054,
+                    "kid": 0.297933,
+                    "ssim": NaN,
+                    "psnr": NaN,
+                    "ms_ssim": NaN,
+                    "lpips": NaN,
+                    "precision": 0.0,
+                    "recall": 0.0
+                }
+            ],
+            "spearman": {
+                "m3": {
+                    "spearman_r": 1.0,
+                    "spearman_p": 1.4042654220543672e-24,
+                    "ci_95": [
+                        1.0,
+                        1.0
+                    ],
+                    "sample_size": 5,
+                    "monotone": true,
+                    "expected_direction": "increase"
+                },
+                "fid": {
+                    "spearman_r": 1.0,
+                    "spearman_p": 1.4042654220543672e-24,
+                    "ci_95": [
+                        1.0,
+                        1.0
+                    ],
+                    "sample_size": 5,
+                    "monotone": true,
+                    "expected_direction": "increase"
+                },
+                "kid": {
+                    "spearman_r": 1.0,
+                    "spearman_p": 1.4042654220543672e-24,
+                    "ci_95": [
+                        1.0,
+                        1.0
+                    ],
+                    "sample_size": 5,
+                    "monotone": true,
+                    "expected_direction": "increase"
+                },
+                "precision": {
+                    "spearman_r": -0.9747,
+                    "spearman_p": 0.004818230468198537,
+                    "ci_95": [
+                        -0.9984,
+                        -0.6597
+                    ],
+                    "sample_size": 5,
+                    "monotone": true,
+                    "expected_direction": "decrease"
+                },
+                "recall": {
+                    "spearman_r": -0.9747,
+                    "spearman_p": 0.004818230468198537,
+                    "ci_95": [
+                        -0.9984,
+                        -0.6597
+                    ],
+                    "sample_size": 5,
+                    "monotone": true,
+                    "expected_direction": "decrease"
+                }
+            },
+            "plot": "C:\\Users\\nisha\\OneDrive\\Desktop\\Generativemodels\\MRI-ImageGenration\\results\\radiodino-s16_run5\\noise_robustness\\blur_robustness.png"
+        }
+    },
+    "sample_efficiency": {
+        "rounds": 10,
+        "n_subset": 500,
+        "active_layers": [
+            12
+        ],
+        "history": [
+            {
+                "m3": 0.07193503900967196,
+                "fid": 65.13942887017022,
+                "cmmd": 0.10045492649078369,
+                "round": 1
+            },
+            {
+                "m3": 0.0732330054533722,
+                "fid": 66.4375807472068,
+                "cmmd": 0.10264122486114502,
+                "round": 2
+            },
+            {
+                "m3": 0.07372246675218905,
+                "fid": 67.91214496829826,
+                "cmmd": 0.10117679834365845,
+                "round": 3
+            },
+            {
+                "m3": 0.0712035229488801,
+                "fid": 65.4011862967319,
+                "cmmd": 0.09955847263336182,
+                "round": 4
+            },
+            {
+                "m3": 0.07362471635425508,
+                "fid": 67.20981211772346,
+                "cmmd": 0.10482966899871826,
+                "round": 5
+            },
+            {
+                "m3": 0.0737909400395377,
+                "fid": 64.45795264213427,
+                "cmmd": 0.10255491733551025,
+                "round": 6
+            },
+            {
+                "m3": 0.07360062481143832,
+                "fid": 66.0902388553092,
+                "cmmd": 0.10083281993865967,
+                "round": 7
+            },
+            {
+                "m3": 0.0709809240442175,
+                "fid": 66.41315382560884,
+                "cmmd": 0.10165661573410034,
+                "round": 8
+            },
+            {
+                "m3": 0.0723523226284153,
+                "fid": 64.08139384603311,
+                "cmmd": 0.10487627983093262,
+                "round": 9
+            },
+            {
+                "m3": 0.07564491660842984,
+                "fid": 64.67552572140899,
+                "cmmd": 0.10404765605926514,
+                "round": 10
+            }
+        ],
+        "stats": [
+            {
+                "metric": "m3",
+                "mean": 0.073009,
+                "std": 0.001407,
+                "cv_pct": 1.9265,
+                "ci_95": [
+                    0.072137,
+                    0.073881
+                ],
+                "n_valid": 10
+            },
+            {
+                "metric": "fid",
+                "mean": 65.781842,
+                "std": 1.243949,
+                "cv_pct": 1.891,
+                "ci_95": [
+                    65.010834,
+                    66.552849
+                ],
+                "n_valid": 10
+            },
+            {
+                "metric": "cmmd",
+                "mean": 0.102263,
+                "std": 0.001856,
+                "cv_pct": 1.8151,
+                "ci_95": [
+                    0.101112,
+                    0.103413
+                ],
+                "n_valid": 10
+            }
+        ],
+        "plots": {
+            "cv_bar": "C:\\Users\\nisha\\OneDrive\\Desktop\\Generativemodels\\MRI-ImageGenration\\results\\radiodino-s16_run5\\sample_efficiency\\stability_cv.png",
+            "convergence": "C:\\Users\\nisha\\OneDrive\\Desktop\\Generativemodels\\MRI-ImageGenration\\results\\radiodino-s16_run5\\sample_efficiency\\stability_convergence.png"
+        }
+    },
+    "cv_at_500": {
+        "m3_cv_pct": null,
+        "fid_cv_pct": null
+    },
+    "weight_ablation": {
+        "cka_thresholds_tested": [
+            0.7,
+            0.8,
+            0.85,
+            0.9,
+            0.92,
+            0.95,
+            0.97,
+            0.99
+        ],
+        "best_threshold": 0.7,
+        "best_discriminability": 9.5388,
+        "rows": [
+            {
+                "threshold": 0.7,
+                "n_active_layers": 1,
+                "active_layers": [
+                    12
+                ],
+                "score_rg": 1.464417,
+                "score_rr": 0.138954,
+                "discriminability": 9.5388
+            },
+            {
+                "threshold": 0.8,
+                "n_active_layers": 2,
+                "active_layers": [
+                    1,
+                    12
+                ],
+                "score_rg": 0.742499,
+                "score_rr": 0.071236,
+                "discriminability": 9.4231
+            },
+            {
+                "threshold": 0.85,
+                "n_active_layers": 2,
+                "active_layers": [
+                    1,
+                    12
+                ],
+                "score_rg": 0.742499,
+                "score_rr": 0.071236,
+                "discriminability": 9.4231
+            },
+            {
+                "threshold": 0.9,
+                "n_active_layers": 2,
+                "active_layers": [
+                    1,
+                    12
+                ],
+                "score_rg": 0.742499,
+                "score_rr": 0.071236,
+                "discriminability": 9.4231
+            },
+            {
+                "threshold": 0.92,
+                "n_active_layers": 4,
+                "active_layers": [
+                    1,
+                    2,
+                    3,
+                    12
+                ],
+                "score_rg": 0.399999,
+                "score_rr": 0.042211,
+                "discriminability": 8.4761
+            },
+            {
+                "threshold": 0.95,
+                "n_active_layers": 5,
+                "active_layers": [
+                    1,
+                    2,
+                    3,
+                    5,
+                    12
+                ],
+                "score_rg": 0.379761,
+                "score_rr": 0.040626,
+                "discriminability": 8.3477
+            },
+            {
+                "threshold": 0.97,
+                "n_active_layers": 6,
+                "active_layers": [
+                    1,
+                    2,
+                    3,
+                    4,
+                    5,
+                    12
+                ],
+                "score_rg": 0.33907,
+                "score_rr": 0.037456,
+                "discriminability": 8.0526
+            },
+            {
+                "threshold": 0.99,
+                "n_active_layers": 8,
+                "active_layers": [
+                    1,
+                    2,
+                    3,
+                    4,
+                    5,
+                    7,
+                    8,
+                    12
+                ],
+                "score_rg": 0.493975,
+                "score_rr": 0.050537,
+                "discriminability": 8.7745
+            }
+        ],
+        "plots": {
+            "discriminability": "C:\\Users\\nisha\\OneDrive\\Desktop\\Generativemodels\\MRI-ImageGenration\\results\\radiodino-s16_run5\\weight_ablation\\weight_ablation_discriminability.png"
+        }
+    },
+    "backbone_comparison": {
+        "error": "'charmap' codec can't encode character '\\u03c4' in position 23: character maps to <undefined>"
+    },
+    "cka_analysis": {
+        "error": "'charmap' codec can't encode character '\\u2194' in position 4: character maps to <undefined>"
+    },
+    "weighting_justification": {
+        "backbone": "Snarcy/RadioDino-s16",
+        "active_layers": [
+            12
+        ],
+        "layer_auc": {
+            "L12": 0.9743
+        },
+        "adaptive_weights": {
+            "L12": 1.0
+        },
+        "auc_adaptive": 0.9743,
+        "auc_uniform": 0.9743,
+        "auc_best_single": 0.9743,
+        "best_layer": 12,
+        "adaptive_beats_uniform": false,
+        "adaptive_beats_best_single": false,
+        "plots": {
+            "weighting_justification": "C:\\Users\\nisha\\OneDrive\\Desktop\\Generativemodels\\MRI-ImageGenration\\results\\radiodino-s16_run5\\weighting_justification\\weighting_justification.png"
+        }
+    },
+    "calibration_sanity": {
+        "check1_real_vs_real": {
+            "m3": 0.000888,
+            "fid": 47.6088,
+            "cmmd": 0.000623
+        },
+        "check2_monotonic": {
+            "blur_sigmas": [
+                0,
+                1,
+                2,
+                3,
+                4,
+                5
+            ],
+            "m3": [
+                0.072463,
+                0.077773,
+                0.089824,
+                0.167256,
+                0.337385,
+                0.458783
+            ],
+            "fid": [
+                65.487,
+                86.0399,
+                148.5935,
+                218.9508,
+                279.0431,
+                313.3716
+            ],
+            "cmmd": [
+                0.101798,
+                0.21371,
+                0.375884,
+                0.493425,
+                0.640739,
+                0.762722
+            ],
+            "m3_monotonic": true,
+            "fid_monotonic": true,
+            "cmmd_monotonic": true
+        },
+        "check3_model_ranking": {
+            "ddpm_proxy": {
+                "m3": 0.185636,
+                "fid": 153.143308,
+                "cmmd": 0.507953
+            },
+            "gan_proxy": {
+                "m3": 0.344141,
+                "fid": 221.940774,
+                "cmmd": 0.605238
+            },
+            "constant": {
+                "m3": 0.650167,
+                "fid": 431.860413,
+                "cmmd": 1.194188
+            },
+            "m3_rank_ok": true,
+            "fid_rank_ok": true,
+            "cmmd_rank_ok": true
+        },
+        "check4_cv_stability": {
+            "n_list": [
+                50,
+                100,
+                200,
+                500
+            ],
+            "cv_m3": [
+                0.1132,
+                0.042,
+                0.0368,
+                0.0
+            ],
+            "cv_fid": [
+                0.0231,
+                0.0386,
+                0.0177,
+                0.0
+            ],
+            "m3_lower_cv_than_fid": [
+                false,
+                false,
+                false,
+                false
+            ]
+        },
+        "plots": {
+            "calibration_sanity": "C:\\Users\\nisha\\OneDrive\\Desktop\\Generativemodels\\MRI-ImageGenration\\results\\radiodino-s16_run5\\calibration_sanity\\calibration_sanity.png"
+        }
+    },
+    "pathology_masking": {
+        "error": "stack expects a non-empty TensorList"
+    },
+    "checkpoint_ranking": {
+        "error": "stack expects a non-empty TensorList"
+    },
+    "n_scaling": {
+        "error": "min() iterable argument is empty"
+    },
+    "coverage_novelty": {
+        "coverage": 0.0,
+        "novelty": 1.0,
+        "memorization_rate": 0.0,
+        "wdm3d_brats": {
+            "coverage": 0.0,
+            "novelty": 1.0,
+            "memorization_rate": 0.0,
+            "radius_rr_k": 0.08119955658912659,
+            "memorize_threshold": 0.011402606964111328,
+            "n_real": 500.0,
+            "n_gen": 500.0,
+            "k_neighbors": 5.0,
+            "pct_memorize": 5.0
+        }
+    },
+    "statistical_rigor": {
+        "m3_score": 0.1533222883939743,
+        "p_value": 0.0,
+        "effect_size": 446.1139497778058,
+        "ci_low": 0.14639024458825586,
+        "ci_high": 0.16235085316002368
+    },
+    "conditional_mmd": {
+        "mean_m3": 0.20788027842839557,
+        "worst_m3": 0.25113509098688763,
+        "worst_stratum": "intensity_Q4",
+        "std_m3": 0.04079655923483878
+    },
+    "normality_violation": {
+        "bimodal_shift": {
+            "levels": [
+                0.0,
+                0.1,
+                0.2,
+                0.4,
+                0.6,
+                0.8,
+                1.0,
+                1.5
+            ],
+            "fid_at_max_departure": 0.7221229012242452,
+            "m3_at_max_departure": 0.23561604022979737
+        },
+        "skewness_power": {
+            "levels": [
+                1.0,
+                1.2,
+                1.5,
+                2.0,
+                2.5,
+                3.0,
+                4.0,
+                5.0
+            ],
+            "fid_at_max_departure": 0.5058273533704913,
+            "m3_at_max_departure": 0.16860725581645966
+        },
+        "mode_collapse": {
+            "levels": [
+                0.0,
+                0.1,
+                0.2,
+                0.3,
+                0.4,
+                0.5,
+                0.7,
+                0.9
+            ],
+            "fid_at_max_departure": 0.45615300590310404,
+            "m3_at_max_departure": 0.15332257151603698
+        }
+    },
+    "distortion_monotonicity": {
+        "corruptions_tested": [
+            "gaussian_noise",
+            "gaussian_blur",
+            "occlusion",
+            "brightness_shift"
+        ],
+        "monotonicity_check": {
+            "gaussian_noise": {
+                "L1": {
+                    "kendall_tau": 0.9999999999999999,
+                    "p_value": 0.002777777777777778
+                },
+                "L6": {
+                    "kendall_tau": 0.9999999999999999,
+                    "p_value": 0.002777777777777778
+                },
+                "L12": {
+                    "kendall_tau": 0.9999999999999999,
+                    "p_value": 0.002777777777777778
+                },
+                "m3_agg": {
+                    "kendall_tau": 0.9999999999999999,
+                    "p_value": 0.002777777777777778
+                },
+                "fid": {
+                    "kendall_tau": 0.9999999999999999,
+                    "p_value": 0.002777777777777778
+                }
+            },
+            "gaussian_blur": {
+                "L1": {
+                    "kendall_tau": 1.0,
+                    "p_value": 0.0003968253968253968
+                },
+                "L6": {
+                    "kendall_tau": 1.0,
+                    "p_value": 0.0003968253968253968
+                },
+                "L12": {
+                    "kendall_tau": 1.0,
+                    "p_value": 0.0003968253968253968
+                },
+                "m3_agg": {
+                    "kendall_tau": 1.0,
+                    "p_value": 0.0003968253968253968
+                },
+                "fid": {
+                    "kendall_tau": 1.0,
+                    "p_value": 0.0003968253968253968
+                }
+            },
+            "occlusion": {
+                "L1": {
+                    "kendall_tau": 0.6,
+                    "p_value": 0.1361111111111111
+                },
+                "L6": {
+                    "kendall_tau": 0.7333333333333333,
+                    "p_value": 0.05555555555555555
+                },
+                "L12": {
+                    "kendall_tau": 0.8666666666666666,
+                    "p_value": 0.016666666666666666
+                },
+                "m3_agg": {
+                    "kendall_tau": 0.7333333333333333,
+                    "p_value": 0.05555555555555555
+                },
+                "fid": {
+                    "kendall_tau": 0.8666666666666666,
+                    "p_value": 0.016666666666666666
+                }
+            },
+            "brightness_shift": {
+                "L1": {
+                    "kendall_tau": 0.9999999999999999,
+                    "p_value": 0.002777777777777778
+                },
+                "L6": {
+                    "kendall_tau": 0.9999999999999999,
+                    "p_value": 0.002777777777777778
+                },
+                "L12": {
+                    "kendall_tau": 0.8666666666666666,
+                    "p_value": 0.016666666666666666
+                },
+                "m3_agg": {
+                    "kendall_tau": 0.9999999999999999,
+                    "p_value": 0.002777777777777778
+                },
+                "fid": {
+                    "kendall_tau": 0.8666666666666666,
+                    "p_value": 0.016666666666666666
+                }
+            }
+        }
+    },
+    "sample_size_consistency": {
+        "25": {
+            "m3_mmd": {
+                "mean": 0.16157803520560265,
+                "cv": 0.14085579101122342
+            },
+            "fid": {
+                "mean": 0.6575154782983026,
+                "cv": 0.05496907280113081
+            },
+            "cmmd": {
+                "mean": 0.0018389701843261718,
+                "cv": 0.15294904339816576
+            }
+        },
+        "50": {
+            "m3_mmd": {
+                "mean": 0.16991794005036354,
+                "cv": 0.1126618671449581
+            },
+            "fid": {
+                "mean": 0.589614690600211,
+                "cv": 0.04708975212627704
+            },
+            "cmmd": {
+                "mean": 0.0019255876541137695,
+                "cv": 0.11433334497371125
+            }
+        },
+        "100": {
+            "m3_mmd": {
+                "mean": 0.16944049954414367,
+                "cv": 0.06868115746238354
+            },
+            "fid": {
+                "mean": 0.538544347644938,
+                "cv": 0.035561904711566485
+            },
+            "cmmd": {
+                "mean": 0.0019310712814331055,
+                "cv": 0.07198493482569034
+            }
+        },
+        "200": {
+            "m3_mmd": {
+                "mean": 0.1681439159810543,
+                "cv": 0.03724101831036915
+            },
+            "fid": {
+                "mean": 0.4883565804785303,
+                "cv": 0.02214183456552534
+            },
+            "cmmd": {
+                "mean": 0.0019040346145629884,
+                "cv": 0.03831002511959138
+            }
+        },
+        "500": {
+            "m3_mmd": {
+                "mean": 0.16771841794252396,
+                "cv": 0.009698496839143408
+            },
+            "fid": {
+                "mean": 0.45232527278717977,
+                "cv": 0.004511443922377829
+            },
+            "cmmd": {
+                "mean": 0.0019039869308471679,
+                "cv": 0.008567320008012785
+            }
+        }
+    },
+    "tstr_utility": {
+        "task": "slice_position",
+        "baseline_rr_acc": 0.38,
+        "spearman_m3_tstr": {
+            "rho": 1.0,
+            "p": 0.0
+        },
+        "spearman_fid_tstr": {
+            "rho": 0.7999999999999999,
+            "p": 0.20000000000000007
+        },
+        "generator_summary": {
+            "ddpm_unet": {
+                "m3_rank": 1,
+                "fid_rank": 1,
+                "tstr_rank": 1,
+                "tstr_acc": 0.454
+            },
+            "wdm3d_brats": {
+                "m3_rank": 2,
+                "fid_rank": 2,
+                "tstr_rank": 2,
+                "tstr_acc": 0.432
+            },
+            "wdm3d_lidc": {
+                "m3_rank": 4,
+                "fid_rank": 3,
+                "tstr_rank": 4,
+                "tstr_acc": 0.352
+            },
+            "random_noise": {
+                "m3_rank": 3,
+                "fid_rank": 4,
+                "tstr_rank": 3,
+                "tstr_acc": 0.384
+            }
+        }
+    }
+}

@@ -1,0 +1,64 @@
+{
+  "config": {
+    "n_used": 200,
+    "skipped": 34,
+    "seed": 42,
+    "n_perm": 100,
+    "matched_area_px": 1705.685,
+    "m3_layer": 12,
+    "inception_baseline": "KID (unbiased Inception-MMD)"
+  },
+  "modes": {
+    "erase": {
+      "M3_L12": {
+        "delta_lesion": 0.024140601977705956,
+        "delta_control": 0.021363770589232445,
+        "specificity_ratio": 1.129978524946016,
+        "z_lesion": 31.765037946022815,
+        "z_control": 26.822945870985645,
+        "p_lesion": 0.0,
+        "p_control": 0.0
+      },
+      "KID_inception": {
+        "delta_lesion": 0.029303753568483693,
+        "delta_control": 0.021997698888432282,
+        "specificity_ratio": 1.33212813381555
+      },
+      "m3_more_specific_than_kid": false
+    },
+    "blur": {
+      "M3_L12": {
+        "delta_lesion": 0.002688157605007291,
+        "delta_control": 0.0,
+        "specificity_ratio": 2688157605.007291,
+        "z_lesion": 2.834727318909354,
+        "z_control": -0.4958145343652763,
+        "p_lesion": 0.03,
+        "p_control": 1.0
+      },
+      "KID_inception": {
+        "delta_lesion": 0.0,
+        "delta_control": 0.0,
+        "specificity_ratio": 0.0
+      },
+      "m3_more_specific_than_kid": true
+    },
+    "noise": {
+      "M3_L12": {
+        "delta_lesion": 0.006021303124725819,
+        "delta_control": 0.0029775977600365877,
+        "specificity_ratio": 2.0222016571680355,
+        "z_lesion": 7.233639628199555,
+        "z_control": 3.2700047041894806,
+        "p_lesion": 0.0,
+        "p_control": 0.03
+      },
+      "KID_inception": {
+        "delta_lesion": 0.04526153656340215,
+        "delta_control": 0.0432443624595229,
+        "specificity_ratio": 1.0466459438676508
+      },
+      "m3_more_specific_than_kid": true
+    }
+  }
+}

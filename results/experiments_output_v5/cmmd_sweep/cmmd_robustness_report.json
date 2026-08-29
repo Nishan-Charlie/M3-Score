@@ -1,0 +1,76 @@
+{
+    "noise": {
+        "metric_values": [
+            {
+                "sigma": 0.0,
+                "cmmd": 0.018775
+            },
+            {
+                "sigma": 0.01,
+                "cmmd": 0.323679
+            },
+            {
+                "sigma": 0.02,
+                "cmmd": 0.366257
+            },
+            {
+                "sigma": 0.05,
+                "cmmd": 0.444364
+            },
+            {
+                "sigma": 0.1,
+                "cmmd": 0.549761
+            },
+            {
+                "sigma": 0.2,
+                "cmmd": 0.671647
+            },
+            {
+                "sigma": 0.5,
+                "cmmd": 0.951923
+            }
+        ],
+        "spearman": {
+            "spearman_r": 1.0,
+            "spearman_p": 0.0,
+            "ci_95": [
+                1.0,
+                1.0
+            ],
+            "n": 7
+        }
+    },
+    "blur": {
+        "metric_values": [
+            {
+                "radius": 0.0,
+                "cmmd": 0.018775
+            },
+            {
+                "radius": 1.0,
+                "cmmd": 0.211078
+            },
+            {
+                "radius": 2.0,
+                "cmmd": 0.438517
+            },
+            {
+                "radius": 3.0,
+                "cmmd": 0.589859
+            },
+            {
+                "radius": 4.0,
+                "cmmd": 0.746099
+            }
+        ],
+        "spearman": {
+            "spearman_r": 1.0,
+            "spearman_p": 1.4042654220543672e-24,
+            "ci_95": [
+                1.0,
+                1.0
+            ],
+            "n": 5
+        }
+    }
+}

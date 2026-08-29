@@ -1,0 +1,909 @@
+{
+    "active_layers": [
+        1,
+        3,
+        12
+    ],
+    "device": "cuda",
+    "core_m3": {
+        "m3_score": 0.03540412022245325,
+        "layer_distances": {
+            "L1": 0.06896781921386719,
+            "L3": 0.05044746398925781,
+            "L12": 0.02376842498779297
+        },
+        "layer_weights": {
+            "L1": 0.07733507992415549,
+            "L3": 0.30511602142253974,
+            "L12": 0.6175486560692753
+        },
+        "semanticity": {
+            "L1": 0.0008336705994644055,
+            "L3": 0.0019542523764820513,
+            "L12": 0.003502807370976411
+        },
+        "stability": {
+            "L1": 8.072800766089664,
+            "L3": 15.255080909080501,
+            "L12": 11.505584028689913
+        },
+        "uniqueness": {
+            "L1": 0.47369152307510376,
+            "L3": 0.42189817130565643,
+            "L12": 0.631660982966423
+        }
+    },
+    "permutation_test": {
+        "null_mean": 0.00015018222988076355,
+        "null_std": 0.00024021291886955733,
+        "S_obs": 0.03540412022245325,
+        "Z_score": 146.76,
+        "empirical_p": 0.0,
+        "n_perm": 50
+    },
+    "ood": {
+        "radiodino_roc_auc": 0.757,
+        "radiodino_pr_auc": 0.6997,
+        "inceptionv3_roc_auc": 0.7903,
+        "inceptionv3_pr_auc": 0.7959,
+        "relative_roc_improvement_pct": -4.21,
+        "relative_pr_improvement_pct": -12.09,
+        "pct_ood": 36.0,
+        "spearman_m3_rho": 0.0918,
+        "spearman_m3_p": 0.04017454012649651,
+        "spearman_inc_rho": 0.4371,
+        "spearman_inc_p": 9.672611246364325e-25
+    },
+    "noise_robustness": {
+        "noise": {
+            "levels": [
+                0.0,
+                0.01,
+                0.02,
+                0.05,
+                0.1,
+                0.2,
+                0.5
+            ],
+            "metric_values": [
+                {
+                    "sigma": 0.0,
+                    "m3": 0.0,
+                    "fid": 0.1307,
+                    "kid": 0.0,
+                    "ssim": 1.0,
+                    "psnr": 100.0,
+                    "ms_ssim": 1.0,
+                    "lpips": 0.0,
+                    "precision": 1.0,
+                    "recall": 1.0
+                },
+                {
+                    "sigma": 0.01,
+                    "m3": 0.144673,
+                    "fid": 28.0317,
+                    "kid": 0.018068,
+                    "ssim": 0.881692,
+                    "psnr": 41.9091,
+                    "ms_ssim": 0.996572,
+                    "lpips": 0.201254,
+                    "precision": 1.0,
+                    "recall": 1.0
+                },
+                {
+                    "sigma": 0.02,
+                    "m3": 0.213427,
+                    "fid": 38.2294,
+                    "kid": 0.02357,
+                    "ssim": 0.680052,
+                    "psnr": 35.9046,
+                    "ms_ssim": 0.986863,
+                    "lpips": 0.256463,
+                    "precision": 0.975,
+                    "recall": 0.99
+                },
+                {
+                    "sigma": 0.05,
+                    "m3": 0.758069,
+                    "fid": 83.0737,
+                    "kid": 0.057426,
+                    "ssim": 0.341467,
+                    "psnr": 27.9661,
+                    "ms_ssim": 0.933057,
+                    "lpips": 0.384238,
+                    "precision": 0.45,
+                    "recall": 0.5
+                },
+                {
+                    "sigma": 0.1,
+                    "m3": 1.029574,
+                    "fid": 155.1804,
+                    "kid": 0.136885,
+                    "ssim": 0.185002,
+                    "psnr": 21.9885,
+                    "ms_ssim": 0.820093,
+                    "lpips": 0.514692,
+                    "precision": 0.025,
+                    "recall": 0.06
+                },
+                {
+                    "sigma": 0.2,
+                    "m3": 2.300464,
+                    "fid": 302.7347,
+                    "kid": 0.38781,
+                    "ssim": 0.093808,
+                    "psnr": 16.1307,
+                    "ms_ssim": 0.639359,
+                    "lpips": 0.649544,
+                    "precision": 0.0,
+                    "recall": 0.0
+                },
+                {
+                    "sigma": 0.5,
+                    "m3": 4.092034,
+                    "fid": 529.0678,
+                    "kid": 0.890138,
+                    "ssim": 0.03127,
+                    "psnr": 9.2896,
+                    "ms_ssim": 0.380933,
+                    "lpips": 0.749448,
+                    "precision": 0.0,
+                    "recall": 0.0
+                }
+            ],
+            "spearman": {
+                "m3": {
+                    "spearman_r": 1.0,
+                    "spearman_p": 0.0,
+                    "ci_95": [
+                        1.0,
+                        1.0
+                    ],
+                    "sample_size": 7,
+                    "monotone": true,
+                    "expected_direction": "increase"
+                },
+                "fid": {
+                    "spearman_r": 1.0,
+                    "spearman_p": 0.0,
+                    "ci_95": [
+                        1.0,
+                        1.0
+                    ],
+                    "sample_size": 7,
+                    "monotone": true,
+                    "expected_direction": "increase"
+                },
+                "kid": {
+                    "spearman_r": 1.0,
+                    "spearman_p": 0.0,
+                    "ci_95": [
+                        1.0,
+                        1.0
+                    ],
+                    "sample_size": 7,
+                    "monotone": true,
+                    "expected_direction": "increase"
+                },
+                "ssim": {
+                    "spearman_r": -1.0,
+                    "spearman_p": 0.0,
+                    "ci_95": [
+                        -1.0,
+                        -1.0
+                    ],
+                    "sample_size": 7,
+                    "monotone": true,
+                    "expected_direction": "decrease"
+                },
+                "psnr": {
+                    "spearman_r": -1.0,
+                    "spearman_p": 0.0,
+                    "ci_95": [
+                        -1.0,
+                        -1.0
+                    ],
+                    "sample_size": 7,
+                    "monotone": true,
+                    "expected_direction": "decrease"
+                },
+                "ms_ssim": {
+                    "spearman_r": -1.0,
+                    "spearman_p": 0.0,
+                    "ci_95": [
+                        -1.0,
+                        -1.0
+                    ],
+                    "sample_size": 7,
+                    "monotone": true,
+                    "expected_direction": "decrease"
+                },
+                "lpips": {
+                    "spearman_r": 1.0,
+                    "spearman_p": 0.0,
+                    "ci_95": [
+                        1.0,
+                        1.0
+                    ],
+                    "sample_size": 7,
+                    "monotone": true,
+                    "expected_direction": "increase"
+                },
+                "precision": {
+                    "spearman_r": -0.982,
+                    "spearman_p": 8.290963420193975e-05,
+                    "ci_95": [
+                        -0.9974,
+                        -0.8787
+                    ],
+                    "sample_size": 7,
+                    "monotone": true,
+                    "expected_direction": "decrease"
+                },
+                "recall": {
+                    "spearman_r": -0.982,
+                    "spearman_p": 8.290963420193975e-05,
+                    "ci_95": [
+                        -0.9974,
+                        -0.8787
+                    ],
+                    "sample_size": 7,
+                    "monotone": true,
+                    "expected_direction": "decrease"
+                }
+            },
+            "plot": "C:\\Users\\nisha\\OneDrive\\Desktop\\Generativemodels\\MRI-ImageGenration\\results\\radiodino_run4\\noise_robustness\\noise_robustness.png"
+        },
+        "blur": {
+            "levels": [
+                0,
+                1,
+                2,
+                3,
+                4
+            ],
+            "metric_values": [
+                {
+                    "radius": 0.0,
+                    "m3": 0.0,
+                    "fid": 0.1307,
+                    "kid": 0.0,
+                    "ssim": 1.0,
+                    "psnr": 100.0,
+                    "ms_ssim": 1.0,
+                    "lpips": 0.0,
+                    "precision": 1.0,
+                    "recall": 1.0
+                },
+                {
+                    "radius": 1.0,
+                    "m3": 0.148058,
+                    "fid": 44.6776,
+                    "kid": 0.018717,
+                    "ssim": 0.962575,
+                    "psnr": 33.3397,
+                    "ms_ssim": 0.99307,
+                    "lpips": 0.063529,
+                    "precision": 0.915,
+                    "recall": 0.945
+                },
+                {
+                    "radius": 2.0,
+                    "m3": 0.600283,
+                    "fid": 157.0502,
+                    "kid": 0.127735,
+                    "ssim": 0.870057,
+                    "psnr": 27.8357,
+                    "ms_ssim": 0.963643,
+                    "lpips": 0.142176,
+                    "precision": 0.02,
+                    "recall": 0.035
+                },
+                {
+                    "radius": 3.0,
+                    "m3": 0.831625,
+                    "fid": 231.7844,
+                    "kid": 0.22574,
+                    "ssim": 0.803887,
+                    "psnr": 25.5076,
+                    "ms_ssim": 0.925717,
+                    "lpips": 0.190202,
+                    "precision": 0.0,
+                    "recall": 0.0
+                },
+                {
+                    "radius": 4.0,
+                    "m3": 0.517016,
+                    "fid": 277.7054,
+                    "kid": 0.297933,
+                    "ssim": 0.758208,
+                    "psnr": 24.1007,
+                    "ms_ssim": 0.887149,
+                    "lpips": 0.227843,
+                    "precision": 0.0,
+                    "recall": 0.0
+                }
+            ],
+            "spearman": {
+                "m3": {
+                    "spearman_r": 0.7,
+                    "spearman_p": 0.1881204043741873,
+                    "ci_95": [
+                        -0.4766,
+                        0.9782
+                    ],
+                    "sample_size": 5,
+                    "monotone": true,
+                    "expected_direction": "increase"
+                },
+                "fid": {
+                    "spearman_r": 1.0,
+                    "spearman_p": 1.4042654220543672e-24,
+                    "ci_95": [
+                        1.0,
+                        1.0
+                    ],
+                    "sample_size": 5,
+                    "monotone": true,
+                    "expected_direction": "increase"
+                },
+                "kid": {
+                    "spearman_r": 1.0,
+                    "spearman_p": 1.4042654220543672e-24,
+                    "ci_95": [
+                        1.0,
+                        1.0
+                    ],
+                    "sample_size": 5,
+                    "monotone": true,
+                    "expected_direction": "increase"
+                },
+                "ssim": {
+                    "spearman_r": -1.0,
+                    "spearman_p": 1.4042654220543672e-24,
+                    "ci_95": [
+                        -1.0,
+                        -1.0
+                    ],
+                    "sample_size": 5,
+                    "monotone": true,
+                    "expected_direction": "decrease"
+                },
+                "psnr": {
+                    "spearman_r": -1.0,
+                    "spearman_p": 1.4042654220543672e-24,
+                    "ci_95": [
+                        -1.0,
+                        -1.0
+                    ],
+                    "sample_size": 5,
+                    "monotone": true,
+                    "expected_direction": "decrease"
+                },
+                "ms_ssim": {
+                    "spearman_r": -1.0,
+                    "spearman_p": 1.4042654220543672e-24,
+                    "ci_95": [
+                        -1.0,
+                        -1.0
+                    ],
+                    "sample_size": 5,
+                    "monotone": true,
+                    "expected_direction": "decrease"
+                },
+                "lpips": {
+                    "spearman_r": 1.0,
+                    "spearman_p": 1.4042654220543672e-24,
+                    "ci_95": [
+                        1.0,
+                        1.0
+                    ],
+                    "sample_size": 5,
+                    "monotone": true,
+                    "expected_direction": "increase"
+                },
+                "precision": {
+                    "spearman_r": -0.9747,
+                    "spearman_p": 0.004818230468198537,
+                    "ci_95": [
+                        -0.9984,
+                        -0.6597
+                    ],
+                    "sample_size": 5,
+                    "monotone": true,
+                    "expected_direction": "decrease"
+                },
+                "recall": {
+                    "spearman_r": -0.9747,
+                    "spearman_p": 0.004818230468198537,
+                    "ci_95": [
+                        -0.9984,
+                        -0.6597
+                    ],
+                    "sample_size": 5,
+                    "monotone": true,
+                    "expected_direction": "decrease"
+                }
+            },
+            "plot": "C:\\Users\\nisha\\OneDrive\\Desktop\\Generativemodels\\MRI-ImageGenration\\results\\radiodino_run4\\noise_robustness\\blur_robustness.png"
+        }
+    },
+    "sample_efficiency": {
+        "rounds": 10,
+        "n_subset": 500,
+        "active_layers": [
+            1,
+            3,
+            8,
+            12
+        ],
+        "history": [
+            {
+                "m3": 0.028443698922575485,
+                "fid": 68.00653076171875,
+                "kid": 0.03748974949121475,
+                "ssim": 0.6106815099716186,
+                "psnr": 13.126521981954575,
+                "ms_ssim": 0.36404128514585044,
+                "lpips": 0.2798372386023402,
+                "round": 1
+            },
+            {
+                "m3": 0.03602232151807556,
+                "fid": 69.68696594238281,
+                "kid": 0.03867124021053314,
+                "ssim": 0.6108195700645447,
+                "psnr": 13.168113679885865,
+                "ms_ssim": 0.37061709070962573,
+                "lpips": 0.27946622762829065,
+                "round": 2
+            },
+            {
+                "m3": 0.03081706141299102,
+                "fid": 67.9652099609375,
+                "kid": 0.036950431764125824,
+                "ssim": 0.6119499428272247,
+                "psnr": 13.163177716732026,
+                "ms_ssim": 0.36576169161569505,
+                "lpips": 0.27900573518127203,
+                "round": 3
+            },
+            {
+                "m3": 0.035207306576231764,
+                "fid": 69.22307586669922,
+                "kid": 0.039768919348716736,
+                "ssim": 0.6119926046133042,
+                "psnr": 13.222113672494888,
+                "ms_ssim": 0.3715838435150328,
+                "lpips": 0.27884886879473925,
+                "round": 4
+            },
+            {
+                "m3": 0.03482549635037872,
+                "fid": 68.22132110595703,
+                "kid": 0.03660004958510399,
+                "ssim": 0.6102780412435531,
+                "psnr": 13.104964451789856,
+                "ms_ssim": 0.36852711628353785,
+                "lpips": 0.2802041741088033,
+                "round": 5
+            },
+            {
+                "m3": 0.03128744426989962,
+                "fid": 67.42935180664062,
+                "kid": 0.03719356283545494,
+                "ssim": 0.6126455407142639,
+                "psnr": 13.232248595952989,
+                "ms_ssim": 0.3723271990579272,
+                "lpips": 0.278300947509706,
+                "round": 6
+            },
+            {
+                "m3": 0.03474737936823513,
+                "fid": 69.49296569824219,
+                "kid": 0.03814645856618881,
+                "ssim": 0.6112516545057297,
+                "psnr": 13.138232449293136,
+                "ms_ssim": 0.3633194253558204,
+                "lpips": 0.2799624102190137,
+                "round": 7
+            },
+            {
+                "m3": 0.02943394616400409,
+                "fid": 68.95089721679688,
+                "kid": 0.03674488514661789,
+                "ssim": 0.6107367631196976,
+                "psnr": 13.036881611347198,
+                "ms_ssim": 0.3618122050686488,
+                "lpips": 0.2802611459046602,
+                "round": 8
+            },
+            {
+                "m3": 0.03169473380542316,
+                "fid": 69.45598602294922,
+                "kid": 0.03959323465824127,
+                "ssim": 0.6106223546266556,
+                "psnr": 13.22979668021202,
+                "ms_ssim": 0.3718171465018439,
+                "lpips": 0.2797706201672554,
+                "round": 9
+            },
+            {
+                "m3": 0.026011026023326295,
+                "fid": 69.269287109375,
+                "kid": 0.038533832877874374,
+                "ssim": 0.6120192667245865,
+                "psnr": 13.151746249198913,
+                "ms_ssim": 0.3654955847868844,
+                "lpips": 0.27828272338956594,
+                "round": 10
+            }
+        ],
+        "stats": [
+            {
+                "metric": "m3",
+                "mean": 0.031849,
+                "std": 0.003314,
+                "cv_pct": 10.4067,
+                "ci_95": [
+                    0.029795,
+                    0.033903
+                ],
+                "n_valid": 10
+            },
+            {
+                "metric": "fid",
+                "mean": 68.770159,
+                "std": 0.792347,
+                "cv_pct": 1.1522,
+                "ci_95": [
+                    68.279057,
+                    69.261261
+                ],
+                "n_valid": 10
+            },
+            {
+                "metric": "kid",
+                "mean": 0.037969,
+                "std": 0.001153,
+                "cv_pct": 3.0364,
+                "ci_95": [
+                    0.037255,
+                    0.038684
+                ],
+                "n_valid": 10
+            },
+            {
+                "metric": "ssim",
+                "mean": 0.6113,
+                "std": 0.000793,
+                "cv_pct": 0.1298,
+                "ci_95": [
+                    0.610808,
+                    0.611792
+                ],
+                "n_valid": 10
+            },
+            {
+                "metric": "psnr",
+                "mean": 13.15738,
+                "std": 0.061289,
+                "cv_pct": 0.4658,
+                "ci_95": [
+                    13.119393,
+                    13.195367
+                ],
+                "n_valid": 10
+            },
+            {
+                "metric": "ms_ssim",
+                "mean": 0.36753,
+                "std": 0.003919,
+                "cv_pct": 1.0662,
+                "ci_95": [
+                    0.365101,
+                    0.369959
+                ],
+                "n_valid": 10
+            },
+            {
+                "metric": "lpips",
+                "mean": 0.279394,
+                "std": 0.000742,
+                "cv_pct": 0.2655,
+                "ci_95": [
+                    0.278934,
+                    0.279854
+                ],
+                "n_valid": 10
+            }
+        ],
+        "plots": {
+            "cv_bar": "C:\\Users\\nisha\\OneDrive\\Desktop\\Generativemodels\\MRI-ImageGenration\\results\\radiodino_run4\\sample_efficiency\\stability_cv.png",
+            "convergence": "C:\\Users\\nisha\\OneDrive\\Desktop\\Generativemodels\\MRI-ImageGenration\\results\\radiodino_run4\\sample_efficiency\\stability_convergence.png"
+        }
+    },
+    "cv_at_500": {
+        "m3_cv_pct": null,
+        "fid_cv_pct": null
+    },
+    "weight_ablation": {
+        "cka_thresholds_tested": [
+            0.7,
+            0.8,
+            0.85,
+            0.9,
+            0.92,
+            0.95,
+            0.97,
+            0.99
+        ],
+        "best_threshold": 0.7,
+        "best_discriminability": 3.0044,
+        "rows": [
+            {
+                "threshold": 0.7,
+                "n_active_layers": 2,
+                "active_layers": [
+                    1,
+                    12
+                ],
+                "score_rg": 0.052611,
+                "score_rr": 0.013138,
+                "discriminability": 3.0044
+            },
+            {
+                "threshold": 0.8,
+                "n_active_layers": 3,
+                "active_layers": [
+                    1,
+                    3,
+                    12
+                ],
+                "score_rg": 0.058048,
+                "score_rr": 0.017329,
+                "discriminability": 2.3498
+            },
+            {
+                "threshold": 0.85,
+                "n_active_layers": 3,
+                "active_layers": [
+                    1,
+                    4,
+                    12
+                ],
+                "score_rg": 0.061303,
+                "score_rr": 0.018051,
+                "discriminability": 2.396
+            },
+            {
+                "threshold": 0.9,
+                "n_active_layers": 4,
+                "active_layers": [
+                    1,
+                    2,
+                    6,
+                    12
+                ],
+                "score_rg": 0.044142,
+                "score_rr": 0.012961,
+                "discriminability": 2.4058
+            },
+            {
+                "threshold": 0.92,
+                "n_active_layers": 5,
+                "active_layers": [
+                    1,
+                    2,
+                    3,
+                    7,
+                    12
+                ],
+                "score_rg": 0.053527,
+                "score_rr": 0.019474,
+                "discriminability": 1.7486
+            },
+            {
+                "threshold": 0.95,
+                "n_active_layers": 6,
+                "active_layers": [
+                    1,
+                    2,
+                    3,
+                    5,
+                    8,
+                    12
+                ],
+                "score_rg": 0.052152,
+                "score_rr": 0.015334,
+                "discriminability": 2.4011
+            },
+            {
+                "threshold": 0.97,
+                "n_active_layers": 6,
+                "active_layers": [
+                    1,
+                    2,
+                    3,
+                    6,
+                    9,
+                    12
+                ],
+                "score_rg": 0.046126,
+                "score_rr": 0.013714,
+                "discriminability": 2.3634
+            },
+            {
+                "threshold": 0.99,
+                "n_active_layers": 11,
+                "active_layers": [
+                    1,
+                    2,
+                    3,
+                    4,
+                    5,
+                    6,
+                    7,
+                    9,
+                    10,
+                    11,
+                    12
+                ],
+                "score_rg": 0.048839,
+                "score_rr": 0.015389,
+                "discriminability": 2.1736
+            }
+        ],
+        "plots": {
+            "discriminability": "C:\\Users\\nisha\\OneDrive\\Desktop\\Generativemodels\\MRI-ImageGenration\\results\\radiodino_run4\\weight_ablation\\weight_ablation_discriminability.png"
+        }
+    },
+    "backbone_comparison": {
+        "config": {
+            "real_dir": "C:\\Users\\nisha\\OneDrive\\Desktop\\Generativemodels\\MRI-ImageGenration\\data_mri\\brats_axial_multislice",
+            "gen_dir": "C:\\Users\\nisha\\OneDrive\\Desktop\\Generativemodels\\MRI-ImageGenration\\output\\generated_500_best",
+            "n_images": 500,
+            "cka_tau": 0.8,
+            "backbones": [
+                {
+                    "id": "microsoft/rad-dino",
+                    "backend": "transformers"
+                },
+                {
+                    "id": "Snarcy/RadioDino-s16",
+                    "backend": "timm"
+                },
+                {
+                    "id": "facebook/dinov2-base",
+                    "backend": "transformers"
+                },
+                {
+                    "id": "flaviagiammarino/pubmed-clip-vit-base-patch32",
+                    "backend": "clip_transformers"
+                },
+                {
+                    "id": "microsoft/BiomedCLIP-PubMedBERT_256-vit_base_patch16_224",
+                    "backend": "open_clip"
+                },
+                {
+                    "id": "RadImageNet-ResNet50",
+                    "backend": "resnet"
+                }
+            ],
+            "kernels": [
+                "polynomial_deg3",
+                "gaussian_rbf_5band"
+            ]
+        },
+        "per_backbone": {
+            "microsoft/rad-dino": {
+                "num_layers": 12,
+                "embed_dim": 768,
+                "active_layers": [
+                    1,
+                    3,
+                    12
+                ],
+                "cka_tau": 0.8,
+                "m3_poly": 0.028988,
+                "disc_poly": 6.914,
+                "rr_poly": 0.004193,
+                "layer_mmd_poly": {
+                    "L1": 0.00025,
+                    "L3": 0.005495,
+                    "L12": 0.08122
+                },
+                "m3_rbf": 0.124654,
+                "disc_rbf": 2.877,
+                "rr_rbf": 0.043327,
+                "layer_mmd_rbf": {
+                    "L1": 0.065561,
+                    "L3": 0.206306,
+                    "L12": 0.102095
+                },
+                "ooc_auc_per_layer": {
+                    "L1": 0.6309,
+                    "L3": 0.8413,
+                    "L12": 0.7456
+                },
+                "weighted_auc": 0.7392
+            },
+            "Snarcy/RadioDino-s16": {
+                "error": "An error happened while trying to locate the file on the Hub and we cannot find the requested files in the local cache. Please check your connection and try again or make sure your Internet connection is on."
+            },
+            "facebook/dinov2-base": {
+                "error": "Can't load image processor for 'facebook/dinov2-base'. If you were trying to load it from 'https://huggingface.co/models', make sure you don't have a local directory with the same name. Otherwise, make sure 'facebook/dinov2-base' is the correct path to a directory containing a preprocessor_config.json file"
+            },
+            "flaviagiammarino/pubmed-clip-vit-base-patch32": {
+                "error": "flaviagiammarino/pubmed-clip-vit-base-patch32 does not appear to have a file named pytorch_model.bin or model.safetensors."
+            },
+            "microsoft/BiomedCLIP-PubMedBERT_256-vit_base_patch16_224": {
+                "error": "No module named 'open_clip'"
+            },
+            "RadImageNet-ResNet50": {
+                "num_layers": 4,
+                "embed_dim": 2048,
+                "active_layers": [
+                    2,
+                    3,
+                    4
+                ],
+                "cka_tau": 0.8,
+                "m3_poly": 0.324939,
+                "disc_poly": 4.3315,
+                "rr_poly": 0.075018,
+                "layer_mmd_poly": {
+                    "L2": 0.017203,
+                    "L3": 0.094596,
+                    "L4": 0.863019
+                },
+                "m3_rbf": 0.128752,
+                "disc_rbf": 3.0236,
+                "rr_rbf": 0.042582,
+                "layer_mmd_rbf": {
+                    "L2": 0.156419,
+                    "L3": 0.138328,
+                    "L4": 0.091509
+                },
+                "ooc_auc_per_layer": {
+                    "L2": 0.8043,
+                    "L3": 0.934,
+                    "L4": 0.7917
+                },
+                "weighted_auc": 0.8433
+            }
+        },
+        "comparison": [
+            {
+                "backbone": "microsoft/rad-dino",
+                "active_layers": [
+                    1,
+                    3,
+                    12
+                ],
+                "m3_poly": 0.028988,
+                "m3_rbf": 0.124654,
+                "disc_poly": 6.914,
+                "disc_rbf": 2.877,
+                "weighted_auc": 0.7392
+            },
+            {
+                "backbone": "RadImageNet-ResNet50",
+                "active_layers": [
+                    2,
+                    3,
+                    4
+                ],
+                "m3_poly": 0.324939,
+                "m3_rbf": 0.128752,
+                "disc_poly": 4.3315,
+                "disc_rbf": 3.0236,
+                "weighted_auc": 0.8433
+            }
+        ],
+        "plots": {
+            "comparison_bar": "C:\\Users\\nisha\\OneDrive\\Desktop\\Generativemodels\\MRI-ImageGenration\\results\\radiodino_run4\\backbone_comparison\\backbone_comparison.png",
+            "layer_mmd": "C:\\Users\\nisha\\OneDrive\\Desktop\\Generativemodels\\MRI-ImageGenration\\results\\radiodino_run4\\backbone_comparison\\backbone_layer_mmd.png"
+        }
+    }
+}

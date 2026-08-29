@@ -1,0 +1,121 @@
+{
+    "cka_thresholds_tested": [
+        0.7,
+        0.8,
+        0.85,
+        0.9,
+        0.92,
+        0.95,
+        0.97,
+        0.99
+    ],
+    "best_threshold": 0.7,
+    "best_discriminability": 9.5388,
+    "rows": [
+        {
+            "threshold": 0.7,
+            "n_active_layers": 1,
+            "active_layers": [
+                12
+            ],
+            "score_rg": 1.464417,
+            "score_rr": 0.138954,
+            "discriminability": 9.5388
+        },
+        {
+            "threshold": 0.8,
+            "n_active_layers": 2,
+            "active_layers": [
+                1,
+                12
+            ],
+            "score_rg": 0.742499,
+            "score_rr": 0.071236,
+            "discriminability": 9.4231
+        },
+        {
+            "threshold": 0.85,
+            "n_active_layers": 2,
+            "active_layers": [
+                1,
+                12
+            ],
+            "score_rg": 0.742499,
+            "score_rr": 0.071236,
+            "discriminability": 9.4231
+        },
+        {
+            "threshold": 0.9,
+            "n_active_layers": 2,
+            "active_layers": [
+                1,
+                12
+            ],
+            "score_rg": 0.742499,
+            "score_rr": 0.071236,
+            "discriminability": 9.4231
+        },
+        {
+            "threshold": 0.92,
+            "n_active_layers": 4,
+            "active_layers": [
+                1,
+                2,
+                3,
+                12
+            ],
+            "score_rg": 0.399999,
+            "score_rr": 0.042211,
+            "discriminability": 8.4761
+        },
+        {
+            "threshold": 0.95,
+            "n_active_layers": 5,
+            "active_layers": [
+                1,
+                2,
+                3,
+                5,
+                12
+            ],
+            "score_rg": 0.379761,
+            "score_rr": 0.040626,
+            "discriminability": 8.3477
+        },
+        {
+            "threshold": 0.97,
+            "n_active_layers": 6,
+            "active_layers": [
+                1,
+                2,
+                3,
+                4,
+                5,
+                12
+            ],
+            "score_rg": 0.33907,
+            "score_rr": 0.037456,
+            "discriminability": 8.0526
+        },
+        {
+            "threshold": 0.99,
+            "n_active_layers": 8,
+            "active_layers": [
+                1,
+                2,
+                3,
+                4,
+                5,
+                7,
+                8,
+                12
+            ],
+            "score_rg": 0.493975,
+            "score_rr": 0.050537,
+            "discriminability": 8.7745
+        }
+    ],
+    "plots": {
+        "discriminability": "results/experiments_output_v5\\weight_ablation\\weight_ablation_discriminability.png"
+    }
+}

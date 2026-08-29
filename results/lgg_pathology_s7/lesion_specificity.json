@@ -1,0 +1,30 @@
+{
+  "config": {
+    "n_used": 250,
+    "skipped": 75,
+    "seed": 7,
+    "n_perm": 100,
+    "matched_area_px": 1698.564,
+    "m3_layer": 12,
+    "inception_baseline": "KID (unbiased Inception-MMD)"
+  },
+  "modes": {
+    "noise": {
+      "M3_L12": {
+        "delta_lesion": 0.00699925422668457,
+        "delta_control": 0.0040569487027823925,
+        "specificity_ratio": 1.7252508570996339,
+        "z_lesion": 14.529286794863417,
+        "z_control": 7.929507458665674,
+        "p_lesion": 0.0,
+        "p_control": 0.0
+      },
+      "KID_inception": {
+        "delta_lesion": 0.04509470246498948,
+        "delta_control": 0.044288710083167704,
+        "specificity_ratio": 1.018198596895422
+      },
+      "m3_more_specific_than_kid": true
+    }
+  }
+}

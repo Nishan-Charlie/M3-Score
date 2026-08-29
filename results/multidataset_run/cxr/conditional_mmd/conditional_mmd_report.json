@@ -1,0 +1,34 @@
+{
+  "stratify_by": "intensity_quartile",
+  "n_strata": 4,
+  "backbone_id": "Snarcy/RadioDino-s16",
+  "mean_m3": 1.1436587274074554,
+  "worst_m3": 1.1700630982716878,
+  "best_m3": 1.1275275945663452,
+  "std_m3": 0.01606557635478379,
+  "worst_stratum": "intensity_Q4",
+  "best_stratum": "intensity_Q1",
+  "n_strata_valid": 4,
+  "stratum_results": {
+    "intensity_Q1": {
+      "m3": 1.1275275945663452,
+      "n_real": 125,
+      "n_gen": 125
+    },
+    "intensity_Q2": {
+      "m3": 1.1351876656214397,
+      "n_real": 125,
+      "n_gen": 125
+    },
+    "intensity_Q3": {
+      "m3": 1.1418565511703491,
+      "n_real": 125,
+      "n_gen": 125
+    },
+    "intensity_Q4": {
+      "m3": 1.1700630982716878,
+      "n_real": 125,
+      "n_gen": 125
+    }
+  }
+}

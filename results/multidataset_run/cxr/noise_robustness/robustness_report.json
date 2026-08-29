@@ -1,0 +1,286 @@
+{
+    "noise": {
+        "levels": [
+            0.0,
+            0.01,
+            0.02,
+            0.05,
+            0.1,
+            0.2,
+            0.5
+        ],
+        "metric_values": [
+            {
+                "sigma": 0.0,
+                "m3": 0.0,
+                "fid": 3.1884,
+                "kid": 0.0,
+                "ssim": NaN,
+                "psnr": NaN,
+                "ms_ssim": NaN,
+                "lpips": NaN,
+                "precision": 1.0,
+                "recall": 1.0
+            },
+            {
+                "sigma": 0.01,
+                "m3": 0.038034,
+                "fid": 142.6276,
+                "kid": 0.146406,
+                "ssim": NaN,
+                "psnr": NaN,
+                "ms_ssim": NaN,
+                "lpips": NaN,
+                "precision": 0.155,
+                "recall": 0.31
+            },
+            {
+                "sigma": 0.02,
+                "m3": 0.157436,
+                "fid": 176.8119,
+                "kid": 0.187195,
+                "ssim": NaN,
+                "psnr": NaN,
+                "ms_ssim": NaN,
+                "lpips": NaN,
+                "precision": 0.065,
+                "recall": 0.08
+            },
+            {
+                "sigma": 0.05,
+                "m3": 0.288107,
+                "fid": 213.279,
+                "kid": 0.204632,
+                "ssim": NaN,
+                "psnr": NaN,
+                "ms_ssim": NaN,
+                "lpips": NaN,
+                "precision": 0.005,
+                "recall": 0.005
+            },
+            {
+                "sigma": 0.1,
+                "m3": 0.372277,
+                "fid": 271.5103,
+                "kid": 0.283787,
+                "ssim": NaN,
+                "psnr": NaN,
+                "ms_ssim": NaN,
+                "lpips": NaN,
+                "precision": 0.0,
+                "recall": 0.0
+            },
+            {
+                "sigma": 0.2,
+                "m3": 0.518035,
+                "fid": 402.3237,
+                "kid": 0.506597,
+                "ssim": NaN,
+                "psnr": NaN,
+                "ms_ssim": NaN,
+                "lpips": NaN,
+                "precision": 0.0,
+                "recall": 0.0
+            },
+            {
+                "sigma": 0.5,
+                "m3": 0.684595,
+                "fid": 587.8782,
+                "kid": 0.908231,
+                "ssim": NaN,
+                "psnr": NaN,
+                "ms_ssim": NaN,
+                "lpips": NaN,
+                "precision": 0.0,
+                "recall": 0.0
+            }
+        ],
+        "spearman": {
+            "m3": {
+                "spearman_r": 1.0,
+                "spearman_p": 0.0,
+                "ci_95": [
+                    1.0,
+                    1.0
+                ],
+                "sample_size": 7,
+                "monotone": true,
+                "expected_direction": "increase"
+            },
+            "fid": {
+                "spearman_r": 1.0,
+                "spearman_p": 0.0,
+                "ci_95": [
+                    1.0,
+                    1.0
+                ],
+                "sample_size": 7,
+                "monotone": true,
+                "expected_direction": "increase"
+            },
+            "kid": {
+                "spearman_r": 1.0,
+                "spearman_p": 0.0,
+                "ci_95": [
+                    1.0,
+                    1.0
+                ],
+                "sample_size": 7,
+                "monotone": true,
+                "expected_direction": "increase"
+            },
+            "precision": {
+                "spearman_r": -0.9636,
+                "spearman_p": 0.0004753043398840463,
+                "ci_95": [
+                    -0.9948,
+                    -0.7675
+                ],
+                "sample_size": 7,
+                "monotone": true,
+                "expected_direction": "decrease"
+            },
+            "recall": {
+                "spearman_r": -0.9636,
+                "spearman_p": 0.0004753043398840463,
+                "ci_95": [
+                    -0.9948,
+                    -0.7675
+                ],
+                "sample_size": 7,
+                "monotone": true,
+                "expected_direction": "decrease"
+            }
+        },
+        "plot": "results\\multidataset_run\\cxr\\noise_robustness\\noise_robustness.png"
+    },
+    "blur": {
+        "levels": [
+            0,
+            1,
+            2,
+            3,
+            4
+        ],
+        "metric_values": [
+            {
+                "radius": 0.0,
+                "m3": 0.0,
+                "fid": 3.1884,
+                "kid": 0.0,
+                "ssim": NaN,
+                "psnr": NaN,
+                "ms_ssim": NaN,
+                "lpips": NaN,
+                "precision": 1.0,
+                "recall": 1.0
+            },
+            {
+                "radius": 1.0,
+                "m3": 0.020873,
+                "fid": 5.6639,
+                "kid": 0.000846,
+                "ssim": NaN,
+                "psnr": NaN,
+                "ms_ssim": NaN,
+                "lpips": NaN,
+                "precision": 1.0,
+                "recall": 1.0
+            },
+            {
+                "radius": 2.0,
+                "m3": 0.147153,
+                "fid": 37.223,
+                "kid": 0.01655,
+                "ssim": NaN,
+                "psnr": NaN,
+                "ms_ssim": NaN,
+                "lpips": NaN,
+                "precision": 1.0,
+                "recall": 1.0
+            },
+            {
+                "radius": 3.0,
+                "m3": 0.237595,
+                "fid": 89.9728,
+                "kid": 0.059789,
+                "ssim": NaN,
+                "psnr": NaN,
+                "ms_ssim": NaN,
+                "lpips": NaN,
+                "precision": 0.64,
+                "recall": 0.675
+            },
+            {
+                "radius": 4.0,
+                "m3": 0.329153,
+                "fid": 156.5834,
+                "kid": 0.137486,
+                "ssim": NaN,
+                "psnr": NaN,
+                "ms_ssim": NaN,
+                "lpips": NaN,
+                "precision": 0.17,
+                "recall": 0.175
+            }
+        ],
+        "spearman": {
+            "m3": {
+                "spearman_r": 1.0,
+                "spearman_p": 1.4042654220543672e-24,
+                "ci_95": [
+                    1.0,
+                    1.0
+                ],
+                "sample_size": 5,
+                "monotone": true,
+                "expected_direction": "increase"
+            },
+            "fid": {
+                "spearman_r": 1.0,
+                "spearman_p": 1.4042654220543672e-24,
+                "ci_95": [
+                    1.0,
+                    1.0
+                ],
+                "sample_size": 5,
+                "monotone": true,
+                "expected_direction": "increase"
+            },
+            "kid": {
+                "spearman_r": 1.0,
+                "spearman_p": 1.4042654220543672e-24,
+                "ci_95": [
+                    1.0,
+                    1.0
+                ],
+                "sample_size": 5,
+                "monotone": true,
+                "expected_direction": "increase"
+            },
+            "precision": {
+                "spearman_r": -0.8944,
+                "spearman_p": 0.040519326353834054,
+                "ci_95": [
+                    -0.9931,
+                    -0.0576
+                ],
+                "sample_size": 5,
+                "monotone": true,
+                "expected_direction": "decrease"
+            },
+            "recall": {
+                "spearman_r": -0.8944,
+                "spearman_p": 0.040519326353834054,
+                "ci_95": [
+                    -0.9931,
+                    -0.0576
+                ],
+                "sample_size": 5,
+                "monotone": true,
+                "expected_direction": "decrease"
+            }
+        },
+        "plot": "results\\multidataset_run\\cxr\\noise_robustness\\blur_robustness.png"
+    }
+}

@@ -1,0 +1,64 @@
+﻿# ─── Datasets and model weights (large, externally downloadable) ───
+/data_mri/
+/datasets/
+/pretrained/
+/checkpoints/
+/test_checkpoints_unet/
+/huggingface_models/
+# generated sample sets — regenerate with generate.py (seeded)
+/output/
+
+# ─── Regenerable experiment caches ───
+# pert_*/ are perturbed-image caches reused across runs (see experiments/noise_robustness.py).
+# They hold no results of record — every number lives in the sibling *_report.json.
+**/pert_*/
+**/calibration_sanity/
+**/_tmp_*.png
+*_cache.npz
+tstr_results.json
+
+# Local Claude Code permissions — personal, not project config
+.claude/settings.local.json
+
+# ─── Cleanup quarantine (delete once verified) ───
+_quarantine_*/
+
+# ─── Logging ───
+/logs/
+*.log
+nohup.out
+*.nohup.out
+
+# ─── Python ───
+__pycache__/
+*.py[cod]
+*$py.class
+venv/
+.venv
+env/
+.env
+.gradio
+.cache/
+
+# ─── IDEs / OS ───
+.vscode/
+.idea/
+.DS_Store
+
+# ─── LaTeX build byproducts ───
+# NOTE: *.pdf and *.bbl are deliberately NOT ignored — paper/paper.pdf is the
+# compiled manuscript and paper/Images/M3Score-Calculation.pdf is a figure the
+# paper needs to compile. paper.bbl is required for arXiv submission.
+*.aux
+*.blg
+*.fdb_latexmk
+*.fls
+*.toc
+*.out
+*.synctex.gz
+*.drawio.bkp
+.$*.drawio.bkp
+
+# ─── Archives ───
+*.zip
+*.tar.gz

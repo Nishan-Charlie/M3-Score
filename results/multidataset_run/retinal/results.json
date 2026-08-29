@@ -1,0 +1,30 @@
+{
+  "dataset": "retinal",
+  "name": "Retinal Fundus (RetinaMNIST + HF DDPM)",
+  "modality": "retinal_fundus",
+  "real_dir": "C:\\Users\\nisha\\OneDrive\\Desktop\\Generativemodels\\MRI-ImageGenration\\data_mri\\medmnist\\retinamnist\\all",
+  "gen_dir": "C:\\Users\\nisha\\OneDrive\\Desktop\\Generativemodels\\MRI-ImageGenration\\output\\generated_retinal",
+  "core_m3": 0.5560690538413925,
+  "statistical_rigor": {
+    "m3_score": 0.5988449335098267,
+    "p_value": 0.0,
+    "effect_size": 804.0639302189543,
+    "ci_low": 0.5885834930837155,
+    "ci_high": 0.6131007006764412
+  },
+  "noise_robustness": {
+    "m3_spearman": 1.0,
+    "fid_spearman": 1.0
+  },
+  "conditional_mmd": {
+    "mean_m3": 0.7664009282986324,
+    "worst_m3": 0.814000686009725,
+    "worst_stratum": "intensity_Q4",
+    "std_m3": 0.048171926893300895
+  },
+  "coverage_novelty": {
+    "coverage": 0.0,
+    "novelty": 1.0,
+    "memorization_rate": 0.0
+  }
+}

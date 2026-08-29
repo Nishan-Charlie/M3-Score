@@ -1,0 +1,32 @@
+{
+    "config": {
+        "real_dir": "data_mri/brats_with_proxymasks",
+        "gen_dir": "output/generated_500_best",
+        "num_images": 200,
+        "mask_files": 500,
+        "note": "Real BraTS segmentation masks only. No centre-square fallback."
+    },
+    "condition_a_real_vs_gen": {
+        "m3": 0.11193256936855683,
+        "fid": 116.93407440185547
+    },
+    "condition_b_real_vs_masked_real": {
+        "m3": 0.0838470581775336,
+        "fid": 103.14288330078125
+    },
+    "condition_c_real_vs_masked_gen": {
+        "m3": 0.10072392130200143,
+        "fid": 146.93807983398438
+    },
+    "sensitivity_b_vs_a": {
+        "m3": -0.25091453578092726,
+        "fid": -0.11793988339532269,
+        "m3_abs_fid_ratio": 2.127478061557059,
+        "interpretation": "M3 relative change -0.2509 vs FID -0.1179. |M3|/|FID| ratio = 2.127. Paper claim: 4.23x. Reported without reinterpretation."
+    },
+    "sensitivity_c_vs_a": {
+        "m3": -0.10013749463995683,
+        "fid": 0.2565890702350052,
+        "m3_abs_fid_ratio": 0.39026405390378555
+    }
+}

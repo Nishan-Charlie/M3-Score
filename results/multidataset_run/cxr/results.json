@@ -1,0 +1,30 @@
+{
+  "dataset": "cxr",
+  "name": "Chest X-Ray (PneumoniaMNIST + corrupted proxy)",
+  "modality": "chest_xray",
+  "real_dir": "C:\\Users\\nisha\\OneDrive\\Desktop\\Generativemodels\\MRI-ImageGenration\\data_mri\\medmnist\\pneumoniamnist\\all",
+  "gen_dir": "C:\\Users\\nisha\\OneDrive\\Desktop\\Generativemodels\\MRI-ImageGenration\\output\\generated_cxr_corrupted",
+  "core_m3": 0.730158735382047,
+  "statistical_rigor": {
+    "m3_score": 0.9377519369125367,
+    "p_value": 0.0,
+    "effect_size": 1005.3201956634161,
+    "ci_low": 0.930794697701931,
+    "ci_high": 0.9471691381931305
+  },
+  "noise_robustness": {
+    "m3_spearman": 1.0,
+    "fid_spearman": 1.0
+  },
+  "conditional_mmd": {
+    "mean_m3": 1.1436587274074554,
+    "worst_m3": 1.1700630982716878,
+    "worst_stratum": "intensity_Q4",
+    "std_m3": 0.01606557635478379
+  },
+  "coverage_novelty": {
+    "coverage": 0.0,
+    "novelty": 1.0,
+    "memorization_rate": 0.0
+  }
+}

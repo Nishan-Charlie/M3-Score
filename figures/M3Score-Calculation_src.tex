@@ -1,0 +1,74 @@
+\documentclass[border=10pt]{standalone}
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage{tikz}
+\usepackage{pifont}          % dingbat icons (snowflake, marks)
+\usetikzlibrary{positioning,arrows.meta,calc,fit,backgrounds,shapes.geometric}
+\begin{document}
+\sffamily
+\begin{tikzpicture}[
+  >={Stealth[round]},
+  ar/.style={->, line width=1.1pt, black!60},
+  deck/.style={inner sep=0pt, draw=white, line width=1pt},
+]
+% ---------------- helper: image deck (3 stacked slices) ----------------
+\newcommand{\imgdeck}[4]{% #1=x #2=y #3=basepath(no idx) #4=frame color
+  \node[deck, draw=#4] at (#1+0.30,#2-0.30) {\includegraphics[width=2.0cm]{#3_2.png}};
+  \node[deck, draw=#4] at (#1+0.15,#2-0.15) {\includegraphics[width=2.0cm]{#3_1.png}};
+  \node[deck, draw=#4] at (#1,#2)           {\includegraphics[width=2.0cm]{#3_0.png}};
+}
+
+% ================= INPUTS =================
+\imgdeck{0}{2.6}{fig_assets/real}{cyan!70!black}
+\imgdeck{0}{-1.4}{fig_assets/gen}{orange!80!black}
+\node[font=\Large\bfseries, text=cyan!55!black] at (0.15,4.35) {Real MRI};
+\node[font=\Large\bfseries, text=orange!75!black] at (0.15,-3.0) {Generated MRI};
+
+% ================= ENCODER =================
+\node[draw=blue!55!black, fill=blue!8, rounded corners=6pt, line width=1.3pt,
+      minimum width=3.6cm, minimum height=5.6cm, align=center] (enc) at (5.1,0.6) {};
+\node[font=\Large\bfseries, text=blue!45!black, align=center] at (5.1,2.55)
+  {\ding{102}\,Frozen\\[2pt]RadioDINO-s16};
+\node[font=\large, text=black!60, align=center] at (5.1,1.55) {ViT-S/16\ $\cdot$\ 12 blocks};
+% patch-grid icon
+\foreach \i in {0,1,2,3} \foreach \j in {0,1,2,3}
+  \fill[blue!35!black] (4.2+\i*0.45,-0.9+\j*0.45) rectangle ++(0.34,0.34);
+\node[font=\large, text=black!60] at (5.1,-1.7) {patch tokens};
+
+% ================= CLS FEATURES =================
+\node[draw=black!45, fill=black!4, rounded corners=5pt, line width=1pt,
+      minimum width=2.9cm, minimum height=3.0cm, align=center, font=\large\bfseries] (cls) at (9.2,0.6)
+  {CLS features\\[3pt]{\normalfont\large $E^{(\ell)}\!\in\!\mathbb{R}^{N\times384}$}\\[6pt]
+   {\normalfont\large $\ell=$}\\[2pt]
+   {\bfseries\large\color{orange!75!black}12}\ \ {\bfseries\large\color{violet!60}9}\ \ {\bfseries\large\color{red!65}4}};
+
+% ================= THREE AXES =================
+\node[draw=orange!75!black, fill=orange!15, rounded corners=6pt, line width=1.2pt,
+      minimum width=5.2cm, minimum height=1.85cm, align=left, font=\Large\bfseries] (fid) at (14.6,3.4)
+  {\hspace{0.1cm}\ding{202}\, Fidelity\hfill \normalsize\colorbox{orange!75!black}{\textcolor{white}{\,L12\,}}\\[2pt]
+   {\normalfont\large unbiased RBF $\mathrm{MMD}^2(E_r^{12},E_g^{12})$}};
+\node[draw=violet!60, fill=violet!12, rounded corners=6pt, line width=1.2pt,
+      minimum width=5.2cm, minimum height=1.85cm, align=left, font=\Large\bfseries] (mem) at (14.6,0.9)
+  {\hspace{0.1cm}\ding{203}\, Memorization\hfill \normalsize\colorbox{violet!60}{\textcolor{white}{\,L9\,}}\\[2pt]
+   {\normalfont\large nearest-neighbour gen\,$\to$\,real}};
+\node[draw=red!65, fill=red!10, rounded corners=6pt, line width=1.2pt,
+      minimum width=5.2cm, minimum height=1.85cm, align=left, font=\Large\bfseries] (cov) at (14.6,-1.6)
+  {\hspace{0.1cm}\ding{204}\, Coverage\hfill \normalsize\colorbox{red!65}{\textcolor{white}{\,L4\,}}\\[2pt]
+   {\normalfont\large $k$-NN precision\,/\,recall \textit{(diagnostic)}}};
+
+% ================= STATS RIBBON =================
+\node[draw=teal!70!black, fill=teal!12, rounded corners=6pt, line width=1.2pt,
+      minimum width=11.2cm, minimum height=1.1cm, align=center, font=\Large\bfseries, text=teal!45!black] (stat) at (11.5,-4.0)
+  {Native significance:\ \ \normalsize\normalfont permutation $p$-value\ \ $\cdot$\ \ bootstrap 95\% CI\ \ $\cdot$\ \ separation $Z$};
+
+% ================= EDGES =================
+\draw[ar] (2.3,2.3) -- (enc.west|-0,1.3);
+\draw[ar] (2.3,-1.1) -- (enc.west|-0,-0.1);
+\draw[ar] (enc.east) -- (cls.west);
+\draw[ar, orange!75!black] (cls.east) -- (fid.west);
+\draw[ar, violet!60] (cls.east) -- (mem.west);
+\draw[ar, red!65] (cls.east) -- (cov.west);
+\draw[ar, teal!70!black] (fid.south) to[out=-90,in=90] (17.0,-3.45);
+\draw[ar, teal!70!black] (mem.east) to[out=0,in=90] (17.3,-3.45);
+\end{tikzpicture}
+\end{document}
