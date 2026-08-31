@@ -20,6 +20,16 @@ tstr_results.json
 # Local Claude Code permissions — personal, not project config
 .claude/settings.local.json
 
+# ─── Manuscript and internal notes (NOT part of the code release) ───
+# The paper is under review; these are deliberately excluded from the public
+# repository. They remain on disk and are simply untracked.
+paper/
+# figures/                   # figure staging area for paper/Images
+CITATION.cff               # cites the unpublished manuscript; restore on acceptance
+CLAUDE.md                  # AI-assistant guide for this repo, internal
+docs/                      # EXPERIMENT_FINDINGS, METHODOLOGY_AND_DIRECTION, next_note, specs
+.claude/                   # local tooling config
+
 # ─── Cleanup quarantine (delete once verified) ───
 _quarantine_*/
 
@@ -62,3 +72,5 @@ env/
 # ─── Archives ───
 *.zip
 *.tar.gz
+
+/paper/

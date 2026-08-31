@@ -1,0 +1,274 @@
+{
+    "n_images": 500,
+    "active_layers": [
+        1,
+        2,
+        3,
+        5,
+        8,
+        12
+    ],
+    "top_feature": "radiodino_L5_735",
+    "top_shift_sd": 5.0143,
+    "ranked_features_top20": [
+        {
+            "rank": 1,
+            "feature": "radiodino_L5_735",
+            "category": "learned",
+            "shift_sd": 5.0143
+        },
+        {
+            "rank": 2,
+            "feature": "radiodino_L3_429",
+            "category": "learned",
+            "shift_sd": 4.235
+        },
+        {
+            "rank": 3,
+            "feature": "radiodino_L3_382",
+            "category": "learned",
+            "shift_sd": 4.0927
+        },
+        {
+            "rank": 4,
+            "feature": "radiodino_L3_581",
+            "category": "learned",
+            "shift_sd": 4.0095
+        },
+        {
+            "rank": 5,
+            "feature": "radiodino_L2_574",
+            "category": "learned",
+            "shift_sd": 3.7674
+        },
+        {
+            "rank": 6,
+            "feature": "radiodino_L2_172",
+            "category": "learned",
+            "shift_sd": 3.7089
+        },
+        {
+            "rank": 7,
+            "feature": "radiodino_L2_760",
+            "category": "learned",
+            "shift_sd": 3.6104
+        },
+        {
+            "rank": 8,
+            "feature": "radiodino_L2_581",
+            "category": "learned",
+            "shift_sd": 3.5273
+        },
+        {
+            "rank": 9,
+            "feature": "radiodino_L3_735",
+            "category": "learned",
+            "shift_sd": 3.5244
+        },
+        {
+            "rank": 10,
+            "feature": "radiodino_L3_699",
+            "category": "learned",
+            "shift_sd": 3.5021
+        },
+        {
+            "rank": 11,
+            "feature": "radiodino_L3_172",
+            "category": "learned",
+            "shift_sd": 3.4317
+        },
+        {
+            "rank": 12,
+            "feature": "radiodino_L2_501",
+            "category": "learned",
+            "shift_sd": 3.3091
+        },
+        {
+            "rank": 13,
+            "feature": "radiodino_L1_418",
+            "category": "learned",
+            "shift_sd": 3.2625
+        },
+        {
+            "rank": 14,
+            "feature": "radiodino_L3_726",
+            "category": "learned",
+            "shift_sd": 3.239
+        },
+        {
+            "rank": 15,
+            "feature": "radiodino_L3_291",
+            "category": "learned",
+            "shift_sd": 3.1863
+        },
+        {
+            "rank": 16,
+            "feature": "radiodino_L3_574",
+            "category": "learned",
+            "shift_sd": 3.1362
+        },
+        {
+            "rank": 17,
+            "feature": "radiodino_L3_490",
+            "category": "learned",
+            "shift_sd": 3.1183
+        },
+        {
+            "rank": 18,
+            "feature": "radiodino_L3_083",
+            "category": "learned",
+            "shift_sd": 3.0812
+        },
+        {
+            "rank": 19,
+            "feature": "radiodino_L5_523",
+            "category": "learned",
+            "shift_sd": 3.0645
+        },
+        {
+            "rank": 20,
+            "feature": "radiodino_L2_598",
+            "category": "learned",
+            "shift_sd": 3.0164
+        }
+    ],
+    "category_shifts": {
+        "intensity_mean_sd": 0.2062,
+        "texture_mean_sd": 0.8558,
+        "learned_mean_sd": 0.7244
+    },
+    "per_layer_shift_sd": {
+        "L1": 0.6691,
+        "L2": 0.6633,
+        "L3": 0.8659,
+        "L5": 0.758,
+        "L8": 0.6707,
+        "L12": 0.7194
+    },
+    "gen_distance_stats": {
+        "mean": 90.6339,
+        "std": 9.9396,
+        "median": 89.9128,
+        "min": 63.392,
+        "max": 166.7147
+    },
+    "real_distance_stats": {
+        "mean": 67.3919,
+        "std": 8.963,
+        "median": 66.172,
+        "min": 50.4093,
+        "max": 102.8499
+    },
+    "top6_feature_distributions": [
+        {
+            "feature": "radiodino_L5_735",
+            "shift_sd": 5.0143,
+            "real_mean": 0.7585,
+            "real_std": 0.1289,
+            "gen_mean": 0.1122,
+            "gen_std": 0.2092
+        },
+        {
+            "feature": "radiodino_L3_429",
+            "shift_sd": 4.235,
+            "real_mean": -0.0332,
+            "real_std": 0.0159,
+            "gen_mean": 0.0343,
+            "gen_std": 0.0219
+        },
+        {
+            "feature": "radiodino_L3_382",
+            "shift_sd": 4.0927,
+            "real_mean": -0.0285,
+            "real_std": 0.0093,
+            "gen_mean": 0.0093,
+            "gen_std": 0.0137
+        },
+        {
+            "feature": "radiodino_L3_581",
+            "shift_sd": 4.0095,
+            "real_mean": -0.0867,
+            "real_std": 0.0111,
+            "gen_mean": -0.0422,
+            "gen_std": 0.0119
+        },
+        {
+            "feature": "radiodino_L2_574",
+            "shift_sd": 3.7674,
+            "real_mean": -0.0333,
+            "real_std": 0.0077,
+            "gen_mean": -0.0043,
+            "gen_std": 0.0073
+        },
+        {
+            "feature": "radiodino_L2_172",
+            "shift_sd": 3.7089,
+            "real_mean": -0.0914,
+            "real_std": 0.0038,
+            "gen_mean": -0.0771,
+            "gen_std": 0.0061
+        }
+    ],
+    "most_shifted_images": [
+        {
+            "rank": 1,
+            "path": "output/generated_500_best\\generated_0116.png",
+            "distance": 166.7147
+        },
+        {
+            "rank": 2,
+            "path": "output/generated_500_best\\generated_0156.png",
+            "distance": 129.692
+        },
+        {
+            "rank": 3,
+            "path": "output/generated_500_best\\generated_0360.png",
+            "distance": 124.672
+        },
+        {
+            "rank": 4,
+            "path": "output/generated_500_best\\generated_0220.png",
+            "distance": 121.0608
+        },
+        {
+            "rank": 5,
+            "path": "output/generated_500_best\\generated_0330.png",
+            "distance": 118.3028
+        }
+    ],
+    "least_shifted_images": [
+        {
+            "rank": 1,
+            "path": "output/generated_500_best\\generated_0045.png",
+            "distance": 63.392
+        },
+        {
+            "rank": 2,
+            "path": "output/generated_500_best\\generated_0482.png",
+            "distance": 67.3341
+        },
+        {
+            "rank": 3,
+            "path": "output/generated_500_best\\generated_0446.png",
+            "distance": 69.5912
+        },
+        {
+            "rank": 4,
+            "path": "output/generated_500_best\\generated_0189.png",
+            "distance": 70.2132
+        },
+        {
+            "rank": 5,
+            "path": "output/generated_500_best\\generated_0173.png",
+            "distance": 70.3862
+        }
+    ],
+    "plots": {
+        "ranking": "results/experiments_output_v5/interpretability\\feature_ranking.png",
+        "category_summary": "results/experiments_output_v5/interpretability\\category_shift.png",
+        "per_image_distance": "results/experiments_output_v5/interpretability\\per_image_distance.png",
+        "top_distributions": "results/experiments_output_v5/interpretability\\top_feature_distributions.png",
+        "most_shifted": "results/experiments_output_v5/interpretability\\most_shifted.png",
+        "least_shifted": "results/experiments_output_v5/interpretability\\least_shifted.png"
+    }
+}
