@@ -158,8 +158,14 @@ def kid_mmd2(feat_a: np.ndarray, feat_b: np.ndarray) -> float:
     """Unbiased KID = polynomial-kernel MMD^2 on Inception features (Binkowski 2018).
 
     k(x,y) = (x.y/d + 1)^3.  Valid at small N (unlike Frechet/FID, which needs N > 2048
-    for a full-rank 2048-d covariance). Same estimator family as M3 (MMD), so the only
-    difference from M3 is the backbone -> isolates the backbone's contribution.
+    for a full-rank 2048-d covariance).
+
+    NOTE: this differs from M3 in BOTH the backbone (InceptionV3 vs RadioDINO-s16)
+    AND the kernel (degree-3 polynomial vs multi-bandwidth RBF), so on its own it
+    does NOT isolate the backbone's contribution. An earlier version of this
+    docstring claimed otherwise, and that claim was wrong. For the kernel-controlled
+    comparison, use `incep_rbf_mmd` in experiments/lgg_noise_sweep.py, which applies
+    M3's own RBF MMD^2 to these same Inception features.
     """
     import torch as _t
     x = _t.from_numpy(feat_a).double()

@@ -7,7 +7,8 @@
 \providecommand{\BIBentrySTDinterwordspacing}{\spaceskip=0pt\relax}
 \providecommand{\BIBentryALTinterwordstretchfactor}{4}
 \providecommand{\BIBentryALTinterwordspacing}{\spaceskip=\fontdimen2\font plus
-\BIBentryALTinterwordstretchfactor\fontdimen3\font minus \fontdimen4\font\relax}
+\BIBentryALTinterwordstretchfactor\fontdimen3\font minus
+  \fontdimen4\font\relax}
 \providecommand{\BIBforeignlanguage}[2]{{%
 \expandafter\ifx\csname l@#1\endcsname\relax
 \typeout{** WARNING: IEEEtran.bst: No hyphenation pattern has been}%
@@ -21,133 +22,267 @@
 \BIBdecl
 
 \bibitem{kebaili2023deep}
-A.~Kebaili, J.~Lapuyade-Lahorgue, and S.~Ruan, ``Deep learning approaches for data augmentation in medical imaging: a review,'' \emph{Journal of imaging}, vol.~9, no.~4, p.~81, 2023.
+A.~Kebaili, J.~Lapuyade-Lahorgue, and S.~Ruan, ``Deep learning approaches for
+  data augmentation in medical imaging: a review,'' \emph{Journal of imaging},
+  vol.~9, no.~4, p.~81, 2023.
 
 \bibitem{kazerouni2023diffusion}
-A.~Kazerouni, E.~K. Aghdam, M.~Heidari, R.~Azad, M.~Fayyaz, I.~Hacihaliloglu, and D.~Merhof, ``Diffusion models in medical imaging: A comprehensive survey,'' \emph{Medical image analysis}, vol.~88, p. 102846, 2023.
+A.~Kazerouni, E.~K. Aghdam, M.~Heidari, R.~Azad, M.~Fayyaz, I.~Hacihaliloglu,
+  and D.~Merhof, ``Diffusion models in medical imaging: A comprehensive
+  survey,'' \emph{Medical image analysis}, vol.~88, p. 102846, 2023.
 
 \bibitem{finetti2025data}
-R.~Finetti, B.~Roncaglia, A.~Visibelli, O.~Spiga, and A.~Santucci, ``Data augmentation and synthetic data generation in rare disease research: a scoping review,'' \emph{Medical Sciences}, vol.~13, no.~4, p. 260, 2025.
+R.~Finetti, B.~Roncaglia, A.~Visibelli, O.~Spiga, and A.~Santucci, ``Data
+  augmentation and synthetic data generation in rare disease research: a
+  scoping review,'' \emph{Medical Sciences}, vol.~13, no.~4, p. 260, 2025.
 
 \bibitem{akpinar2024synthetic}
-M.~H. Akpinar, A.~Sengur, M.~Salvi, S.~Seoni, O.~Faust, H.~Mir, F.~Molinari, and U.~R. Acharya, ``Synthetic data generation via generative adversarial networks in healthcare: a systematic review of image-and signal-based studies,'' \emph{IEEE Open Journal of Engineering in Medicine and Biology}, vol.~6, pp. 183--192, 2024.
+M.~H. Akpinar, A.~Sengur, M.~Salvi, S.~Seoni, O.~Faust, H.~Mir, F.~Molinari,
+  and U.~R. Acharya, ``Synthetic data generation via generative adversarial
+  networks in healthcare: a systematic review of image-and signal-based
+  studies,'' \emph{IEEE Open Journal of Engineering in Medicine and Biology},
+  vol.~6, pp. 183--192, 2024.
 
 \bibitem{goodfellow2014generative}
-I.~J. Goodfellow, J.~Pouget-Abadie, M.~Mirza, B.~Xu, D.~Warde-Farley, S.~Ozair, A.~Courville, and Y.~Bengio, ``Generative adversarial nets,'' \emph{Advances in neural information processing systems}, vol.~27, 2014.
+I.~J. Goodfellow, J.~Pouget-Abadie, M.~Mirza, B.~Xu, D.~Warde-Farley, S.~Ozair,
+  A.~Courville, and Y.~Bengio, ``Generative adversarial nets,'' \emph{Advances
+  in neural information processing systems}, vol.~27, 2014.
 
 \bibitem{ho2020denoising}
-J.~Ho, A.~Jain, and P.~Abbeel, ``Denoising diffusion probabilistic models,'' \emph{Advances in neural information processing systems}, vol.~33, pp. 6840--6851, 2020.
+J.~Ho, A.~Jain, and P.~Abbeel, ``Denoising diffusion probabilistic models,''
+  \emph{Advances in neural information processing systems}, vol.~33, pp.
+  6840--6851, 2020.
 
 \bibitem{khader2023denoising}
 \BIBentryALTinterwordspacing
-F.~Khader, G.~Mueller-Franzes, S.~T. Arasteh, T.~Han, C.~Haarburger, M.~Schulze-Hagen, P.~Schad, S.~Engelhardt, B.~Baessler, S.~Foersch, J.~Stegmaier, C.~Stark, T.~Bahmer, C.~M. Loeffler, J.~N. Kather, and D.~Truhn, ``Denoising diffusion probabilistic models for {3D} medical image generation,'' \emph{Scientific Reports}, vol.~13, no.~1, p. 7303, 2023. [Online]. Available: \url{https://doi.org/10.1038/s41598-023-34341-2}
+F.~Khader, G.~Mueller-Franzes, S.~T. Arasteh, T.~Han, C.~Haarburger,
+  M.~Schulze-Hagen, P.~Schad, S.~Engelhardt, B.~Baessler, S.~Foersch,
+  J.~Stegmaier, C.~Stark, T.~Bahmer, C.~M. Loeffler, J.~N. Kather, and
+  D.~Truhn, ``Denoising diffusion probabilistic models for {3D} medical image
+  generation,'' \emph{Scientific Reports}, vol.~13, no.~1, p. 7303, 2023.
+  [Online]. Available: \url{https://doi.org/10.1038/s41598-023-34341-2}
 \BIBentrySTDinterwordspacing
 
 \bibitem{pinaya2022brain}
 \BIBentryALTinterwordspacing
-W.~H.~L. Pinaya, P.-D. Tudosiu, J.~Dafflon, P.~F. {Da Costa}, V.~Fernandez, P.~Nachev, S.~Ourselin, and M.~J. Cardoso, ``Brain imaging generation with latent diffusion models,'' in \emph{{MICCAI} Workshop on Deep Generative Models ({DGM4MICCAI 2022})}, ser. Lecture Notes in Computer Science, vol. 13609.\hskip 1em plus 0.5em minus 0.4em\relax Springer, 2022, pp. 117--126, arXiv:2209.07162. [Online]. Available: \url{https://doi.org/10.1007/978-3-031-18576-2_12}
+W.~H.~L. Pinaya, P.-D. Tudosiu, J.~Dafflon, P.~F. {Da Costa}, V.~Fernandez,
+  P.~Nachev, S.~Ourselin, and M.~J. Cardoso, ``Brain imaging generation with
+  latent diffusion models,'' in \emph{{MICCAI} Workshop on Deep Generative
+  Models ({DGM4MICCAI 2022})}, ser. Lecture Notes in Computer Science, vol.
+  13609.\hskip 1em plus 0.5em minus 0.4em\relax Springer, 2022, pp. 117--126,
+  arXiv:2209.07162. [Online]. Available:
+  \url{https://doi.org/10.1007/978-3-031-18576-2_12}
 \BIBentrySTDinterwordspacing
 
 \bibitem{kelkar2023assessing}
 \BIBentryALTinterwordspacing
-V.~A. Kelkar, D.~S. Gotsis, F.~J. Brooks, {Prabhat KC}, K.~J. Myers, R.~Zeng, and M.~A. Anastasio, ``Assessing the ability of generative adversarial networks to learn canonical medical image statistics,'' \emph{{IEEE} Transactions on Medical Imaging}, vol.~42, no.~6, pp. 1799--1808, 2023. [Online]. Available: \url{https://doi.org/10.1109/TMI.2023.3241454}
+V.~A. Kelkar, D.~S. Gotsis, F.~J. Brooks, {Prabhat KC}, K.~J. Myers, R.~Zeng,
+  and M.~A. Anastasio, ``Assessing the ability of generative adversarial
+  networks to learn canonical medical image statistics,'' \emph{{IEEE}
+  Transactions on Medical Imaging}, vol.~42, no.~6, pp. 1799--1808, 2023.
+  [Online]. Available: \url{https://doi.org/10.1109/TMI.2023.3241454}
 \BIBentrySTDinterwordspacing
 
 \bibitem{deo2025metrics}
 \BIBentryALTinterwordspacing
-Y.~Deo, Y.~Jia, T.~Lassila, W.~A.~P. Smith, T.~Lawton, S.~Kang, A.~F. Frangi, and I.~Habli, ``Metrics that matter: Evaluating image quality metrics for medical image generation,'' 2025. [Online]. Available: \url{https://arxiv.org/abs/2505.07175}
+Y.~Deo, Y.~Jia, T.~Lassila, W.~A.~P. Smith, T.~Lawton, S.~Kang, A.~F. Frangi,
+  and I.~Habli, ``Metrics that matter: Evaluating image quality metrics for
+  medical image generation,'' 2025. [Online]. Available:
+  \url{https://arxiv.org/abs/2505.07175}
 \BIBentrySTDinterwordspacing
 
 \bibitem{heusel2017gans}
-M.~Heusel, H.~Ramsauer, T.~Unterthiner, B.~Nessler, and S.~Hochreiter, ``{GAN}s trained by a two time-scale update rule converge to a local {Nash} equilibrium,'' in \emph{Advances in Neural Information Processing Systems ({NeurIPS})}, vol.~30.\hskip 1em plus 0.5em minus 0.4em\relax Curran Associates, 2017.
+M.~Heusel, H.~Ramsauer, T.~Unterthiner, B.~Nessler, and S.~Hochreiter, ``{GAN}s
+  trained by a two time-scale update rule converge to a local {Nash}
+  equilibrium,'' in \emph{Advances in Neural Information Processing Systems
+  ({NeurIPS})}, vol.~30.\hskip 1em plus 0.5em minus 0.4em\relax Curran
+  Associates, 2017.
 
 \bibitem{binkowski2018demystifying}
 \BIBentryALTinterwordspacing
-M.~Bi{\'n}kowski, D.~J. Sutherland, M.~N. Arbel, and A.~Gretton, ``Demystifying {MMD} {GAN}s,'' in \emph{International Conference on Learning Representations ({ICLR})}, 2018, arXiv:1801.01401. [Online]. Available: \url{https://arxiv.org/abs/1801.01401}
+M.~Bi{\'n}kowski, D.~J. Sutherland, M.~N. Arbel, and A.~Gretton, ``Demystifying
+  {MMD} {GAN}s,'' in \emph{International Conference on Learning Representations
+  ({ICLR})}, 2018, arXiv:1801.01401. [Online]. Available:
+  \url{https://arxiv.org/abs/1801.01401}
 \BIBentrySTDinterwordspacing
 
 \bibitem{szegedy2016rethinking}
 \BIBentryALTinterwordspacing
-C.~Szegedy, V.~Vanhoucke, S.~Ioffe, J.~Shlens, and Z.~Wojna, ``Rethinking the inception architecture for computer vision,'' in \emph{{IEEE/CVF} Conference on Computer Vision and Pattern Recognition ({CVPR})}, 2016, pp. 2818--2826, arXiv:1512.00567. [Online]. Available: \url{https://doi.org/10.1109/CVPR.2016.308}
+C.~Szegedy, V.~Vanhoucke, S.~Ioffe, J.~Shlens, and Z.~Wojna, ``Rethinking the
+  inception architecture for computer vision,'' in \emph{{IEEE/CVF} Conference
+  on Computer Vision and Pattern Recognition ({CVPR})}, 2016, pp. 2818--2826,
+  arXiv:1512.00567. [Online]. Available:
+  \url{https://doi.org/10.1109/CVPR.2016.308}
 \BIBentrySTDinterwordspacing
 
 \bibitem{skandarani2023gans}
 \BIBentryALTinterwordspacing
-Y.~Skandarani, P.-M. Jodoin, and A.~Lalande, ``{GAN}s for medical image synthesis: {A}n empirical study,'' \emph{Journal of Imaging}, vol.~9, no.~3, p.~69, 2023. [Online]. Available: \url{https://doi.org/10.3390/jimaging9030069}
+Y.~Skandarani, P.-M. Jodoin, and A.~Lalande, ``{GAN}s for medical image
+  synthesis: {A}n empirical study,'' \emph{Journal of Imaging}, vol.~9, no.~3,
+  p.~69, 2023. [Online]. Available:
+  \url{https://doi.org/10.3390/jimaging9030069}
 \BIBentrySTDinterwordspacing
 
 \bibitem{woodland2024feature}
-M.~Woodland, A.~Castelo, M.~Al~Taie, J.~Albuquerque Marques~Silva, M.~Eltaher, F.~Mohn, A.~Shieh, S.~Kundu, J.~P. Yung, A.~B. Patel \emph{et~al.}, ``Feature extraction for generative medical imaging evaluation: New evidence against an evolving trend,'' in \emph{International Conference on Medical Image Computing and Computer-Assisted Intervention}.\hskip 1em plus 0.5em minus 0.4em\relax Springer, 2024, pp. 87--97.
+M.~Woodland, A.~Castelo, M.~Al~Taie, J.~Albuquerque Marques~Silva, M.~Eltaher,
+  F.~Mohn, A.~Shieh, S.~Kundu, J.~P. Yung, A.~B. Patel \emph{et~al.}, ``Feature
+  extraction for generative medical imaging evaluation: New evidence against an
+  evolving trend,'' in \emph{International Conference on Medical Image
+  Computing and Computer-Assisted Intervention}.\hskip 1em plus 0.5em minus
+  0.4em\relax Springer, 2024, pp. 87--97.
 
 \bibitem{kynkaanniemi2019pr}
-T.~Kynk{\"a}{\"a}nniemi, T.~Karras, S.~Laine, J.~Lehtinen, and T.~Aila, ``Improved precision and recall metric for assessing generative models,'' in \emph{Advances in Neural Information Processing Systems ({NeurIPS})}, vol.~32.\hskip 1em plus 0.5em minus 0.4em\relax Curran Associates, 2019.
+T.~Kynk{\"a}{\"a}nniemi, T.~Karras, S.~Laine, J.~Lehtinen, and T.~Aila,
+  ``Improved precision and recall metric for assessing generative models,'' in
+  \emph{Advances in Neural Information Processing Systems ({NeurIPS})},
+  vol.~32.\hskip 1em plus 0.5em minus 0.4em\relax Curran Associates, 2019.
 
 \bibitem{naeem2020reliable}
-M.~F. Naeem, S.~J. Oh, Y.~Uh, Y.~Choi, and J.~Yoo, ``Reliable fidelity and diversity metrics for generative models,'' in \emph{International conference on machine learning}.\hskip 1em plus 0.5em minus 0.4em\relax PMLR, 2020, pp. 7176--7185.
+M.~F. Naeem, S.~J. Oh, Y.~Uh, Y.~Choi, and J.~Yoo, ``Reliable fidelity and
+  diversity metrics for generative models,'' in \emph{International conference
+  on machine learning}.\hskip 1em plus 0.5em minus 0.4em\relax PMLR, 2020, pp.
+  7176--7185.
 
 \bibitem{wang2004image}
-Z.~Wang, A.~C. Bovik, H.~R. Sheikh, and E.~P. Simoncelli, ``Image quality assessment: from error visibility to structural similarity,'' \emph{IEEE transactions on image processing}, vol.~13, no.~4, pp. 600--612, 2004.
+Z.~Wang, A.~C. Bovik, H.~R. Sheikh, and E.~P. Simoncelli, ``Image quality
+  assessment: from error visibility to structural similarity,'' \emph{IEEE
+  transactions on image processing}, vol.~13, no.~4, pp. 600--612, 2004.
 
 \bibitem{dohmen2025similarity}
-M.~Dohmen, M.~A. Klemens, I.~M. Baltruschat, T.~Truong, and M.~Lenga, ``Similarity and quality metrics for mr image-to-image translation,'' \emph{Scientific Reports}, vol.~15, no.~1, p. 3853, 2025.
+M.~Dohmen, M.~A. Klemens, I.~M. Baltruschat, T.~Truong, and M.~Lenga,
+  ``Similarity and quality metrics for mr image-to-image translation,''
+  \emph{Scientific Reports}, vol.~15, no.~1, p. 3853, 2025.
 
 \bibitem{breger2025study}
-A.~Breger, A.~Biguri, M.~S. Landman, I.~Selby, N.~Amberg, E.~Brunner, J.~Gr{\"o}hl, S.~Hatamikia, C.~Karner, L.~Ning \emph{et~al.}, ``A study of why we need to reassess full reference image quality assessment with medical images,'' \emph{Journal of Imaging Informatics in Medicine}, vol.~38, no.~6, pp. 3444--3469, 2025.
+A.~Breger, A.~Biguri, M.~S. Landman, I.~Selby, N.~Amberg, E.~Brunner,
+  J.~Gr{\"o}hl, S.~Hatamikia, C.~Karner, L.~Ning \emph{et~al.}, ``A study of
+  why we need to reassess full reference image quality assessment with medical
+  images,'' \emph{Journal of Imaging Informatics in Medicine}, vol.~38, no.~6,
+  pp. 3444--3469, 2025.
 
 \bibitem{zhang2018lpips}
-R.~Zhang, P.~Isola, A.~A. Efros, E.~Shechtman, and O.~Wang, ``The unreasonable effectiveness of deep features as a perceptual metric,'' in \emph{Proceedings of the {IEEE} Conference on Computer Vision and Pattern Recognition ({CVPR})}, 2018, pp. 586--595.
+R.~Zhang, P.~Isola, A.~A. Efros, E.~Shechtman, and O.~Wang, ``The unreasonable
+  effectiveness of deep features as a perceptual metric,'' in \emph{Proceedings
+  of the {IEEE} Conference on Computer Vision and Pattern Recognition
+  ({CVPR})}, 2018, pp. 586--595.
 
 \bibitem{salimans2016is}
-T.~Salimans, I.~Goodfellow, W.~Zaremba, V.~Cheung, A.~Radford, and X.~Chen, ``Improved techniques for training {GAN}s,'' in \emph{Advances in Neural Information Processing Systems ({NeurIPS})}, vol.~29, 2016, pp. 2234--2242.
+T.~Salimans, I.~Goodfellow, W.~Zaremba, V.~Cheung, A.~Radford, and X.~Chen,
+  ``Improved techniques for training {GAN}s,'' in \emph{Advances in Neural
+  Information Processing Systems ({NeurIPS})}, vol.~29, 2016, pp. 2234--2242.
+
+\bibitem{alaa2022faithful}
+A.~Alaa, B.~van Breugel, E.~S. Saveliev, and M.~van~der Schaar, ``How faithful
+  is your synthetic data? sample-level metrics for evaluating and auditing
+  generative models,'' in \emph{Proceedings of the 39th International
+  Conference on Machine Learning (ICML)}, 2022, pp. 290--306.
 
 \bibitem{naeem2020dc}
 \BIBentryALTinterwordspacing
-M.~F. Naeem, S.~J. Oh, Y.~Uh, Y.~Choi, and J.~Yoo, ``Reliable fidelity and diversity metrics for generative models,'' in \emph{Proceedings of the 37th International Conference on Machine Learning ({ICML})}, 2020, pp. 7133--7142. [Online]. Available: \url{https://arxiv.org/abs/2002.09797}
+M.~F. Naeem, S.~J. Oh, Y.~Uh, Y.~Choi, and J.~Yoo, ``Reliable fidelity and
+  diversity metrics for generative models,'' in \emph{Proceedings of the 37th
+  International Conference on Machine Learning ({ICML})}, 2020, pp. 7133--7142.
+  [Online]. Available: \url{https://arxiv.org/abs/2002.09797}
 \BIBentrySTDinterwordspacing
 
 \bibitem{perezrad}
-F.~P{\'e}rez-Garc{\'\i}a, H.~Sharma, S.~Bond-Taylor, K.~Bouzid, V.~Salvatelli, M.~Ilse \emph{et~al.}, ``Rad-dino: Exploring scalable medical image encoders beyond text supervision.''
+F.~P{\'e}rez-Garc{\'\i}a, H.~Sharma, S.~Bond-Taylor, K.~Bouzid, V.~Salvatelli,
+  M.~Ilse \emph{et~al.}, ``Rad-dino: Exploring scalable medical image encoders
+  beyond text supervision.''
 
 \bibitem{oquab2023dinov2}
-M.~Oquab, T.~Darcet, T.~Moutakanni, H.~Vo, M.~Szafraniec, V.~Khalidov, P.~Fernandez, D.~Haziza, F.~Massa, A.~El-Nouby \emph{et~al.}, ``Dinov2: Learning robust visual features without supervision,'' \emph{arXiv preprint arXiv:2304.07193}, 2023.
+M.~Oquab, T.~Darcet, T.~Moutakanni, H.~Vo, M.~Szafraniec, V.~Khalidov,
+  P.~Fernandez, D.~Haziza, F.~Massa, A.~El-Nouby \emph{et~al.}, ``Dinov2:
+  Learning robust visual features without supervision,'' \emph{arXiv preprint
+  arXiv:2304.07193}, 2023.
 
 \bibitem{gretton2012kernel}
-A.~Gretton, K.~M. Borgwardt, M.~J. Rasch, B.~Sch{\"o}lkopf, and A.~Smola, ``A kernel two-sample test,'' \emph{The journal of machine learning research}, vol.~13, no.~1, pp. 723--773, 2012.
+A.~Gretton, K.~M. Borgwardt, M.~J. Rasch, B.~Sch{\"o}lkopf, and A.~Smola, ``A
+  kernel two-sample test,'' \emph{The journal of machine learning research},
+  vol.~13, no.~1, pp. 723--773, 2012.
 
 \bibitem{menze2014multimodal}
-B.~H. Menze, A.~Jakab, S.~Bauer, J.~Kalpathy-Cramer, K.~Farahani, J.~Kirby, Y.~Burren, N.~Porz, J.~Slotboom, R.~Wiest \emph{et~al.}, ``The multimodal brain tumor image segmentation benchmark (brats),'' \emph{IEEE transactions on medical imaging}, vol.~34, no.~10, pp. 1993--2024, 2014.
+B.~H. Menze, A.~Jakab, S.~Bauer, J.~Kalpathy-Cramer, K.~Farahani, J.~Kirby,
+  Y.~Burren, N.~Porz, J.~Slotboom, R.~Wiest \emph{et~al.}, ``The multimodal
+  brain tumor image segmentation benchmark (brats),'' \emph{IEEE transactions
+  on medical imaging}, vol.~34, no.~10, pp. 1993--2024, 2014.
 
 \bibitem{bakas2018identifying}
-S.~Bakas, M.~Reyes, A.~Jakab, S.~Bauer, M.~Rempfler, A.~Crimi, R.~T. Shinohara, C.~Berger, S.~M. Ha, M.~Rozycki \emph{et~al.}, ``Identifying the best machine learning algorithms for brain tumor segmentation, progression assessment, and overall survival prediction in the brats challenge,'' \emph{arXiv preprint arXiv:1811.02629}, 2018.
+S.~Bakas, M.~Reyes, A.~Jakab, S.~Bauer, M.~Rempfler, A.~Crimi, R.~T. Shinohara,
+  C.~Berger, S.~M. Ha, M.~Rozycki \emph{et~al.}, ``Identifying the best machine
+  learning algorithms for brain tumor segmentation, progression assessment, and
+  overall survival prediction in the brats challenge,'' \emph{arXiv preprint
+  arXiv:1811.02629}, 2018.
 
 \bibitem{jayasumana2024cmmd}
-S.~Jayasumana, S.~Ramalingam, A.~Veit, D.~Glasner, A.~Chakrabarti, and S.~Kumar, ``Rethinking {FID}: Towards a better evaluation metric for image generation,'' in \emph{Proceedings of the {IEEE/CVF} Conference on Computer Vision and Pattern Recognition ({CVPR})}, 2024, pp. 9307--9315.
+S.~Jayasumana, S.~Ramalingam, A.~Veit, D.~Glasner, A.~Chakrabarti, and
+  S.~Kumar, ``Rethinking {FID}: Towards a better evaluation metric for image
+  generation,'' in \emph{Proceedings of the {IEEE/CVF} Conference on Computer
+  Vision and Pattern Recognition ({CVPR})}, 2024, pp. 9307--9315.
 
 \bibitem{radford2021clip}
-A.~Radford, J.~W. Kim, C.~Hallacy, A.~Ramesh, G.~Goh, S.~Agarwal, G.~Sastry, A.~Askell, P.~Mishkin, J.~Clark, G.~Krueger, and I.~Sutskever, ``Learning transferable visual models from natural language supervision,'' in \emph{Proceedings of the 38th International Conference on Machine Learning ({ICML})}, 2021, pp. 8748--8763.
+A.~Radford, J.~W. Kim, C.~Hallacy, A.~Ramesh, G.~Goh, S.~Agarwal, G.~Sastry,
+  A.~Askell, P.~Mishkin, J.~Clark, G.~Krueger, and I.~Sutskever, ``Learning
+  transferable visual models from natural language supervision,'' in
+  \emph{Proceedings of the 38th International Conference on Machine Learning
+  ({ICML})}, 2021, pp. 8748--8763.
 
 \bibitem{konz2025frd}
-N.~Konz, R.~Osuala, P.~Verma, Y.~Chen, H.~Gu, H.~Dong, Y.~Chen, A.~Marshall, L.~Garrucho, K.~Kushibar, D.~M. Lang, G.~S. Kim, L.~J. Grimm, J.~M. Lewin, J.~S. Duncan, J.~A. Schnabel, O.~Diaz, K.~Lekadir, and M.~A. Mazurowski, ``{Fr\'{e}chet Radiomic Distance (FRD)}: A versatile metric for comparing medical imaging datasets,'' \emph{Medical Image Analysis}, vol. 110, 2026, arXiv:2412.01496.
+N.~Konz, R.~Osuala, P.~Verma, Y.~Chen, H.~Gu, H.~Dong, Y.~Chen, A.~Marshall,
+  L.~Garrucho, K.~Kushibar, D.~M. Lang, G.~S. Kim, L.~J. Grimm, J.~M. Lewin,
+  J.~S. Duncan, J.~A. Schnabel, O.~Diaz, K.~Lekadir, and M.~A. Mazurowski,
+  ``{Fr\'{e}chet Radiomic Distance (FRD)}: A versatile metric for comparing
+  medical imaging datasets,'' \emph{Medical Image Analysis}, vol. 110, 2026,
+  arXiv:2412.01496.
 
 \bibitem{dosovitskiy2020vit}
 \BIBentryALTinterwordspacing
-A.~Dosovitskiy, L.~Beyer, A.~Kolesnikov, D.~Weissenborn, X.~Zhai, T.~Unterthiner, M.~Dehghani, M.~Minderer, G.~Heigold, S.~Gelly, J.~Uszkoreit, and N.~Houlsby, ``An image is worth 16{\texttimes}16 words: Transformers for image recognition at scale,'' in \emph{International Conference on Learning Representations ({ICLR})}, 2021. [Online]. Available: \url{https://arxiv.org/abs/2010.11929}
+A.~Dosovitskiy, L.~Beyer, A.~Kolesnikov, D.~Weissenborn, X.~Zhai,
+  T.~Unterthiner, M.~Dehghani, M.~Minderer, G.~Heigold, S.~Gelly, J.~Uszkoreit,
+  and N.~Houlsby, ``An image is worth 16{\texttimes}16 words: Transformers for
+  image recognition at scale,'' in \emph{International Conference on Learning
+  Representations ({ICLR})}, 2021. [Online]. Available:
+  \url{https://arxiv.org/abs/2010.11929}
 \BIBentrySTDinterwordspacing
+
+\bibitem{wightman2019timm}
+R.~Wightman, ``{PyTorch Image Models},''
+  \url{https://github.com/huggingface/pytorch-image-models}, 2019.
+
+\bibitem{wolf2020transformers}
+T.~Wolf, L.~Debut, V.~Sanh, J.~Chaumond, C.~Delangue, A.~Moi, P.~Cistac,
+  T.~Rault, R.~Louf, M.~Funtowicz, J.~Davison, S.~Shleifer, P.~von Platen,
+  C.~Ma, Y.~Jernite, J.~Plu, C.~Xu, T.~Le~Scao, S.~Gugger, M.~Drame, Q.~Lhoest,
+  and A.~M. Rush, ``Transformers: State-of-the-art natural language
+  processing,'' in \emph{Proceedings of the 2020 Conference on Empirical
+  Methods in Natural Language Processing: System Demonstrations}.\hskip 1em
+  plus 0.5em minus 0.4em\relax Association for Computational Linguistics, 2020,
+  pp. 38--45.
 
 \bibitem{darcet2023registers}
 \BIBentryALTinterwordspacing
-T.~Darcet, M.~Oquab, J.~Mairal, and P.~Bojanowski, ``Vision transformers need registers,'' in \emph{International Conference on Learning Representations ({ICLR})}, 2024. [Online]. Available: \url{https://arxiv.org/abs/2309.16588}
+T.~Darcet, M.~Oquab, J.~Mairal, and P.~Bojanowski, ``Vision transformers need
+  registers,'' in \emph{International Conference on Learning Representations
+  ({ICLR})}, 2024. [Online]. Available: \url{https://arxiv.org/abs/2309.16588}
 \BIBentrySTDinterwordspacing
 
 \bibitem{liu2008isolation}
-F.~T. Liu, K.~M. Ting, and Z.-H. Zhou, ``Isolation forest,'' in \emph{2008 Eighth IEEE International Conference on Data Mining}.\hskip 1em plus 0.5em minus 0.4em\relax IEEE, 2008, pp. 413--422.
+F.~T. Liu, K.~M. Ting, and Z.-H. Zhou, ``Isolation forest,'' in \emph{2008
+  Eighth IEEE International Conference on Data Mining}.\hskip 1em plus 0.5em
+  minus 0.4em\relax IEEE, 2008, pp. 413--422.
 
 \bibitem{buda2019association}
-M.~Buda, A.~Saha, and M.~A. Mazurowski, ``Association of genomic subtypes of lower-grade gliomas with shape features automatically extracted by a deep learning algorithm,'' \emph{Computers in Biology and Medicine}, vol. 109, pp. 218--225, 2019.
+M.~Buda, A.~Saha, and M.~A. Mazurowski, ``Association of genomic subtypes of
+  lower-grade gliomas with shape features automatically extracted by a deep
+  learning algorithm,'' \emph{Computers in Biology and Medicine}, vol. 109, pp.
+  218--225, 2019.
 
 \bibitem{kornblith2019cka}
 \BIBentryALTinterwordspacing
-S.~Kornblith, M.~Norouzi, H.~Lee, and G.~Hinton, ``Similarity of neural network representations revisited,'' in \emph{Proceedings of the 36th International Conference on Machine Learning ({ICML})}, 2019, pp. 3519--3529. [Online]. Available: \url{https://arxiv.org/abs/1905.00414}
+S.~Kornblith, M.~Norouzi, H.~Lee, and G.~Hinton, ``Similarity of neural network
+  representations revisited,'' in \emph{Proceedings of the 36th International
+  Conference on Machine Learning ({ICML})}, 2019, pp. 3519--3529. [Online].
+  Available: \url{https://arxiv.org/abs/1905.00414}
 \BIBentrySTDinterwordspacing
 
 \end{thebibliography}

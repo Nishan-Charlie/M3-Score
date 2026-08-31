@@ -16,7 +16,9 @@
 \usepackage{multirow}
 
 % ── Figures ──────────────────────────────────────────────────────────────────
-\usepackage[caption=false,font=normalsize,labelfont=sf,textfont=sf]{subfig}
+% NOTE: subcaption (loaded above) provides the subfigure environment used
+% throughout. Do NOT also load subfig -- the two conflict under IEEEtran, and
+% no \subfloat command is used in this document.
 \usepackage{graphicx}
 \usepackage{stfloats}
 
@@ -74,7 +76,7 @@
 
 % =============================================================================
 \begin{abstract}
-Evaluating generative models for radiology image synthesis is harder than evaluating natural-image generators: the clinically relevant signal lies in rare, high-frequency pathological structure that natural-image embeddings under-represent. We introduce the \textbf{Medical Multi-axis Maximum Mean Discrepancy (M3-Score)}, an evaluation framework grounded in the frozen RadioDINO-s16 vision transformer (ViT-S/16) pre-trained on radiology images. Rather than collapsing generation quality into one scalar, M3 reports three separately defined quantities, each read from a transformer layer fixed \emph{a priori} by representational depth and never tuned on test outcomes: a \emph{fidelity} axis (unbiased multi-bandwidth RBF MMD\(^2\) at the final layer), a \emph{memorization} axis (nearest-neighbour distances at 75\% depth), and an \emph{experimental coverage} diagnostic (k-NN manifold precision and recall at 33\% depth; reported as experimental, not a validated axis). Each fidelity estimate is reported with a permutation-test $p$-value, a bootstrap 95\% confidence interval, and a null-standardized separation $Z$. On BraTS brain MRI the fidelity axis cleanly separates real from DDPM-generated images (permutation $p < 0.002$ at 500 shuffles; observed MMD$^2 = 0.153$ with bootstrap 95\% CI $[0.146, 0.162]$ excluding zero) and detects out-of-distribution radiology with ROC-AUC $= 0.976$ versus $0.809$ for the InceptionV3 (FID) backbone and $0.659$ for CLIP (CMMD). Our central finding is a \emph{structural failure of CMMD}: it \emph{rank-inverts} radiology OOD, assigning a cross-modality chest/lung CT shift a \emph{smaller} distance from brain MRI ($0.699$, 95\% CI $[0.686,0.715]$) than a weak same-modality generator ($0.738$, $[0.723,0.758]$; paired $\Delta = -0.039$, $[-0.059,-0.021]$, excluding zero), whereas the M3 fidelity axis orders them correctly ($0.248$ vs.\ $0.457$, $\Delta = +0.210$). FID (InceptionV3) also orders them correctly, so the failure is specific to CLIP features, not to natural-image backbones in general. Using real expert glioma masks with an area-matched, texture-controlled design, M3 is lesion-selective under subtle degradation ($1.4$--$1.8\times$ more responsive to tumour-region than to matched healthy-region perturbation) where an Inception-MMD baseline is not ($\sim$$1.05\times$), an effect attributable to the radiology backbone. We also report results that did not favour M3: FID is \emph{more} stable than M3 at small sample sizes ($N < 100$), and the coverage axis is unstable under k-NN radius inflation and remains a research direction rather than a validated claim. M3 is scoped to the radiology (CT/MRI) domain in which its backbone was trained.
+Evaluating generative models for radiology image synthesis is harder than evaluating natural-image generators: the clinically relevant signal lies in rare, high-frequency pathological structure that natural-image embeddings under-represent. We introduce the \textbf{Medical Multi-axis Maximum Mean Discrepancy (M3-Score)}, an evaluation framework grounded in the frozen RadioDINO-s16 vision transformer (ViT-S/16) pre-trained on radiology images. Rather than collapsing generation quality into one scalar, M3 reports two separately defined quantities, each read from a transformer layer fixed \emph{a priori} by representational depth and never tuned on test outcomes: a \emph{fidelity} axis (unbiased multi-bandwidth RBF MMD\(^2\) at the final layer) and a \emph{memorization} axis (nearest-neighbour distances at 75\% depth). Each fidelity estimate is reported with a permutation-test $p$-value and a bootstrap 95\% confidence interval. On BraTS brain MRI the fidelity axis cleanly separates real from DDPM-generated images (permutation $\hat{p} = 1/501 = 0.002$, the resolution floor at 500 shuffles; observed MMD$^2 = 0.153$, bootstrap 95\% CI $[0.146, 0.162]$) and detects out-of-distribution radiology with ROC-AUC $= 0.976$ versus $0.809$ for the InceptionV3 (FID) backbone and $0.659$ for CLIP (CMMD). Our central finding is a \emph{structural failure of CMMD}: it \emph{rank-inverts} radiology OOD, assigning a cross-modality chest/lung CT shift a \emph{smaller} distance from brain MRI ($0.699$, 95\% CI $[0.686,0.715]$) than a weak same-modality generator ($0.738$, $[0.723,0.758]$; paired $\Delta = -0.039$, $[-0.059,-0.021]$, excluding zero), whereas the M3 fidelity axis orders them correctly ($0.248$ vs.\ $0.457$, $\Delta = +0.210$). FID (InceptionV3) also orders them correctly, so the failure is specific to CLIP features, not to natural-image backbones in general. Using real expert glioma masks with an area-matched, texture-controlled design, M3 is lesion-selective under subtle degradation ($1.4$--$1.8\times$ more responsive to tumour-region than to matched healthy-region perturbation) where an Inception-MMD baseline is not ($\sim$$1.05\times$), an effect attributable to the radiology backbone. We also report results that did not favor M3: FID is \emph{more} stable than M3 at small sample sizes ($N < 100$); a third, exploratory coverage diagnostic fails its own mode-drop validation at \emph{every} one of the twelve encoder depths, so it is excluded from all claims here and reported only as a negative result; and the a-priori depth for the memorization axis, while harmless, is not empirically corroborated. M3 is scoped to the radiology (CT/MRI) domain in which its backbone was trained.
 \end{abstract}
 % =============================================================================
 
@@ -91,7 +93,7 @@ maximum mean discrepancy, RadioDINO, interpretability, diffusion models.
 
 Generative models are increasingly utilized to address data scarcity of annotated medical imaging data, which
 continues to constrain clinical artificial intelligence (AI)
-development across modalities~\cite{kebaili2023deep, kazerouni2023diffusion}. Strict patient privacy regulations, the high cost of expert annotation, severe class imbalance due to disease rarity, and logistical challenges in multi-centre data sharing collectively limit the creation of large-scale, high-quality datasets~\cite{finetti2025data, akpinar2024synthetic}. Following the pioneering role of Generative Adversarial Networks (GANs) \cite{goodfellow2014generative} in medical image synthesis, Denoising Diffusion Probabilistic Models
+development across modalities~\cite{kebaili2023deep, kazerouni2023diffusion}. Strict patient privacy regulations, the high cost of expert annotation, severe class imbalance due to disease rarity, and logistical challenges in multi-center data sharing collectively limit the creation of large-scale, high-quality datasets~\cite{finetti2025data, akpinar2024synthetic}. Following the pioneering role of Generative Adversarial Networks (GANs) \cite{goodfellow2014generative} in medical image synthesis, Denoising Diffusion Probabilistic Models
 (DDPMs) \cite{ho2020denoising} have substantially elevated the state of the art, enabling the generation of highly realistic and anatomically consistent images across MRI, CT, chest radiography, retinal fundus photography, dermoscopy, and ultrasound \cite{kazerouni2023diffusion, khader2023denoising, pinaya2022brain}. Downstream benefits, including improvements to segmentation, classification, and reconstruction performance through synthetic data augmentation, have been demonstrated across these modalities, particularly for rare-pathology cohorts~\cite{finetti2025data, akpinar2024synthetic, kebaili2023deep}.
 
 Yet, deploying generative models for medical image synthesis in
@@ -131,13 +133,13 @@ Hounsfield unit distributions in CT, vascular branching patterns
 in retinal fundus photography, and ground-glass opacity patterns
 in chest radiography~\cite{kelkar2023assessing,skandarani2023gans}.
 Kelkar~\textit{et al.}~\cite{kelkar2023assessing} showed that
-state-of-the-art GANs can obtain favourable FID scores on medical
+state-of-the-art GANs can obtain favorable FID scores on medical
 images while failing to preserve per-image statistics that are
 meaningful for downstream clinical tasks. Recent work by Woodland~\textit{et al.}~\cite{woodland2024feature}, evaluating sixteen generative models across four medical imaging modalities, found that ImageNet-based feature extractors can be more consistent with human expert judgment than single-modality medical encoders. This highlights that the relationship between backbone domain specificity and metric reliability is non-trivial, motivating the need for a purpose-built multi-modality radiology encoder.
 
 \paragraph{Aggregation over heterogeneous populations}
 
-FID and KID reduce the distribution of generated images to a single scalar, which may obscure heterogeneous structure in the generated sample space. In our brain MRI experiments, a DDPM attains a competitive FID ($68.8$) while its generated samples occupy near-zero manifold precision relative to the real data ($\alpha$-Precision $\approx 0$; Section~\ref{sec:results_axes}), indicating limited coverage that the scalar FID does not reveal. These results indicate that a favourable FID does not guarantee comprehensive distributional coverage, highlighting the need for complementary evaluation metrics that capture different aspects of generative performance.
+FID and KID reduce the distribution of generated images to a single scalar, which can hide heterogeneous structure in the generated sample space. In our brain MRI experiments, a DDPM attains a competitive FID ($68.8$) while its generated samples occupy near-zero manifold precision relative to the real data ($\alpha$-Precision $\approx 0$; Section~\ref{sec:results_axes}). A favorable FID therefore does not imply that the generator covers the real distribution, and a metric that separates these failure modes is needed to tell the two cases apart.
 
 \paragraph{Absence of per-image and per-scale interpretability}
 Neither FID, KID, nor manifold-based
@@ -155,10 +157,10 @@ Pixel-level metrics such as Structural Similarity Index (SSIM)~\cite{wang2004ima
 widely used in medical image synthesis
 evaluation~\cite{dohmen2025similarity}, yet both carry well-documented
 limitations. SSIM is insensitive to blurring, unreliable under
-intensity shifts in unnormalised images, and shows poor correlation
+intensity shifts in unnormalized images, and shows poor correlation
 with human radiological perception for images containing subtle
 pathological findings~\cite{breger2025study,dohmen2025similarity}.
-PSNR is highly sensitive to normalisation choices and inconsistent
+PSNR is highly sensitive to normalization choices and inconsistent
 across different intensity ranges, and prior work recommends against
 its use in medical image quality
 assessment~\cite{dohmen2025similarity}. More broadly,
@@ -177,11 +179,15 @@ training-time monitoring workflows.
 \begin{table*}[t]
 \centering
 \caption{Unified benchmark of evaluation metrics for generative medical
-         image models. The M3-Score reports three axes read from layers
-         fixed \emph{a priori} by representational depth (fidelity L12,
-         memorization L9, coverage L4); the fidelity axis additionally
-         carries a native permutation $p$-value, bootstrap CI, and
-         null-standardized separation $Z$ (Section~\ref{sec:proposed}).}
+         image models. The M3-Score reports two validated axes read from
+         layers fixed \emph{a priori} by representational depth (fidelity
+         L12, memorization L9); the fidelity axis additionally carries a
+         native permutation $p$-value and bootstrap CI
+         (Section~\ref{sec:proposed}). A third, exploratory coverage
+         diagnostic at L4 is defined in Section~\ref{sec:method_axes} but
+         excluded from this comparison and from every claim in this paper:
+         it fails its own validation at all twelve encoder depths
+         (Sections~\ref{sec:results_axes} and~\ref{sec:results_depth}).}
 \label{tab:master}
 \renewcommand{\arraystretch}{1.12}
 \setlength{\tabcolsep}{5pt}
@@ -214,7 +220,7 @@ training-time monitoring workflows.
     structure terms. \\
   & PSNR
   & $\uparrow$ & $[0,\infty)$
-  & Peak signal-to-noise ratio; sensitive to normalisation
+  & Peak signal-to-noise ratio; sensitive to normalization
     choices. \\
   & MS-SSIM
   & $\uparrow$ & $[0,1]$
@@ -232,17 +238,17 @@ training-time monitoring workflows.
 \midrule
 
 \multirow{5}{*}{Manifold}
-  & $\alpha$-Precision~\cite{kynkaanniemi2019pr}
+  & $\alpha$-Precision~\cite{kynkaanniemi2019pr,alaa2022faithful}
   & $\uparrow$ & $[0,1]$
   & Fraction of generated samples lying within the real data
     manifold (fidelity). \\
-  & $\beta$-Recall~\cite{kynkaanniemi2019pr}
+  & $\beta$-Recall~\cite{kynkaanniemi2019pr,alaa2022faithful}
   & $\uparrow$ & $[0,1]$
   & Fraction of real manifold covered by generated samples
     (diversity). \\
   & Authenticity
   & $\uparrow$ & $[0,1]$
-  & Evaluates whether generated samples avoid memorisation
+  & Evaluates whether generated samples avoid memorization
     of training images. \\
   & Coverage~\cite{naeem2020dc}
   & $\uparrow$ & $[0,1]$
@@ -287,7 +293,7 @@ the \textbf{memorization} axis uses nearest-neighbour distances at 75\% depth (L
 the \textbf{coverage} axis uses k-NN manifold precision/recall~\cite{kynkaanniemi2019pr} at 33\% depth (L4), where structural diversity is encoded. No layer, threshold, or kernel bandwidth in M3 is selected by which choice makes a reported result look best; a post-hoc CKA ablation (Section~\ref{sec:results_ablation}) independently confirms that the final layer maximises real-versus-generated discriminability for the fidelity axis, but the axis assignment does not depend on that ablation.
 
 \paragraph{Native statistical reporting}
-For the fidelity axis, M3 reports a permutation-test $p$-value, a bootstrap 95\% confidence interval, and a null-standardized separation $Z$ relative to the permutation null. FID, KID, and CMMD provide none of these. On $N = 500$ images the fidelity evaluation runs in approximately $8$\,s on a single consumer GPU, making it viable as a checkpoint monitor during training.
+For the fidelity axis, M3 reports a permutation-test $p$-value and a bootstrap 95\% confidence interval. FID, KID, and CMMD provide neither. On $N = 500$ images the fidelity evaluation runs in approximately $8$\,s on a single consumer GPU, making it viable as a checkpoint monitor during training.
 
 % ------------------------------------------------------------
 \subsection{Contributions}
@@ -302,13 +308,13 @@ The contributions of this paper are as follows.
         A radiology-domain evaluation framework that reports fidelity (final-layer unbiased RBF MMD\(^2\)), memorization (mid-deep nearest-neighbour distances), and coverage (early-mid k-NN precision/recall) as three separately defined quantities. Every layer is fixed by representational position before any test result is seen, eliminating the selection-on-outcome bias that inflates single-scalar metrics.
 
   \item \textbf{Native statistical inference for the fidelity axis.}
-        Each fidelity estimate is accompanied by a permutation-test $p$-value, a bootstrap 95\% confidence interval, and a null-standardized separation $Z$ relative to the permutation null, none of which FID, KID, or CMMD provide.
+        Each fidelity estimate is accompanied by a permutation-test $p$-value and a bootstrap 95\% confidence interval, neither of which FID, KID, or CMMD provide. We additionally report a null-standardized separation $Z$, but only as a descriptive signal-to-noise ratio: it grows with $N$ by construction and carries no inferential content (Section~\ref{sec:results_permutation}).
 
   \item \textbf{Identification of a CMMD structural failure.}
         We show that CMMD (CLIP ViT-L/14 features) \emph{rank-inverts} a weak same-modality MRI generator and a full cross-modality CT shift, ranking the CT as closer to real MRI (paired $\Delta = -0.039$, 95\% CI $[-0.059,-0.021]$, excluding zero), whereas the M3 fidelity axis, and InceptionV3/FID, order them correctly. This is, to our knowledge, the first documented rank-inversion failure of CMMD on a medical OOD ordering task.
 
-  \item \textbf{Per-axis validation, including honest negatives.}
-        We validate the memorization axis by injecting near-duplicates at known rates (recovered exactly) and probe the coverage axis with mode-drop. We report, rather than suppress, that (i) FID is more sample-stable than M3 at $N < 100$, (ii) the coverage axis is unstable under k-NN radius inflation, and (iii) using \emph{real} expert lesion masks, M3 shows no lesion-specific advantage under gross erasure but is lesion-selective ($1.4$--$1.8\times$ vs.\ an Inception-MMD baseline's $\sim$$1.05\times$) under subtle noise, a backbone-attributable \emph{specificity} to subtle diagnostic-region degradation, not the larger raw-sensitivity figure claimed in early drafts.
+  \item \textbf{Per-axis validation, including negative results.}
+        We validate the memorization axis by injecting near-duplicates at known rates (recovered exactly) and probe the coverage axis with mode-drop. Three results run against the metric and are reported in full: (i) FID is more sample-stable than M3 at $N < 100$, (ii) the coverage axis is unstable under k-NN radius inflation, and (iii) using \emph{real} expert lesion masks, M3 shows no lesion-specific advantage under gross erasure, though it is lesion-selective ($1.4$--$1.8\times$ vs.\ an Inception-MMD baseline's $\sim$$1.05\times$) under subtle noise, a backbone-attributable \emph{specificity} to subtle diagnostic-region degradation rather than the larger raw-sensitivity figure claimed in early drafts.
 
   \item \textbf{Open, protocol-harmonized pipeline.}
         A single canonical configuration (RadioDINO-s16, $N = 500$, multi-bandwidth RBF, U-statistic MMD\(^2\)) is applied across every experiment, with explicit acceptance criteria and released code and layer caches.
@@ -345,16 +351,17 @@ Method limitations, including the cases where M3 does not outperform
 existing metrics, are discussed in Section~\ref{sec:discussion}.
 
 % ------------------------------------------------------------
-\subsection{Paper Organisation}
-\label{sec:organisation}
+\subsection{Paper Organization}
+\label{sec:organization}
 % ------------------------------------------------------------
 
-Section~2 reviews related work on generative medical image synthesis
-and evaluation metrics. Section~3 describes the methodology,
-including the canonical three-axis a-priori formulation and the legacy
-post-hoc validation machinery. Section~4 reports experimental results,
-including the results that do not favour M3. Section~5 discusses findings,
-limitations, and the radiology-domain scope. Section~6 concludes.
+Section~\ref{sec:related} reviews related work on generative medical image
+synthesis and evaluation metrics. Section~\ref{sec:methodology} describes the
+methodology, including the canonical three-axis a-priori formulation and the
+legacy post-hoc validation machinery. Section~\ref{sec:results} reports
+experimental results, including those that do not favor M3.
+Section~\ref{sec:discussion} discusses findings, limitations, and the
+radiology-domain scope. Section~\ref{sec:conclusion} concludes.
 
 % =============================================================================
 \section{Related Work}
@@ -378,7 +385,7 @@ positions the M3-Score within this trajectory.
 The earliest quantitative metrics for image quality operate at the pixel
 level. PSNR measures reconstruction fidelity
 as the logarithm of the ratio between the maximum possible signal and the
-mean squared error, making it sensitive to normalisation choices and
+mean squared error, making it sensitive to normalization choices and
 inconsistent across intensity ranges. Wang~\textit{et al.}~\cite{wang2004image}
 introduced the SSIM, which partially addresses
 these limitations by jointly evaluating luminance, contrast, and structural
@@ -389,7 +396,7 @@ Br\'{e}ger~\textit{et al.}~\cite{breger2025study} and
 Dohmen~\textit{et al.}~\cite{dohmen2025similarity} have both shown that
 SSIM correlates poorly with radiological perception for images containing
 subtle pathological findings, and that PSNR is unreliable under the
-normalisation conventions common in medical imaging.
+normalization conventions common in medical imaging.
 Zhang~\textit{et al.}~\cite{zhang2018lpips} introduced the Learned
 Perceptual Image Patch Similarity (LPIPS) metric, which replaces hand-crafted
 structural terms with a calibrated distance in a pretrained deep feature
@@ -422,7 +429,7 @@ Heusel~\textit{et al.}~\cite{heusel2017gans} as part of a two-time-scale GAN
 training framework, addressed this limitation by computing the
 Fr\'{e}chet distance between multivariate Gaussians fitted to the
 InceptionV3 feature distributions of real and generated images. FID rapidly
-became the primary benchmark metric across the generative modelling literature
+became the primary benchmark metric across the generative modeling literature
 and remains the most reported scalar in medical image synthesis evaluations.
 However, FID carries three structural limitations that are particularly acute
 in the medical setting: it assumes Gaussian-distributed activations (which is
@@ -497,7 +504,7 @@ computationally prohibitive at training-time monitoring scales.
 The inadequacy of ImageNet-pretrained feature extractors for medical image
 evaluation has motivated a small but growing body of domain-specific metrics.
 Kelkar~\textit{et al.}~\cite{kelkar2023assessing} demonstrated that
-state-of-the-art GANs can attain favourable FID scores on medical images
+state-of-the-art GANs can attain favorable FID scores on medical images
 while failing to preserve per-image statistics that matter for downstream
 clinical tasks. Deo~\textit{et al.}~\cite{deo2025metrics} showed that
 nearly all upstream metrics are insensitive to localised morphological
@@ -550,16 +557,16 @@ RadioDINO's intermediate ViT representations more likely to encode the anatomica
 
 Woodland \textit{et al.} \cite{woodland2024feature} conducted a large-scale study evaluating sixteen generative models across four medical imaging modalities and found that the choice of backbone substantially affects metric consistency with human expert judgment, motivating the use of a purpose-built multi-modality radiology encoder rather than a single-modality or general-purpose backbone.
 
-The preceding survey establishes three recurring gaps in existing work:
+Three recurring gaps emerge from the work reviewed above:
 (a) dependence on general-purpose encoders misaligned with radiology semantics,
 (b) collapse of evaluation into a single scalar that conflates distinct
 failure modes (fidelity, memorization, coverage), and
 (c) absence of native significance testing and per-image interpretability.
 M3-Score addresses all three by building on a purpose-built radiology
-encoder (RadioDINO-s16), reporting three axes read from layers fixed
-\emph{a priori} by representational depth, and accompanying the fidelity
-axis with a permutation $p$-value, bootstrap CI, and null-standardized separation $Z$.
-The following section develops the full technical construction.
+encoder (RadioDINO-s16), reporting separate fidelity and memorization axes
+read from layers fixed \emph{a priori} by representational depth, and
+accompanying the fidelity axis with a permutation $p$-value and a bootstrap
+confidence interval. Section~\ref{sec:methodology} develops the construction.
 
 % =============================================================================
 \section{Methodology}
@@ -571,9 +578,9 @@ Section~\ref{sec:method_overview} introduces the notation and the canonical pipe
  
 \begin{figure*}[!t]
 \centering
-\includegraphics[width=0.86\textwidth]{Images/M3Score-Calculation.pdf}
+\includegraphics[width=\textwidth]{Images/M3Score-Calculation.pdf}
 
-\caption{Overview of the M3-Score evaluation pipeline. Real and generated MRI sets pass through a single frozen RadioDINO-s16 encoder (ViT-S/16); CLS-token features are read from three \emph{a-priori} layers: L12 (fidelity), L9 (memorization), and L4 (coverage). The fidelity axis is an unbiased multi-bandwidth RBF $\mathrm{MMD}^2$ between L12 features, reported with a permutation $p$-value, a bootstrap $95\%$ CI, and a null-standardized separation $Z$; the memorization and coverage axes use nearest-neighbour and $k$-NN manifold statistics (coverage is a diagnostic, not a validated axis). The optional CKA pruning / entropy-weighting machinery is a post-hoc validation of the fidelity layer only and is not shown here.}
+\caption{Overview of the M3-Score evaluation pipeline. The real set $R$ and generated set $G$ ($N$ images each) pass through a single frozen RadioDINO-s16 encoder (ViT-S/16, pre-trained on $838{,}000$ radiology images with DINOv2 self-supervision). No part of the encoder is trained or fine-tuned: this is an evaluation-time pipeline only. One CLS-token feature vector per image is read from each of three \emph{a-priori} layers, and each layer answers a different question: L12 asks whether the generated set matches the real set as a group (fidelity), L9 asks whether the model has copied its training images (memorization), and L4 asks whether it reproduces the full variety of real images (coverage, reported as a diagnostic only). \textbf{The three axes are never averaged.} The headline M3-Score is the L12 fidelity $\mathrm{MMD}^2$ alone --- an unbiased multi-bandwidth RBF U-statistic reported with a permutation $p$-value, a bootstrap $95\%$ CI, and a null-standardized separation $Z$ --- with the memorization rate and coverage reported beside it, since a single mean would conceal which of the three axes failed. The dashed path is the optional post-hoc CKA check: it never contributes to the reported score, and feeds back only to revise the layer choice \emph{before} a subsequent evaluation. Inset plots summarize the validated behavior of the reported number (Sections~\ref{sec:results_cv} and~\ref{sec:results_noise}).}
 \label{fig:methodology_pipeline}
 \end{figure*}
 % ------------------------------------------------------------
@@ -581,7 +588,7 @@ Section~\ref{sec:method_overview} introduces the notation and the canonical pipe
 \label{sec:method_overview}
 % ------------------------------------------------------------
 
-Let $\mathcal{X}_r = \{x_i\}_{i=1}^{N}$ denote a reference set of $N$ real radiology images and $\mathcal{X}_g = \{\hat{x}_j\}_{j=1}^{N}$ a set of $N$ images produced by a generative model under evaluation. Let $\Phi$ denote the frozen RadioDINO-s16 encoder, which maps an input image to a sequence of intermediate representations across the $L = 12$ transformer blocks. The canonical M3-Score reports three axes computed in the following stages, detailed in Section~\ref{sec:method_axes} and summarized in Algorithm~\ref{alg:m3canonical}. (The legacy adaptive path of Algorithm~\ref{alg:m3score} is retained only for the post-hoc validation of Section~\ref{sec:results_ablation} and is \emph{not} part of the canonical metric.)
+Let $\mathcal{X}_r = \{x_i\}_{i=1}^{N}$ denote a reference set of $N$ real radiology images and $\mathcal{X}_g = \{\hat{x}_j\}_{j=1}^{N}$ a set of $N$ images produced by a generative model under evaluation. Let $\Phi$ denote the frozen RadioDINO-s16 encoder, which maps an input image to a sequence of intermediate representations across the $L = 12$ transformer blocks. The canonical M3-Score reports three axes computed in the following stages, detailed in Section~\ref{sec:method_axes} and summarized in Algorithm~\ref{alg:m3canonical}. (A superseded adaptive path, retained only for the post-hoc validation of Section~\ref{sec:results_ablation}, is \emph{not} part of the canonical metric.)
 
 \begin{enumerate}[leftmargin=*,label=\arabic*.,itemsep=0.3em]
   \item \textbf{A-priori layer read-out.}
@@ -591,7 +598,7 @@ Let $\mathcal{X}_r = \{x_i\}_{i=1}^{N}$ denote a reference set of $N$ real radio
   \item \textbf{Fidelity axis.}
         An unbiased multi-bandwidth RBF MMD$^2$ U-statistic quantifies the distributional divergence between $E_r^{(12)}$ and $E_g^{(12)}$, reported with a permutation $p$-value, null-standardized separation $Z$, and bootstrap $95\%$ CI.
   \item \textbf{Memorization and coverage axes.}
-        Nearest-neighbour distances at L9 give the memorization rate; $k$-NN manifold precision/recall at L4 give coverage. The legacy CKA-pruning and entropy-stability-uniqueness aggregation (Algorithm~\ref{alg:m3score}) is run only when the optional post-hoc validation of Section~\ref{sec:results_ablation} is desired.
+        Nearest-neighbour distances at L9 give the memorization rate; $k$-NN manifold precision/recall at L4 give coverage. The legacy CKA-pruning step (Algorithm~\ref{alg:cka_pruning}) is run only when the optional post-hoc validation of Section~\ref{sec:results_ablation} is desired.
 \end{enumerate}
 
 \begin{algorithm}[t]
@@ -648,10 +655,13 @@ fidelity layer L12 is independently supported by the CKA analysis of
 Section~\ref{sec:results_ablation}, which confirms it as the single most
 discriminative non-redundant layer. The memorization (L9) and coverage (L4)
 depths are \emph{structural priors} chosen by representational position rather
-than optimised; a systematic per-task depth ablation for these two
-axes (near-duplicate recovery rate versus depth, and precision/recall
-stability versus depth) is left to future work, and the coverage axis in
-particular is reported only as a diagnostic (Section~\ref{sec:results_axes}).
+than optimised. Section~\ref{sec:results_depth} reports a per-task depth
+ablation over all twelve blocks for both axes; it finds that L9 is neither
+better nor worse than any other depth under the canonical near-duplicate
+protocol, that no depth rescues the coverage axis, and that neither prior can
+be promoted to an empirically optimal choice on the evidence we have. The
+coverage axis is accordingly reported only as a diagnostic
+(Section~\ref{sec:results_axes}).
 
 \paragraph{Fidelity axis}
 Let $E_r^{(12)}, E_g^{(12)} \in \mathbb{R}^{N \times D}$ be the CLS-token
@@ -692,7 +702,7 @@ deferred to Appendix~\ref{app:legacy}, is retained only as an
 the most discriminative fidelity layer, Section~\ref{sec:results_ablation});
 it is not part of the canonical metric and never selects the reported axes.
 
-An earlier \emph{adaptive} design (CKA-based layer pruning followed by an entropy-stability-uniqueness weighting of the layer distances) was abandoned in favour of the fixed a-priori layers of Section~\ref{sec:method_axes}, so that no layer, threshold, or weight is ever selected on test outcomes. For completeness, its full specification (Algorithms~\ref{alg:m3score},~\ref{alg:cka_pruning},~\ref{alg:aggregation}) and the post-hoc CKA ablation confirming L12 as the single most discriminative fidelity layer are provided in Appendix~\ref{app:legacy}.
+An earlier \emph{adaptive} design (CKA-based layer pruning followed by an entropy-stability-uniqueness weighting of the layer distances) was abandoned in favor of the fixed a-priori layers of Section~\ref{sec:method_axes}, so that no layer, threshold, or weight is ever selected on test outcomes. The CKA layer-selection step it introduced is retained purely as a post-hoc check and is specified in Appendix~\ref{app:legacy} (Algorithm~\ref{alg:cka_pruning}); that check confirms L12 as the single most discriminative fidelity layer. The abandoned aggregation and weighting rules are not reproduced here, as no reported result uses them.
 
 % ------------------------------------------------------------
 \subsection{Feature Extraction via Frozen RadioDINO}
@@ -722,7 +732,8 @@ $\mathbf{H}^{(\ell)} \in \mathbb{R}^{B \times N_\text{seq} \times D}$
 $\mathbf{A}^{(\ell)} \in \mathbb{R}^{B \times H \times N_\text{seq}
 \times N_\text{seq}}$), where $B$ is the mini-batch size and
 $b \in \{1,\ldots,B\}$ indexes an image within the batch.
-\emph{For the canonical RadioDINO-s16 backbone (loaded via \texttt{timm}),
+\emph{For the canonical RadioDINO-s16 backbone (loaded via
+\texttt{timm}~\cite{wightman2019timm}),
 the per-image feature at block $\ell$ is the CLS token}
 $f^{(\ell)}_b = \mathbf{H}^{(\ell)}_{b,0,:} \in \mathbb{R}^{D}$,
 consistent with Section~\ref{sec:method_axes} and with the standard practice
@@ -733,7 +744,7 @@ images of $\mathcal{X}$ yields the embedding matrix
 $E^{(\ell)} \in \mathbb{R}^{N \times D}$.
 
 \paragraph{Attention-aware pooling (alternative for \texttt{transformers} backbones)}
-For HuggingFace \texttt{transformers} ViT backbones that additionally expose
+For HuggingFace \texttt{transformers}~\cite{wolf2020transformers} ViT backbones that additionally expose
 per-head attention (e.g.\ Microsoft rad-dino, DINOv2), M3 supports an
 \emph{attention-aware} pooling as an alternative to the CLS token; we describe
 it here for completeness and evaluate it in the backbone comparison, but it is
@@ -757,7 +768,7 @@ weight $\bar{\mathbf{A}}^{(\ell)}_{b,0,0}$ is excluded, since
 DINOv2-style encoders produce systematically elevated self-attention at
 the CLS position that would otherwise dominate the pooled
 vector~\cite{darcet2023registers}.
-The weights are $\ell_1$-normalised per image:
+The weights are $\ell_1$-normalized per image:
 \begin{equation}
   \label{eq:attn_norm}
   \tilde{\alpha}^{(\ell)}_{b,p} =
@@ -781,7 +792,7 @@ Algorithm~\ref{alg:extraction} states the complete attention-aware procedure,
 including mini-batch processing and accumulation across batches.
 
 \begin{algorithm}[t]
-\caption{Attention-aware feature extraction ($\textsc{ExtractFeatures}$)}
+\caption{Attention-aware feature extraction}
 \label{alg:extraction}
 \begin{algorithmic}[1]
 \Require Encoder $\Phi$, image set $\mathcal{X}$,
@@ -806,7 +817,7 @@ including mini-batch processing and accumulation across batches.
     \State $\tilde{\alpha}^{(\ell)} \leftarrow
            \alpha^{(\ell)} /
            (\sum_p \alpha^{(\ell)}_{:,p} + \varepsilon)$
-           \Comment{$\ell_1$-normalise, Eq.~\eqref{eq:attn_norm}}
+           \Comment{$\ell_1$-normalize, Eq.~\eqref{eq:attn_norm}}
     \State $\mathbf{P}^{(\ell)} \leftarrow
            \mathbf{H}^{(\ell)}_{:,\, 1:,\, :}$
            \Comment{patch tokens, $(B \times (N_\text{seq}-1) \times D)$}
@@ -831,12 +842,12 @@ including mini-batch processing and accumulation across batches.
 \label{sec:method_mmd}
 % ------------------------------------------------------------
 
-\paragraph{Feature normalisation}
+\paragraph{Feature normalization}
 RadioDINO intermediate hidden states returned by the transformer blocks
 have $\ell_2$ norms in the range $[10^2, 3 \times 10^2]$ depending on
 layer depth.
 Without correction, this arbitrary scale dominates the pairwise Euclidean
-distances that enter the Gaussian kernel and destabilises the
+distances that enter the Gaussian kernel and destabilizes the
 median-heuristic bandwidth, rendering MMD$^2$ estimates incomparable
 across layers and datasets.
 To eliminate this dependence on the arbitrary scale of intermediate
@@ -850,14 +861,14 @@ prior to kernel evaluation:
 After this projection, $\lVert \hat{e} \rVert_2 = 1$ and the inner
 product $\hat{u}^\top \hat{v}$ equals the cosine similarity of $u$ and
 $v$, which lies in $[-1, 1]$.
-This normalisation is applied to the rows of both $E_r^{(\ell)}$ and
+This normalization is applied to the rows of both $E_r^{(\ell)}$ and
 $E_g^{(\ell)}$ before any kernel computation.
 The CKA layer selection step (Appendix~\ref{app:legacy}) operates on
-the raw (unnormalised) features, since CKA is scale-invariant and
+the raw (unnormalized) features, since CKA is scale-invariant and
 measures representational geometry rather than distributional distance.
 
 \paragraph{Kernel definition}
-The distributional divergence between the unit-normalised real and
+The distributional divergence between the unit-normalized real and
 generated embedding sets is measured by the Maximum Mean
 Discrepancy~\cite{gretton2012kernel} under a \emph{multi-bandwidth
 Gaussian RBF} kernel. For two unit-norm vectors $u, v \in \mathbb{R}^D$,
@@ -891,7 +902,7 @@ KID~\cite{binkowski2018demystifying}.
 
 \paragraph{Unbiased estimator}
 Let $\hat{R} \in \mathbb{R}^{N \times D}$ and
-$\hat{G} \in \mathbb{R}^{N \times D}$ denote the $\ell_2$-normalised
+$\hat{G} \in \mathbb{R}^{N \times D}$ denote the $\ell_2$-normalized
 real and generated embedding matrices at the fidelity layer.
 Define the kernel matrices
 $K^{rr}_{ij} = k(\hat{R}_{i,:}, \hat{R}_{j,:})$,
@@ -916,26 +927,26 @@ Unlike FID, Eq.~\eqref{eq:mmd} makes no parametric assumption on the
 distribution of embeddings, is an (asymptotically) unbiased estimator of the true
 population $\mathrm{MMD}^2$, and its expectation is zero if and only if
 the real and generated distributions are identical under $k$.
-Algorithm~\ref{alg:mmd} states the computation explicitly.
+Algorithm~\ref{alg:mmd} states the computation explicitly; we refer to it as
+$\textsc{MMD2U}$ where it is invoked from other algorithms.
 
 \begin{algorithm}[t]
-\caption{Unbiased multi-bandwidth RBF MMD$^2$
-         ($\textsc{UnbiasedMMD2}$)}
+\caption{Unbiased multi-bandwidth RBF MMD$^2$}
 \label{alg:mmd}
 \begin{algorithmic}[1]
-\Require $R \in \mathbb{R}^{N \times D}$,
-         $G \in \mathbb{R}^{N \times D}$,
+\Require Real and generated embedding matrices at a single layer $\ell$,
+         $E_r, E_g \in \mathbb{R}^{N \times D}$ (Section~\ref{sec:method_overview});
          bandwidth scales $\mathcal{S} = \{0.25, 0.5, 1, 2, 4\}$
 \Ensure  $\widehat{\mathrm{MMD}}^2 \in [0, \infty)$
-\State $\hat{R}_{i,:} \leftarrow R_{i,:} / (\lVert R_{i,:} \rVert_2 + \varepsilon)$;\;
-       $\hat{G}_{j,:} \leftarrow G_{j,:} / (\lVert G_{j,:} \rVert_2 + \varepsilon)$
-       \Comment{$\ell_2$-normalise rows, Eq.~\eqref{eq:l2norm}}
-\State $D^{rr}_{ij} \leftarrow \lVert \hat{R}_i - \hat{R}_j \rVert_2^2$;\;
-       $D^{gg}_{ij} \leftarrow \lVert \hat{G}_i - \hat{G}_j \rVert_2^2$;\;
-       $D^{rg}_{ij} \leftarrow \lVert \hat{R}_i - \hat{G}_j \rVert_2^2$
+\State $\hat{E}_{r,i,:} \leftarrow E_{r,i,:} / (\lVert E_{r,i,:} \rVert_2 + \varepsilon)$;\;
+       $\hat{E}_{g,j,:} \leftarrow E_{g,j,:} / (\lVert E_{g,j,:} \rVert_2 + \varepsilon)$
+       \Comment{$\ell_2$-normalize rows, Eq.~\eqref{eq:l2norm}}
+\State $D^{rr}_{ij} \leftarrow \lVert \hat{E}_{r,i} - \hat{E}_{r,j} \rVert_2^2$;\;
+       $D^{gg}_{ij} \leftarrow \lVert \hat{E}_{g,i} - \hat{E}_{g,j} \rVert_2^2$;\;
+       $D^{rg}_{ij} \leftarrow \lVert \hat{E}_{r,i} - \hat{E}_{g,j} \rVert_2^2$
 \State $\sigma_\mathrm{med}^2 \leftarrow
        \operatorname{median}\bigl(\{D^{\cup}_{ij} : i < j\}\bigr)$
-       \Comment{median heuristic on $\hat{R}\cup\hat{G}$, Eq.~\eqref{eq:bandwidths}}
+       \Comment{median heuristic on $\hat{E}_r\cup\hat{E}_g$, Eq.~\eqref{eq:bandwidths}}
 \State $A \leftarrow 0$
 \For{each scale $s \in \mathcal{S}$}
   \State $\gamma \leftarrow 1 / (2\, s\, \sigma_\mathrm{med}^2)$
@@ -962,14 +973,14 @@ Algorithm~\ref{alg:mmd} states the computation explicitly.
 \label{sec:method_perim}
 % ------------------------------------------------------------
 
-The population-level score $S$ summarises distributional divergence
+The population-level score $S$ summarizes distributional divergence
 across all $N$ generated images.
 A complementary per-image score enables ranking of individual generated
 images by their distance from the real distribution, which is absent from
 FID, KID, and FRD.
 Consistent with the canonical fidelity axis, the per-image score is defined on
 the final (L12) layer alone, so it requires no adaptive weighting. For an image
-$\hat{x}_j \in \mathcal{X}_g$ with $\ell_2$-normalised feature vector
+$\hat{x}_j \in \mathcal{X}_g$ with $\ell_2$-normalized feature vector
 $\hat{E}_{g,j}^{(12)}$, the score is the distance to the real centroid
 \begin{equation}
 \label{eq:perim}
@@ -986,7 +997,7 @@ s(\hat{x}_j)
 \hat{E}_{r,i}^{(12)},
 \end{equation}
 where $\hat{\mu}_{r}^{(12)}$ is the empirical centroid of the
-$\ell_2$-normalised real L12 embeddings. This is exactly the per-image quantity
+$\ell_2$-normalized real L12 embeddings. This is exactly the per-image quantity
 used in the anomaly-correlation experiment (Section~\ref{sec:results_ood},
 Fig.~\ref{fig:ood}\,(b)). Images with large $s(\hat{x}_j)$ lie further from the
 real distribution at the semantic (L12) scale. (An unweighted average over the
@@ -1004,7 +1015,7 @@ Algorithm~\ref{alg:ranking} states the ranking procedure.
 \Require Generated L12 embeddings $E_g^{(12)}$, real L12 embeddings $E_r^{(12)}$
 \Ensure Index permutation $\pi$ such that
         $s_{\pi(1)} \geq s_{\pi(2)} \geq \cdots \geq s_{\pi(N)}$
-\State $\ell_2$-normalise all rows of $E_r^{(12)}$ and $E_g^{(12)}$
+\State $\ell_2$-normalize all rows of $E_r^{(12)}$ and $E_g^{(12)}$
        \Comment{Eq.~\eqref{eq:l2norm}}
 \State $\hat{\mu}_r^{(12)} \leftarrow
        \frac{1}{N}\sum_{i=1}^{N} \hat{E}_{r,i}^{(12)}$
@@ -1034,7 +1045,7 @@ The CKA layer selection step processes $N_r$ images over all $L$ layers
 and requires $O(L^2 \cdot N_r^2)$ gram-matrix inner products; with
 $N_r = 20$ and $L = 12$, this is negligible relative to the main
 extraction pass.
-The $\ell_2$-normalisation step costs $O(N \cdot M \cdot D)$ and the
+The $\ell_2$-normalization step costs $O(N \cdot M \cdot D)$ and the
 MMD$^2$ computation at each retained layer costs $O(N^2)$ kernel
 evaluations; both are small relative to feature extraction at $N = 500$.
 Total wall-clock time at $N = 500$ on a single NVIDIA A6000 GPU is
@@ -1080,7 +1091,7 @@ The procedure is as follows.
   \item \textbf{Evaluation set preparation.}
         Assemble $N \geq 100$ real and generated images from the
         target modality.
-        Images are resized to $224 \times 224$ and normalised to
+        Images are resized to $224 \times 224$ and normalized to
         $[0, 1]$ by the RadioDINO preprocessing pipeline.
 
   \item \textbf{A-priori layer read-out.}
@@ -1114,8 +1125,8 @@ obtain stable estimates; for publication-grade evaluation, $N \geq 500$
 is recommended.
 Increasing $N$ reduces the variance of the fidelity $\widehat{\mathrm{MMD}}^2$
 at a cost proportional to the additional forward passes through $\Phi$.
-The optional post-hoc CKA validation (Algorithm~\ref{alg:cka_pruning},
-\ref{alg:m3score}) may additionally be run on $N_r = 20$ real images to
+The optional post-hoc CKA validation (Algorithm~\ref{alg:cka_pruning})
+may additionally be run on $N_r = 20$ real images to
 confirm that L12 remains the most discriminative fidelity layer for the
 new modality.
 
@@ -1134,14 +1145,35 @@ same distribution; representative samples of both sets are shown in
 Fig.~\ref{fig:samples}. The fidelity, memorization, and coverage axes read from
 the a-priori layers L12, L9, and L4 respectively
 (Section~\ref{sec:method_axes}); no layer is selected by test outcome.
-We organise results into seven subsections: a noise/blur sanity check, OOD
+We organize results into seven subsections: a noise/blur sanity check, OOD
 and cross-modality discrimination (including the CMMD failure), three-axis
 validation, a generation-quality ladder, pathology-region masking, sample
-efficiency, a post-hoc CKA ablation, and the permutation test. Throughout,
-we report results that do not favour M3 as findings.
+efficiency, a post-hoc CKA ablation, and the permutation test. Results that
+do not favor M3 are reported alongside those that do.
 The Isolation Forest anomaly detector used in
 Section~\ref{sec:results_ood} is trained exclusively on real image
 embeddings and is completely independent of the M3-Score computation.
+
+\paragraph{Reported quantities}
+The tables below use the following quantities throughout.
+\emph{$\rho$} is the Spearman rank correlation between a perturbation level
+and a metric's value; a metric that increases monotonically with degradation
+attains $\rho = 1$. \emph{$\tau$} is Kendall's rank correlation, used where
+the ordering rather than the spacing of a small number of tiers is at issue.
+\emph{CV} is the coefficient of variation, the standard deviation across
+repeated subsamples divided by their mean, expressed as a percentage; lower
+means a metric returns a more repeatable value at a given $N$.
+\emph{$Z$} is the null-standardized separation defined in
+Section~\ref{sec:method_axes}, reported as a magnitude of separation from the
+permutation null rather than as a Gaussian $z$-score.
+\emph{$\alpha$-Precision} is the fraction of generated samples that fall
+inside the $k$-NN manifold of the real set ($k = 5$), and
+\emph{$\beta$-Recall} the fraction of real samples that fall inside the
+$k$-NN manifold of the generated set; the two measure fidelity and coverage
+respectively, and both lie in $[0,1]$ with higher being
+better~\cite{kynkaanniemi2019pr,alaa2022faithful}. \emph{$\Delta$} denotes a
+paired difference between two rows of the same table, reported with its
+bootstrap $95\%$ CI.
 
 \begin{figure*}[!t]
 \centering
@@ -1217,7 +1249,7 @@ correctly to progressive pixel-level degradation
 (Fig.~\ref{fig:noise_robustness} and Fig.~\ref{fig:blur_robustness}).
 As noise increases to $\sigma = 0.5$, the fidelity MMD$^2$ rises to
 $0.607$, FID to $521.96$, and KID to $0.868$, while SSIM collapses to
-$0.031$ and PSNR to $9.29$\,dB (raw unnormalized values; Fig.~\ref{fig:noise_robustness} and Fig.~\ref{fig:blur_robustness} display all metrics normalised to $[0,1]$ for visual comparison).
+$0.031$ and PSNR to $9.29$\,dB (raw unnormalized values; Fig.~\ref{fig:noise_robustness} and Fig.~\ref{fig:blur_robustness} display all metrics normalized to $[0,1]$ for visual comparison).
 
 \paragraph{Blur degradation}
 Under Gaussian blur the M3-Score achieves $\rho = 1.000$ ($p < 0.001$),
@@ -1242,10 +1274,10 @@ partially preserves.
   The composite panel shows four views:
   (a)~distributional metrics (M3/FID/KID) in raw units,
   (b)~perceptual metrics (SSIM/PSNR/MS-SSIM/LPIPS),
-  (c)~all metrics normalised to $[0,1]$ for visual comparison, and
+  (c)~all metrics normalized to $[0,1]$ for visual comparison, and
   (d)~$|\mathrm{Spearman}\ \rho|$ bar chart.
   All nine metrics achieve $|\rho| = 1.00$ ($p < 0.001$);
-  the normalised panel (c) shows M3 and SSIM/PSNR diverge earliest,
+  the normalized panel (c) shows M3 and SSIM/PSNR diverge earliest,
   indicating higher sensitivity at low perturbation levels.
   Note: raw metric values cited in text (e.g.\ fidelity MMD$^2 = 0.607$, FID $= 521.96$ at $\sigma = 0.5$)
   correspond to unnormalized panel (a)/(b); panel~(c) shows the same data rescaled.%
@@ -1261,7 +1293,7 @@ partially preserves.
   The composite panel shows four views:
   (a)~distributional metrics (M3/FID/KID) in raw units,
   (b)~perceptual metrics (SSIM/PSNR/MS-SSIM/LPIPS),
-  (c)~all metrics normalised to $[0,1]$ for visual comparison, and
+  (c)~all metrics normalized to $[0,1]$ for visual comparison, and
   (d)~$|\mathrm{Spearman}\ \rho|$ bar chart.
   M3-Score achieves $\rho = 1.000$ ($p < 0.001$).
   $\alpha$-Precision collapses to $0.006$ by $r = 2$, while distributional metrics
@@ -1386,7 +1418,7 @@ versus $0.809$ for InceptionV3 (the FID backbone) and $0.659$ for CLIP
 respectively (Fig.~\ref{fig:ood}\,(c)). The $N = 100$ six-backbone selection
 screen (Table~\ref{tab:ood_sweep}) confirms the choice: RadioDINO-s16
 ($0.995$) leads the larger Microsoft rad-dino ViT-B/14 ($0.913$) and
-generic DINOv2 ($0.968$). Notably, the most ``distinctive'' backbone by
+generic DINOv2 ($0.968$). The most ``distinctive'' backbone by
 inter-layer CKA (rad-dino, L1$\leftrightarrow$L12 CKA $= 0.203$) is the
 \emph{worst} OOD discriminator, so layer distinctiveness does not predict
 discriminative power; we select by OOD-AUC, not by CKA structure.
@@ -1412,14 +1444,11 @@ MRI generator ($0.738\,[0.723,0.758]$), ranking lung CT as closer to brain
 MRI than a poor brain-MRI generator. The paired difference
 $\Delta_{\mathrm{CT}-\mathrm{MRI}} = -0.039\,[-0.059,-0.021]$ excludes zero,
 so this is a statistically significant rank inversion, not sampling noise; the
-corresponding M3 difference is $+0.210\,[+0.198,+0.220]$. Crucially, FID
+corresponding M3 difference is $+0.210\,[+0.198,+0.220]$. FID
 (InceptionV3) also orders the tiers correctly ($68.8 < 180.6 < 317.4$), so the
 failure is specific to \emph{CLIP} features rather than to natural-image
 backbones in general: CLIP does not encode the radiology modality boundary
-that a radiology-trained backbone, and even InceptionV3, does. (These values
-supersede an earlier draft that reported the CMMD tiers as $0.674$ vs.\ $0.663$
-with $\Delta = 0.011$; under bootstrap CIs the effect is a significant
-inversion, which is a stronger form of the same structural limitation.)
+that a radiology-trained backbone, and even InceptionV3, does.
 
 \begin{figure*}[!t]
 \centering
@@ -1445,8 +1474,11 @@ generator (Table~\ref{tab:cmmd_fail}).}
   zero). FID values are point estimates (InceptionV3).
 }
 \label{tab:cmmd_fail}
-\setlength{\tabcolsep}{4pt}
-\resizebox{\columnwidth}{!}{%
+% Typeset at \small rather than \resizebox: scaling to \columnwidth produced a
+% font size below IEEE's minimum legible size.
+\setlength{\tabcolsep}{3pt}
+\small
+{%
 \begin{tabular}{lccc}
 \toprule
 Comparison vs.\ BraTS real & M3 (fid.) [95\% CI] & FID & CMMD [95\% CI] \\
@@ -1460,7 +1492,7 @@ CT $-$ WDM-3D\ \ $\Delta$    & $\mathbf{+0.210}\,[+0.198,+0.220]$ & $+136.8$ & $
 \end{tabular}}
 \end{table}
 
-\paragraph{Domain-ontology ordering (honest caveat)}
+\paragraph{Domain-ontology ordering: a scope limitation}
 Across five test sets ordered by intuitive OOD severity, FID and KID
 achieve Kendall $\tau = 1.000$ while M3 achieves $\tau = 0.800$
 ($p = 0.083$). The single inversion is that M3 ranks retinal fundus images
@@ -1536,7 +1568,7 @@ intended depth. As expected, the fidelity MMD$^2$ at L12 simultaneously
 falls (from $0.187$ to $0.043$), because injecting genuine real images into
 the generated set also moves the generated distribution toward the real one;
 the two axes are therefore correlated under this perturbation rather than
-orthogonal, which we report rather than obscure.
+orthogonal.
 
 \begin{table}[t]
 \centering
@@ -1559,7 +1591,7 @@ $0.5$ & $0.50$ & $0.043$ & $0.99$ \\
 \end{tabular}
 \end{table}
 
-\paragraph{Coverage axis (honest negative)}
+\paragraph{Coverage axis: a negative result}
 Probing the coverage axis with mode-drop (truncating the generated set by
 $\{0, 10, 20, 30, 50\}\%$) does \emph{not} produce a monotone decrease in
 L4 recall; recall instead drifts upward ($0.18 \to 0.28$) as the generated
@@ -1572,6 +1604,101 @@ development, not a validated claim, and recommend it only with
 $N \gtrsim 500$ and semantically clustered mode-drop. Precision is
 identically $0.0$ in our setting, consistent with the OOD result that
 generated points lie outside the real $k$-NN manifold at this checkpoint.
+
+% ------------------------------------------------------------
+\subsection{Layer-Depth Ablation for the Memorization and Coverage Axes}
+\label{sec:results_depth}
+% ------------------------------------------------------------
+
+Fixing $\ell_{\text{mem}}$ and $\ell_{\text{cov}}$ a priori protects against
+outcome-driven selection, but it invites the obvious question of whether the
+chosen depths are the right ones. We therefore repeat both axis validations at
+\emph{every} one of the twelve RadioDINO-s16 blocks ($N = 150$, seed $42$;
+Fig.~\ref{fig:depth_ablation}). Features are extracted once per condition and
+reused across depths, so the sweep costs little more than the original
+experiments. The outcome does not support promoting either prior to an
+empirically optimal choice, and we report it as such.
+
+\paragraph{Memorization depth}
+Under the canonical protocol of Section~\ref{sec:results_axes} (near-duplicates
+formed by jitter at $\sigma = 5\times10^{-4}$), the memorization rate recovers
+the injected fraction \emph{exactly at all twelve depths}: mean absolute
+recovery error is $0.000$ everywhere. The test is saturated, so it certifies
+that the L9 prior costs nothing while providing no evidence that L9 is
+preferable to any other block.
+
+To make the comparison discriminative we increase the difficulty of the
+near-duplicates (Table~\ref{tab:depth_mem}). A detection ceiling then appears
+and moves toward the input as $\sigma$ grows: at $\sigma = 0.02$ blocks L1--L5
+still recover the injection rate exactly while L6 and deeper fail outright
+(error $0.220$, i.e.\ they flag nothing); at $\sigma = 0.05$ only L1 survives;
+by $\sigma \ge 0.1$ no depth detects anything. \emph{Whenever the test
+separates depths at all, L9 is on the failing side of the ceiling.}
+
+This result must be read with its construction in mind. The perturbation is
+additive pixel noise, which is precisely the kind of variation a deep
+self-supervised representation is trained to discard, so the protocol is biased
+toward shallow, near-pixel features by design. It therefore does not establish
+that a shallow block is the better memorization layer for the failure that
+matters clinically --- a generator reproducing the \emph{anatomy} of a training
+case. Adjudicating that requires near-duplicates perturbed semantically
+(small affine or elastic warps, intensity shifts) rather than by noise, which
+we did not run. What the sweep does establish is narrower and worth stating
+plainly: the L9 prior is not empirically corroborated, only shown to be
+harmless under the protocol on which the axis was originally validated.
+
+\begin{table}[t]
+\centering
+\caption{%
+  Memorization-axis recovery error (mean $|$recovered $-$ injected$|$ over
+  injection rates $\{0,0.1,0.2,0.3,0.5\}$) by block depth and near-duplicate
+  difficulty $\sigma$. $0.220$ is the error of a detector that flags nothing.
+  The canonical protocol ($\sigma = 5\times10^{-4}$) is saturated; where the
+  test does separate depths, the a-priori L9 is already past the ceiling.
+}
+\label{tab:depth_mem}
+\setlength{\tabcolsep}{4pt}
+\begin{tabular}{lccccc}
+\toprule
+$\sigma$ & L1 & L4 & \textbf{L9} & L12 & blocks with error $<0.01$ \\
+\midrule
+$5\times10^{-4}$ & $0.000$ & $0.000$ & $\mathbf{0.000}$ & $0.000$ & all 12 \\
+$5\times10^{-3}$ & $0.000$ & $0.000$ & $\mathbf{0.000}$ & $0.000$ & all 12 \\
+$0.02$           & $0.000$ & $0.000$ & $\mathbf{0.220}$ & $0.220$ & L1--L5 \\
+$0.05$           & $0.000$ & $0.220$ & $\mathbf{0.220}$ & $0.220$ & L1 \\
+$0.10$           & $0.219$ & $0.220$ & $\mathbf{0.220}$ & $0.220$ & none \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\paragraph{Coverage depth}
+The mode-drop probe gives a cleaner answer. Recall should fall as generated
+diversity is removed; instead it \emph{rises} at every one of the twelve
+depths, with Spearman $\rho$ between drop fraction and recall positive
+throughout (L4: $\rho = +0.975$; the least-bad block, L8, still gives
+$\rho = +0.224$; six blocks give $\rho \ge +0.9$). No depth has the correct
+sign. The non-monotonicity reported in Section~\ref{sec:results_axes} is
+therefore a property of the $k$-NN precision/recall estimator at this sample
+size, not a consequence of reading it at L4: changing the layer cannot repair
+it. This strengthens rather than softens our earlier caveat, and is the reason
+the coverage axis is reported as a diagnostic and excluded from every headline
+claim in this paper.
+
+\begin{figure}[t]
+\centering
+\includegraphics[width=\linewidth]{Images/layer_depth_ablation.png}
+\caption{%
+  Depth ablation over all twelve RadioDINO-s16 blocks ($N = 150$).
+  \textbf{Left:} memorization recovery error against depth, one curve per
+  near-duplicate difficulty $\sigma$. The two lowest $\sigma$ curves lie flat
+  at zero (every depth succeeds, so the test cannot rank depths); as $\sigma$
+  grows a detection ceiling appears and retreats toward the input, and the
+  a-priori L9 (dashed) is above it in every discriminative case.
+  \textbf{Right:} Spearman $\rho$ between mode-drop fraction and $k$-NN recall.
+  Negative would be correct; every block is positive, so no depth fixes the
+  coverage axis.}
+\label{fig:depth_ablation}
+\end{figure}
 
 % ------------------------------------------------------------
 \subsection{Generation-Quality Ladder}
@@ -1656,25 +1783,72 @@ image is changed.}
 \label{fig:lesion_example}
 \end{figure*}
 
-Two regimes emerge. Under \emph{gross erasure} (zeroing the region) neither M3
-nor KID is lesion-specific ($\rho \approx 1.1$--$1.3$ for both): the black-hole
+Two regimes emerge. Under \emph{gross erasure} (zeroing the region) no metric
+is lesion-specific ($\rho \approx 1.1$--$1.3$ for all): the black-hole
 signal dominates and swamps any semantic difference, consistent with, and
 explaining, the artefact-invariance of M3 discussed below. Under \emph{subtle}
-region-local Gaussian noise, however, M3 is lesion-selective while the
-Inception baseline is not. Figure~\ref{fig:lgg_sweep} traces $\rho$ against
+region-local Gaussian noise, however, M3 responds more strongly when the
+perturbation falls inside the tumour than when the same perturbation falls in
+healthy tissue, whereas the Inception baselines respond almost equally to
+both. Figure~\ref{fig:lgg_sweep} traces $\rho$ against
 noise strength $\sigma$: in the measurable regime ($\sigma \ge 45$; below this
 the L12 MMD$^2$ underflows to zero at $N=200$ and the ratio is undefined) M3
 attains $\rho = 1.4$--$1.8$ against \emph{both} controls, which agree to within
-$0.1$, whereas KID stays flat at $\rho \approx 1.05$. Because both metrics score
-the \emph{identical} perturbed images, and because the mirror control's mean
-gradient energy matches the lesion's to within $4\%$, the selectivity is
-attributable to the radiology backbone rather than to pixel magnitude or
-texture complexity. The effect decays as $\sigma$ grows (extrapolating toward
-the $\rho\approx1.1$ of gross erasure), so it is correctly scoped as
-selectivity to \emph{subtle} diagnostic-region degradation, not a universal
-pathology-sensitivity advantage. As no LGG generator was available, this is a
-metric-sensitivity test on real images under controlled perturbations, not a
-generator-quality result.
+$0.1$, whereas the Inception baselines stay flat at $\rho \approx 1.03$--$1.10$.
+
+\paragraph{Isolating the backbone from the kernel}
+Attributing this gap to the \emph{backbone} requires holding the estimator
+fixed, since M3 uses a multi-bandwidth RBF kernel while KID uses a degree-3
+polynomial one; a comparison against KID alone varies both. We therefore add a
+kernel-controlled baseline: the \emph{identical} multi-bandwidth RBF
+$\mathrm{MMD}^2$ of Algorithm~\ref{alg:mmd}, applied to InceptionV3 features
+instead of RadioDINO ones, so that the backbone is the only difference from M3.
+It behaves like KID, not like M3 (Table~\ref{tab:lgg_kernel}): across
+$\sigma \in \{45, 60, 90\}$ the RBF-on-Inception ratio is
+$1.03$--$1.10$ and the polynomial-kernel KID ratio is $1.03$--$1.08$, agreeing
+to within $0.04$ at every $\sigma$, while M3 attains $1.39$--$1.81$. Exchanging
+the kernel therefore accounts for essentially none of the gap, and the
+selectivity is attributable to the radiology backbone rather than to the
+estimator, to pixel magnitude, or to texture complexity --- the last two being
+already controlled by the area-matched design and the $4\%$ gradient-energy
+match of the mirror control.
+
+Two caveats bound the claim. The effect decays as $\sigma$ grows (extrapolating
+toward the $\rho\approx1.1$ of gross erasure), so it is scoped as selectivity to
+\emph{subtle} diagnostic-region degradation, not a universal
+pathology-sensitivity advantage. And at $\sigma = 45$ the M3 bootstrap interval
+still admits $\rho = 1$ ($[0.94, 2.14]$ mirror); only at $\sigma = 60$ and $90$
+does the lower bound exceed unity ($1.03$ and $1.06$ mirror; $1.02$ and $1.03$
+texture-matched), so the individually significant evidence sits in that upper
+band rather than across the whole sweep. As no LGG generator was available,
+this is a metric-sensitivity test on real images under controlled
+perturbations, not a generator-quality result.
+
+\begin{table}[t]
+\centering
+\caption{%
+  Lesion/healthy specificity ratio $\rho$ with bootstrap $95\%$ CIs, mirror
+  control, $N = 200$. The kernel-controlled baseline (RBF on InceptionV3)
+  differs from M3 \emph{only} in the backbone; KID additionally differs in the
+  kernel. Both Inception baselines behave alike, so the separation from M3 is
+  backbone-driven, not kernel-driven. ``n/a'' marks $\sigma$ below a metric's
+  detection floor.
+}
+\label{tab:lgg_kernel}
+\setlength{\tabcolsep}{4pt}
+\small
+\begin{tabular}{lccc}
+\toprule
+$\sigma$ & M3 (RadioDINO, RBF) & Inception, RBF & Inception, poly.\ (KID) \\
+\midrule
+$20$ & n/a & $1.13\,[0.85,1.32]$ & $1.12\,[0.85,1.34]$ \\
+$30$ & n/a & $1.09\,[0.88,1.26]$ & $1.08\,[0.88,1.25]$ \\
+$45$ & $\mathbf{1.71}\,[0.94,2.14]$ & $1.10\,[0.92,1.26]$ & $1.08\,[0.92,1.24]$ \\
+$60$ & $\mathbf{1.57}\,[1.03,1.97]$ & $1.10\,[0.95,1.24]$ & $1.08\,[0.93,1.22]$ \\
+$90$ & $\mathbf{1.39}\,[1.06,1.71]$ & $1.08\,[0.96,1.20]$ & $1.06\,[0.93,1.19]$ \\
+\bottomrule
+\end{tabular}
+\end{table}
 
 \begin{figure}[t]
 \centering
@@ -1689,27 +1863,38 @@ generator-quality result.
 \label{fig:lgg_sweep}
 \end{figure}
 
-For completeness we retain the earlier proxy-mask experiment as secondary
-evidence of the \emph{opposite} property, that FID and CMMD are driven by
-low-level masking artefacts. Across three conditions ($N=200$;
-Table~\ref{tab:masking}) with a $64{\times}64$ centre square mask on BraTS,
-masking the tumour region in real images (condition~B) moves them \emph{closer}
-to the tumour-free generated distribution in RadioDINO space (the M3 fidelity
-axis falls by $54.4\%$), whereas FID \emph{increases} by $101.4\%$ and CMMD by
-$191.7\%$. InceptionV3 and CLIP features are thus highly sensitive to the
-black-square artefact itself, while M3 is comparatively \emph{invariant} to it.
-Together with the LGG result, the picture is one of \emph{specificity}:
-RadioDINO features track clinically meaningful change (subtle lesion
-degradation) rather than pixel-level artefacts that inflate FID and CMMD.
-(These BraTS masks are intensity-threshold FLAIR proxies, not ground truth, and
-are reported as a conservative supporting result only.)
+A second experiment isolates what each metric is actually responding to when a
+region is masked. Across three conditions ($N=200$; Table~\ref{tab:masking})
+with a $64{\times}64$ center square mask on BraTS, masking the tumour region in
+real images (condition~B) moves them \emph{closer} to the tumour-free generated
+distribution in RadioDINO space (the M3 fidelity axis falls by $54.4\%$),
+whereas FID \emph{increases} by $101.4\%$ and CMMD by $191.7\%$.
+
+The direction of these changes identifies the cause. If FID and CMMD were
+responding to the removal of the tumour, masking it in real images would move
+those images \emph{towards} the tumour-free generated set and the distances
+would fall, as M3's does. They instead rise sharply, and they rise by a similar
+amount in condition~C, where the same square is applied to generated images
+that contain no tumour to remove ($+117.6\%$ FID, $+226.5\%$ CMMD). Both
+metrics therefore respond to the black square itself rather than to the
+anatomical change, and the magnitude of the increase is not evidence of
+pathology sensitivity. M3 is comparatively invariant to the artefact and moves
+in the direction the anatomy implies. Read together with the LGG result, this
+is a statement about \emph{specificity}: RadioDINO features track clinically
+meaningful change rather than the pixel-level artefacts that inflate FID and
+CMMD. The BraTS masks here are intensity-threshold FLAIR proxies, not ground
+truth, so this is reported as a supporting result only; the LGG experiment
+above, which uses real expert masks, carries the primary claim.
 
 \begin{table}[t]
 \centering
 \caption{%
-  Masking with a $64{\times}64$ centre square mask ($N = 200$).
-  B masks the centre in real images; C masks the same region in generated images.
-  Relative change is against the condition-A baseline.
+  Masking with a $64{\times}64$ center square mask ($N = 200$).
+  B masks the center in real images; C masks the same region in the
+  (tumour-free) generated images. Relative change is against the condition-A
+  baseline. FID and CMMD rise steeply in \emph{both} B and C, including in C
+  where no tumour is removed, which identifies the black square rather than the
+  anatomical change as what they are measuring.
 }
 \label{tab:masking}
 \begin{tabular}{lccc}
@@ -1721,6 +1906,7 @@ B: real vs.\ masked-real           & $0.079$ & $247.7$ & $0.439$ \\
 C: real vs.\ masked-gen            & $0.215$ & $267.7$ & $0.493$ \\
 \midrule
 Rel.\ change (B$-$A)/A             & $\mathbf{-54.4\%}$ & $\mathbf{+101.4\%}$ & $\mathbf{+191.7\%}$ \\
+Rel.\ change (C$-$A)/A             & $+24.3\%$ & $+117.6\%$ & $+226.5\%$ \\
 \bottomrule
 \end{tabular}
 \end{table}
@@ -1732,12 +1918,12 @@ Rel.\ change (B$-$A)/A             & $\mathbf{-54.4\%}$ & $\mathbf{+101.4\%}$ & 
 
 We measure the coefficient of variation (CV) of each metric across random
 subsamples at $N \in \{25, 50, 100, 200, 500\}$ (5 repeats each).
-Table~\ref{tab:cv} reports the result, and it does not favour M3 at small
+Table~\ref{tab:cv} reports the result, and it does not favor M3 at small
 $N$: \emph{FID is more sample-stable than M3 for $N < 100$} (e.g.\ CV
 $3.2\%$ vs.\ $17.0\%$ at $N = 25$). When tested on fully independent subsets
 of $N=500$, both metrics are highly stable: M3 attains CV $1.93\%$ and FID attains $1.89\%$.
-The honest summary is that M3 and FID converge to comparable CV
-($\sim$2--3\%) by $N = 100$, and that the unbiased MMD$^2$ estimator
+M3 and FID converge to comparable CV
+($\sim$2--3\%) by $N = 100$, and the unbiased MMD$^2$ estimator
 underlying M3 (shared with CMMD) carries higher small-sample variance than
 FID's Gaussian-moment estimator. We therefore recommend reporting M3 only
 for $N \geq 100$, and preferably $N = 500$.
@@ -1745,20 +1931,25 @@ for $N \geq 100$, and preferably $N = 500$.
 \begin{table}[t]
 \centering
 \caption{%
-  Coefficient of variation (\%) across random subsamples (5 repeats).
-  FID is more stable than M3 at small $N$; the metrics converge by
-  $N = 100$. ($N = 500$ has a single admissible subset, hence CV $= 0$.)
+  Coefficient of variation (\%) across repeated draws; lowest per row in bold.
+  FID is clearly the most stable metric at $N \le 50$; M3 overtakes it from
+  $N = 100$, and all three converge to $\sim$2\% by $N = 500$.
+  Rows $N \le 200$ use 5 random subsamples from the
+  $500$-image evaluation pool. The $N = 500$ row \emph{cannot} be estimated this
+  way --- a 500-image subsample of a 500-image pool is the pool itself, giving a
+  degenerate CV of exactly $0$ --- so it is instead estimated from 10
+  \emph{independently drawn} 500-image evaluation sets.
 }
 \label{tab:cv}
-\begin{tabular}{lccc}
+\begin{tabular}{lcccc}
 \toprule
-$N$ & M3 CV (\%) & FID CV (\%) & CMMD CV (\%) \\
+$N$ & M3 CV (\%) & FID CV (\%) & CMMD CV (\%) & draws \\
 \midrule
-$25$  & $16.98$ & $\mathbf{3.18}$ & $15.09$ \\
-$50$  & $12.27$ & $\mathbf{4.91}$ & $10.98$ \\
-$100$ & $2.36$  & $2.87$ & $6.75$ \\
-$200$ & $2.37$  & $2.97$ & $5.14$ \\
-$500$ & $0.00$  & $0.00$ & $0.00$ \\
+$25$  & $16.98$ & $\mathbf{3.18}$ & $15.09$ & 5 subsamples \\
+$50$  & $12.27$ & $\mathbf{4.91}$ & $10.98$ & 5 subsamples \\
+$100$ & $\mathbf{2.36}$ & $2.87$ & $6.75$ & 5 subsamples \\
+$200$ & $\mathbf{2.37}$ & $2.97$ & $5.14$ & 5 subsamples \\
+$500$ & $1.93$  & $1.89$ & $\mathbf{1.82}$  & 10 independent sets \\
 \bottomrule
 \end{tabular}
 \end{table}
@@ -1847,17 +2038,29 @@ fidelity features and permuting the labels $500$ times, recomputing the
 unbiased MMD$^2$ on each shuffle (Section~\ref{sec:method_axes}). This is
 the native fidelity-axis permutation test, not an auxiliary construction.
 
-The observed fidelity MMD$^2$ is $0.153$. No permuted statistic out of $500$
-reached it, giving an empirical $p < 0.002$ (the resolution floor at $500$
-permutations), and the bootstrap $95\%$ confidence interval $[0.146,\ 0.162]$
-excludes the null mean ($\approx 0$) by roughly two orders of magnitude.
-For reference, the observed value lies $446$ permutation-null standard
-deviations above the null mean ($\sigma_0 = 3.4\times10^{-4}$). We stress
-that this ratio is a null-standardized separation magnitude, \emph{not} a
-Gaussian $z$-score: it scales approximately linearly with $N$ because the
-unbiased MMD$^2$ null variance shrinks as $O(1/N)$ while the observed
-statistic converges to a positive constant, and the permutation null is
-strongly non-Gaussian. Inference therefore rests on the permutation
+The observed fidelity MMD$^2$ is $0.153$. No permuted statistic out of $B=500$
+reached it. Using the standard add-one estimator, which avoids reporting an
+impossible $p = 0$, this gives $\hat{p} = (0+1)/(B+1) = 1/501 = 0.002$. This is
+the smallest value the test can return at $B = 500$: it is a resolution floor,
+not evidence of a smaller $p$, and we therefore write $\hat{p} = 0.002$ rather
+than $p < 0.002$. A smaller reportable $p$ would require more permutations, not
+a larger effect.
+
+We do \emph{not} treat the bootstrap interval's exclusion of zero as evidence.
+The unbiased MMD$^2$ estimator is clamped at zero
+(Algorithm~\ref{alg:mmd}) and the population quantity is non-negative by
+construction, so a positive point estimate almost necessarily yields a CI above
+zero; the interval is reported to convey the \emph{precision} of the estimate
+($[0.146,\ 0.162]$, a width of $0.016$), not as a test against the null.
+For the same reason we relegate the null-standardized separation $Z$: at
+$N = 500$ the observed value lies $446$ null standard deviations above the null
+mean ($\sigma_0 = 3.4\times10^{-4}$), but this magnitude carries no inferential
+content. It grows approximately linearly with $N$ by construction, because the
+null variance shrinks as $O(1/N)$ while the observed statistic converges to a
+positive constant, and the permutation null is strongly non-Gaussian, so $Z$
+maps to no tail probability. It is reported only as a descriptive
+signal-to-noise ratio and should not be compared across sample sizes.
+Inference rests on the permutation
 $p$-value and the bootstrap interval, both of which establish separability
 between the real and generated distributions well beyond conventional
 thresholds and, unlike FID/KID/CMMD, are produced natively by the metric.
@@ -1885,7 +2088,7 @@ CLIP).
 We stress that this is not a defect of the MMD estimator but a
 \emph{misalignment of the CLIP embedding space with radiology modality
 structure}. CLIP is trained to align images with free-text captions, so its
-geometry is organised around high-level, modality-agnostic semantics
+geometry is organized around high-level, modality-agnostic semantics
 (``a medical scan of a brain/chest'') rather than the Hounsfield-unit,
 tissue-texture, and acquisition statistics that govern pixel-level radiology
 fidelity. Under that objective, a lung CT and a brain MRI can be nearer in
@@ -1909,7 +2112,7 @@ nothing by fixing it in advance and we gain immunity to outcome-driven
 selection.
 
 \paragraph{Where M3 does not win}
-We emphasise three honest limitations. First, \emph{sample efficiency}: FID
+Three limitations remain. First, \emph{sample efficiency}: FID
 is more stable than M3 for $N < 100$ (Table~\ref{tab:cv}); the unbiased
 MMD$^2$ estimator pays for its lack of a Gaussian assumption with higher
 small-sample variance, so M3 should be reported at $N \geq 100$. Second, the
@@ -1923,6 +2126,14 @@ is therefore artifact \emph{specificity} to subtle, semantically meaningful
 change, not the raw-sensitivity advantage claimed in early drafts. A study with
 a lesion-conditioned generator is required to extend this from a
 metric-sensitivity test to a generator-quality claim.
+Fourth, the \emph{layer priors for two of the three axes are unconfirmed}: the
+depth ablation of Section~\ref{sec:results_depth} shows that L9 is
+indistinguishable from every other block under the protocol on which the
+memorization axis was validated, and that no depth at all gives the coverage
+axis the correct sign. Only the fidelity layer L12 is independently
+corroborated. We regard fixing the depths in advance as the right default,
+since it removes an obvious route to outcome-driven tuning, but it should be
+understood as a discipline rather than as an optimum we have demonstrated.
 
 \paragraph{Limitations and scope}
 M3-Score is validated primarily on brain MRI (BraTS), with cross-modality
@@ -1963,14 +2174,18 @@ discrimination, the CMMD-style failure it avoids, and per-axis diagnostics.
 
 We introduced the M3-Score, a radiology-domain evaluation framework for
 generative image models built on the frozen RadioDINO-s16 ViT. Rather than a
-single tuned scalar, M3 reports three axes read from layers fixed a priori by
+single tuned scalar, M3 reports two axes read from layers fixed a priori by
 representational depth: a fidelity axis (unbiased multi-bandwidth RBF
-MMD$^2$ at L12) with a native permutation $p$-value, bootstrap CI, and
-null-standardized separation $Z$; a memorization axis (L9) validated to recover injected
-near-duplicate rates exactly; and a coverage axis (L4) that we report, with
-explicit caveats, as a diagnostic still under development.
+MMD$^2$ at L12) with a native permutation $p$-value and bootstrap CI, and a
+memorization axis (L9) validated to recover injected near-duplicate rates
+exactly. A third, exploratory coverage diagnostic at L4 is specified and
+evaluated, but it fails its own mode-drop validation at all twelve encoder
+depths (Section~\ref{sec:results_depth}); we therefore exclude it from every
+claim made here and report it only as a negative result, since the failure
+lies in the $k$-NN precision/recall estimator at these sample sizes rather
+than in the choice of layer.
 On BraTS brain MRI the fidelity axis separates real from generated images at
-permutation $p < 0.002$ (bootstrap $95\%$ CI $[0.146,0.162]$ excluding zero)
+permutation $\hat{p} = 0.002$, the resolution floor at $B=500$ (bootstrap $95\%$ CI $[0.146,0.162]$)
 and detects out-of-distribution radiology at
 ROC-AUC $= 0.976$, versus $0.809$ for InceptionV3 and $0.659$ for CLIP. Our
 central result is the structural failure of CMMD, which \emph{rank-inverts} a
@@ -1978,7 +2193,7 @@ cross-modality CT shift and a weak in-domain generator, placing CT closer to
 real MRI (paired $\Delta = -0.039$, 95\% CI $[-0.059,-0.021]$, excluding
 zero), where M3 (and FID) order them correctly.
 
-We also report, rather than reinterpret, results that do not favour M3: FID
+Results that do not favor M3 are reported in full: FID
 is more sample-stable at $N < 100$; the coverage axis is unstable under
 $k$-NN radius inflation; and, with real expert lesion masks, M3 shows no
 lesion-specific advantage under gross erasure and only a modest one
@@ -1993,65 +2208,21 @@ sizes.
 \appendices
 \section{Legacy Adaptive Aggregation and CKA Layer Selection}
 \label{app:legacy}
-This appendix documents the \emph{superseded} adaptive design, retained only for the post-hoc validation reported in Section~\ref{sec:results_ablation}. It is \emph{not} part of the canonical M3-Score (Algorithm~\ref{alg:m3canonical}, Section~\ref{sec:method_axes}): the canonical fidelity, memorization, and coverage axes read the fixed layers $\{12,9,4\}$ and require none of the machinery below, so no layer, threshold, or weight is selected on test outcomes.
+This appendix specifies the one component of the superseded adaptive design
+that the reported results still depend on: the CKA-based layer selection used
+for the post-hoc validation of Section~\ref{sec:results_ablation}, which is
+what establishes L12 as the single most discriminative non-redundant layer.
+It is \emph{not} part of the canonical M3-Score
+(Algorithm~\ref{alg:m3canonical}, Section~\ref{sec:method_axes}): the canonical
+axes read fixed layers and require none of this machinery, so no layer,
+threshold, or weight is selected on test outcomes.
 
-\begin{algorithm}[t]
-\caption{Legacy adaptive M3 aggregation (optional post-hoc path) \newline \small{(CKA: Centered Kernel Alignment; MMD: Maximum Mean Discrepancy; ExtractFeat: Feature Extraction; Agg: Aggregation)}}
-\label{alg:m3score}
-\begin{algorithmic}[1]
-\Require Real set $\mathcal{X}_r$, generated set $\mathcal{X}_g$,
-         encoder $\Phi$ with $L$ layers,
-         CKA threshold $\tau$, sub-batch count $K$,
-         reference size $N_r \leq N$
-\Ensure  Score $S$, layer distances
-         $\{\widehat{\text{MMD}}^2_\ell\}_{\ell \in \mathcal{L}}$,
-         layer weights $\{w_\ell\}_{\ell \in \mathcal{L}}$
-\State $\mathcal{X}_r^{(N_r)} \leftarrow \{x_1, \ldots, x_{N_r}\}$
-\State $\mathcal{L} \leftarrow
-       \textsc{CKAPrune}(\Phi,\, \mathcal{X}_r^{(N_r)},\, \tau)$
-       \Comment{Algorithm~\ref{alg:cka_pruning}}
-\State $\{E_r^{(\ell)}\}_{\ell \in \mathcal{L}} \leftarrow
-       \textsc{ExtractFeat}(\Phi,\, \mathcal{X}_r,\, \mathcal{L})$
-       \Comment{Algorithm \ref{alg:extraction}}
-\State $\{E_g^{(\ell)}\}_{\ell \in \mathcal{L}} \leftarrow
-       \textsc{ExtractFeat}(\Phi,\, \mathcal{X}_g,\, \mathcal{L})$
-\For{each $\ell \in \mathcal{L}$}
-  \State $\widehat{\text{MMD}}^2_\ell \leftarrow
-         \textsc{MMD2U}(E_r^{(\ell)},\, E_g^{(\ell)})$
-         \Comment{Algorithm~\ref{alg:mmd}}
-  \For{$k = 1, \ldots, K$}
-    \State $\mathcal{I}_r \leftarrow$ sample $\lfloor N/K \rfloor$
-           indices from $\{1,\ldots,N\}$ without replacement
-    \State $\mathcal{I}_g \leftarrow$ sample $\lfloor N/K \rfloor$
-           indices from $\{1,\ldots,N\}$ without replacement
-    \State $\delta_k^{(\ell)} \leftarrow
-           \textsc{MMD2U}(E_r^{(\ell)}[\mathcal{I}_r],\,
-           E_g^{(\ell)}[\mathcal{I}_g])$
-  \EndFor
-  \State $\bar{\delta}^{(\ell)} \leftarrow
-         \frac{1}{K}\sum_{k=1}^{K} \delta_k^{(\ell)}$
-  \State $\sigma^{(\ell)} \leftarrow
-         \Bigl(\frac{1}{K}\sum_{k=1}^{K}
-         (\delta_k^{(\ell)} - \bar{\delta}^{(\ell)})^2\Bigr)^{1/2}$
-  \State $\mathrm{SNR}_\ell \leftarrow
-         \min\!\Bigl(
-         \bar{\delta}^{(\ell)} /
-         (\sigma^{(\ell)} + \varepsilon),\; 10^4
-         \Bigr)$
-\EndFor
-\State $w_\ell \leftarrow
-       \textsc{Agg}(\{E_r^{(\ell)}\},\,\{E_g^{(\ell)}\},\,
-       \{\widehat{\mathrm{MMD}}^2_\ell\},\,\{\bar{H}^{(\ell)}\})$
-       \Comment{Algorithm~\ref{alg:aggregation}: entropy$\times$stability$\times$uniqueness}
-\State $S \leftarrow
-       \sum_{\ell \in \mathcal{L}} w_\ell \cdot \widehat{\text{MMD}}^2_\ell$
-\State \Return $S,\;
-       \{\widehat{\text{MMD}}^2_\ell\}_{\ell \in \mathcal{L}},\;
-       \{w_\ell\}_{\ell \in \mathcal{L}}$
-\end{algorithmic}
-\end{algorithm}
+The remainder of the abandoned design --- the adaptive aggregation loop and the
+entropy-stability-uniqueness layer weighting --- is not reproduced here, since
+no result in this paper uses it. Its full specification and reference
+implementation are available in the released code repository
+(Section~\ref{sec:conclusion}).
 
-% ------------------------------------------------------------
 \subsection{Post-Hoc Validation: CKA-Based Layer Analysis}
 \label{sec:method_cka}
 % ------------------------------------------------------------
@@ -2074,7 +2245,7 @@ Given two embedding matrices $E^{(\ell_1)}, E^{(\ell_2)} \in \mathbb{R}^{N_r \ti
           \lVert \tilde{E}^{(\ell_2)\top}
                  \tilde{E}^{(\ell_2)} \rVert_F^2}^{1/2},
 \end{equation}
-where $\tilde{E}^{(\ell)} = E^{(\ell)} - \mathbf{1}\bar{e}^{(\ell)\top}$ is the column-centred matrix, $\bar{e}^{(\ell)} = \frac{1}{N_r}\sum_i E^{(\ell)}_{i,:}$ is the column mean, and $\lVert \cdot \rVert_F$ denotes the Frobenius norm. $\mathrm{CKA}(E^{(\ell_1)}, E^{(\ell_2)}) \in [0, 1]$, with value 1 indicating identical representational geometry.
+where $\tilde{E}^{(\ell)} = E^{(\ell)} - \mathbf{1}\bar{e}^{(\ell)\top}$ is the column-centerd matrix, $\bar{e}^{(\ell)} = \frac{1}{N_r}\sum_i E^{(\ell)}_{i,:}$ is the column mean, and $\lVert \cdot \rVert_F$ denotes the Frobenius norm. $\mathrm{CKA}(E^{(\ell_1)}, E^{(\ell_2)}) \in [0, 1]$, with value 1 indicating identical representational geometry.
 
 Evaluating Eq.~\eqref{eq:cka} directly requires forming
 $(D \times D)$ covariance matrices, whose denominator scales as
@@ -2130,7 +2301,7 @@ is reused for the full evaluation pass.
          \mathcal{X}_r^{(N_r)},\, \{\ell\})$
   \State $\tilde{E}^{(\ell)} \leftarrow
          E^{(\ell)} - \mathbf{1}\bar{e}^{(\ell)\top}$
-         \Comment{column-centre, Eq.~\eqref{eq:cka}}
+         \Comment{column-center, Eq.~\eqref{eq:cka}}
   \State $K^{(\ell)} \leftarrow
          \tilde{E}^{(\ell)}\tilde{E}^{(\ell)\top}$
          \Comment{$(N_r \times N_r)$ gram matrix, Eq.~\eqref{eq:gram}}
@@ -2158,211 +2329,6 @@ is reused for the full evaluation pass.
 \end{algorithmic}
 \end{algorithm}
 
-% ------------------------------------------------------------
-
-
-
-% ------------------------------------------------------------
-\subsection{Legacy Adaptive Aggregation (Superseded)}
-\label{sec:method_aggregation}
-% ------------------------------------------------------------
-
-\emph{The weighting scheme below was the aggregation rule of the original
-single-scalar M3 and is retained for completeness and reproducibility of the
-post-hoc CKA validation. It is not used by the canonical three-axis metric
-of Section~\ref{sec:method_axes}, which reports fidelity, memorization, and
-coverage separately rather than collapsing them into one weighted sum. When
-the CKA analysis reduces to the single most discriminative layer (L12), all
-weighting schemes below coincide and the aggregate equals the fidelity axis.}
-
-Not all retained layers in $\mathcal{L}$ contribute equally useful
-information to the final score.
-Three orthogonal criteria determine the weight assigned to each layer:
-\emph{semantic focus} (does the layer attend to diagnostically relevant
-image regions?), \emph{statistical stability} (is its MMD$^2$ estimate
-consistent across sub-samples?), and \emph{representational uniqueness}
-(does it capture aspects not already captured by another retained layer?).
-The final weight for layer $\ell$ is proportional to the product of all
-three components:
-\begin{equation}
-  \label{eq:weights}
-  \tilde{w}_\ell
-  = \mathrm{Sem}_\ell \cdot \mathrm{Stab}_\ell \cdot \mathrm{Uniq}_\ell,
-  \qquad
-  w_\ell = \frac{\tilde{w}_\ell}
-                {\sum_{\ell' \in \mathcal{L}} \tilde{w}_{\ell'}}.
-\end{equation}
-Each component is defined and motivated below.
-
-\paragraph{Semantic focus $\mathrm{Sem}_\ell$}
-The CLS-to-patch attention weights
-$\{\tilde{\alpha}^{(\ell)}_{b,p}\}$ (Eq.~\eqref{eq:attn_norm}) encode
-which image patches the encoder considers most relevant at layer $\ell$.
-When the attention is concentrated on a small number of patches, the
-layer responds selectively to localised anatomical structures, which is
-diagnostically informative for medical images.
-When the attention is nearly uniform, the layer integrates all patches
-equally and its features are less discriminative.
-This selectivity is quantified by the Shannon entropy of the attention
-distribution for image $b$,
-\begin{equation}
-  \label{eq:entropy}
-  H^{(\ell)}_b =
-  - \sum_{p=1}^{N_\mathrm{seq}-1}
-    \tilde{\alpha}^{(\ell)}_{b,p}
-    \log \tilde{\alpha}^{(\ell)}_{b,p},
-\end{equation}
-and the layer-level entropy is the mean over the real image set,
-$\bar{H}^{(\ell)} = \frac{1}{N}\sum_{b=1}^{N} H^{(\ell)}_b$.
-The semantic focus weight is defined as
-\begin{equation}
-  \label{eq:semanticity}
-  \mathrm{Sem}_\ell = \exp\!\left(
-    -\frac{\bar{H}^{(\ell)}}{T}
-  \right),
-\end{equation}
-where $T > 0$ is a temperature parameter (default $T = 1$).
-$\mathrm{Sem}_\ell \in (0, 1]$, approaching $1$ for a perfectly focused
-layer and approaching $\exp(-\log(N_\mathrm{seq}-1)/T)$ for a perfectly
-uniform layer.
-The exponential form ensures that layers with very low entropy receive
-substantially higher weight than layers with only moderately low entropy.
-
-\paragraph{Statistical stability $\mathrm{Stab}_\ell$}
-For each retained layer $\ell$, $K$ sub-batch MMD$^2$ estimates are
-obtained by drawing independent random subsets of size
-$n_k = \lfloor N/K \rfloor$ from both the real and generated embedding
-matrices and evaluating Eq.~\eqref{eq:mmd} on each pair.
-Denoting the $k$-th sub-batch estimate as $\delta_k^{(\ell)}$, the
-mean and standard deviation of the sub-batch estimates are
-\begin{align}
-  \bar{\delta}^{(\ell)} &=
-    \frac{1}{K}\sum_{k=1}^{K} \delta_k^{(\ell)}, \\
-  \sigma^{(\ell)} &=
-    \Bigl(\frac{1}{K}\sum_{k=1}^{K}
-    \bigl(\delta_k^{(\ell)} - \bar{\delta}^{(\ell)}\bigr)^2
-    \Bigr)^{1/2}.
-\end{align}
-The stability weight is the signal-to-noise ratio of the sub-batch
-estimates, capped to prevent any single layer from monopolising the
-total weight when its sub-batch variance is near zero:
-\begin{equation}
-  \label{eq:stability}
-  \mathrm{Stab}_\ell =
-  \min\!\left(
-    \frac{\bar{\delta}^{(\ell)}}{\sigma^{(\ell)} + \varepsilon},\;
-    10^4
-  \right),
-  \quad \varepsilon = 10^{-6}.
-\end{equation}
-The numerator $\bar{\delta}^{(\ell)}$ ensures that layers with a large
-and consistent MMD$^2$ (clear distributional gap) receive higher
-stability than layers with a large but highly variable MMD$^2$.
-The cap of $10^4$ is necessary because $\sigma^{(\ell)} \to 0$ when all
-sub-batches agree exactly (e.g.\ under zero perturbation), in which case
-an uncapped inverse-variance weight would collapse the entire weight
-distribution onto one layer regardless of its semantic or uniqueness
-properties.
-The default is $K = 5$; the sensitivity of $S$ to $K$ is reported in
-Section~\ref{sec:results_ablation}.
-
-\paragraph{Representational uniqueness $\mathrm{Uniq}_\ell$}
-Although CKA pruning removes layers whose representations are highly
-similar to any already-retained layer, the retained set $\mathcal{L}$
-may still contain layers with moderate pairwise similarity.
-To downweight such layers relative to those that capture genuinely
-distinct aspects of the feature hierarchy, the uniqueness of layer
-$\ell$ is defined as one minus its mean CKA similarity to all other
-retained layers:
-\begin{equation}
-  \label{eq:uniqueness}
-  \mathrm{Uniq}_\ell =
-  \max\!\left(
-  1 - \frac{1}{M - 1}
-  \sum_{\substack{\ell' \in \mathcal{L} \\ \ell' \neq \ell}}
-  \mathrm{CKA}(E_r^{(\ell)},\, E_r^{(\ell')}),\;
-  10^{-4}
-  \right),
-\end{equation}
-where $M = |\mathcal{L}|$ and CKA is evaluated on the real embedding
-matrices via Eq.~\eqref{eq:cka_gram}.
-$\mathrm{Uniq}_\ell \in (0, 1]$, approaching $1$ for a layer whose
-representations are orthogonal to all other retained layers.
-The floor of $10^{-4}$ prevents complete suppression of any layer.
-
-\paragraph{Final score}
-The unnormalised weight $\tilde{w}_\ell$ (Eq.~\eqref{eq:weights})
-captures all three properties simultaneously: a layer receives high
-weight only if it focuses on semantically relevant patches
-($\mathrm{Sem}_\ell$ large), its MMD$^2$ estimate is consistent across
-sub-samples ($\mathrm{Stab}_\ell$ large), and it is not redundant with
-respect to the other retained layers ($\mathrm{Uniq}_\ell$ large).
-The M3-Score is the weighted sum of the per-layer unbiased MMD$^2$
-estimates:
-\begin{equation}
-  \label{eq:m3score}
-  S = \sum_{\ell \in \mathcal{L}}
-      w_\ell \cdot \widehat{\mathrm{MMD}}^2_\ell.
-\end{equation}
-Lower values of $S$ indicate greater distributional similarity between
-the real and generated image sets.
-$S = 0$ if and only if, for every $\ell \in \mathcal{L}$, the real and
-generated embedding distributions are identical under the kernel $k$.
-Algorithm~\ref{alg:aggregation} states the complete aggregation procedure.
-
-\begin{algorithm}[t]
-\caption{Entropy-stability-uniqueness aggregation}
-\label{alg:aggregation}
-\begin{algorithmic}[1]
-\Require Real embeddings $\{E_r^{(\ell)}\}_{\ell \in \mathcal{L}}$,
-         generated embeddings $\{E_g^{(\ell)}\}_{\ell \in \mathcal{L}}$,
-         per-layer MMD$^2$ estimates $\{\widehat{\mathrm{MMD}}^2_\ell\}$,
-         per-layer mean attention entropy $\{\bar{H}^{(\ell)}\}$,
-         sub-batch count $K = 5$, temperature $T = 1$,
-         SNR cap $C = 10^4$, floor $f = 10^{-4}$
-\Ensure  Score $S$, normalised weights $\{w_\ell\}_{\ell \in \mathcal{L}}$
-\For{each $\ell \in \mathcal{L}$}
-  \State $\mathrm{Sem}_\ell \leftarrow
-         \exp(-\bar{H}^{(\ell)} / T)$
-         \Comment{semantic focus, Eq.~\eqref{eq:semanticity}}
-  \For{$k = 1, \ldots, K$}
-    \State $\mathcal{I}_r, \mathcal{I}_g \leftarrow$
-           draw $\lfloor N/K \rfloor$ indices from $\{1,\ldots,N\}$
-    \State $\delta_k^{(\ell)} \leftarrow
-           \textsc{UnbiasedMMD2}(E_r^{(\ell)}[\mathcal{I}_r],\,
-           E_g^{(\ell)}[\mathcal{I}_g])$
-  \EndFor
-  \State $\bar{\delta}^{(\ell)} \leftarrow
-         \frac{1}{K}\sum_k \delta_k^{(\ell)}$
-  \State $\sigma^{(\ell)} \leftarrow \bigl(
-         \frac{1}{K}\sum_k (\delta_k^{(\ell)} -
-         \bar{\delta}^{(\ell)})^2 \bigr)^{1/2}$
-  \State $\mathrm{Stab}_\ell \leftarrow
-         \min\!\bigl(\bar{\delta}^{(\ell)} /
-         (\sigma^{(\ell)} + \varepsilon),\; C\bigr)$
-         \Comment{capped SNR, Eq.~\eqref{eq:stability}}
-  \State $\mathrm{Uniq}_\ell \leftarrow
-         \max\!\bigl(1 - \frac{1}{M-1}
-         \sum_{\ell' \neq \ell}
-         \mathrm{CKA}(E_r^{(\ell)}, E_r^{(\ell')}),\; f\bigr)$
-         \Comment{Eq.~\eqref{eq:uniqueness}}
-  \State $\tilde{w}_\ell \leftarrow
-         \mathrm{Sem}_\ell \cdot
-         \mathrm{Stab}_\ell \cdot
-         \mathrm{Uniq}_\ell$
-         \Comment{unnormalised weight, Eq.~\eqref{eq:weights}}
-\EndFor
-\State $w_\ell \leftarrow
-       \tilde{w}_\ell / \sum_{\ell'} \tilde{w}_{\ell'}$
-       for all $\ell \in \mathcal{L}$
-       \Comment{normalise}
-\State $S \leftarrow
-       \sum_{\ell \in \mathcal{L}} w_\ell \cdot
-       \widehat{\mathrm{MMD}}^2_\ell$
-       \Comment{Eq.~\eqref{eq:m3score}}
-\State \Return $S,\; \{w_\ell\}_{\ell \in \mathcal{L}}$
-\end{algorithmic}
-\end{algorithm}
 
 
 

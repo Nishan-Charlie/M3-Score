@@ -185,6 +185,15 @@ def main():
         return metric._mmd2(torch.from_numpy(a).to(args.device),
                             torch.from_numpy(b).to(args.device)).item()
 
+    # Kernel-CONTROLLED baseline: the identical multi-bandwidth RBF MMD^2 used
+    # for M3, applied to InceptionV3 features instead of RadioDINO ones.
+    # KID (below) differs from M3 in BOTH backbone and kernel (degree-3
+    # polynomial), so it cannot isolate the backbone's contribution. This one
+    # differs only in the backbone, which is what the paper's claim requires.
+    def incep_rbf_mmd(a, b):
+        return metric._compute_mmd2_rbf(torch.from_numpy(a).float().to(args.device),
+                                        torch.from_numpy(b).float().to(args.device)).item()
+
     real_m3 = m3_feats(real_arrs)
     real_kid = inception_feats(to_fid01(real_arrs, args.device), args.device)
 
@@ -209,10 +218,14 @@ def main():
         row["M3_texture"] = ratio_ci(m3_mmd, real_m3, les_m3, tex_m3, 5e-4, args.n_boot, args.seed)
         row["KID_mirror"] = ratio_ci(kid_mmd2, real_kid, les_k, mir_k, 1e-3, args.n_boot, args.seed)
         row["KID_texture"] = ratio_ci(kid_mmd2, real_kid, les_k, tex_k, 1e-3, args.n_boot, args.seed)
+        # kernel-controlled: same RBF as M3, Inception backbone
+        row["INCRBF_mirror"] = ratio_ci(incep_rbf_mmd, real_kid, les_k, mir_k, 5e-4, args.n_boot, args.seed)
+        row["INCRBF_texture"] = ratio_ci(incep_rbf_mmd, real_kid, les_k, tex_k, 5e-4, args.n_boot, args.seed)
         results["sweep"].append(row)
         def _f(r):
             return f"{r['ratio']:.2f}" if r["measurable"] else "n/a"
         print(f"[sig={sig:5.0f}] M3(mir)={_f(row['M3_mirror'])} M3(tex)={_f(row['M3_texture'])} "
+              f"| IncRBF(mir)={_f(row['INCRBF_mirror'])} IncRBF(tex)={_f(row['INCRBF_texture'])} "
               f"| KID(mir)={_f(row['KID_mirror'])} KID(tex)={_f(row['KID_texture'])}")
 
     with open(os.path.join(args.out, "sweep.json"), "w") as f:

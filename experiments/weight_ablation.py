@@ -307,7 +307,7 @@ def run_weight_ablation(
     ax1.tick_params(axis="y", labelcolor=color_disc)
     ax1.tick_params(axis="x", colors="#333333")
     ax1.set_title(
-        "Discriminability vs.\ CKA threshold $\\tau$\n"
+        "Discriminability vs. CKA threshold $\\tau$\n"
         "($\\tau=0.80$: recommended default, underlined)",
         fontsize=11, color="#222222"
     )
@@ -319,8 +319,11 @@ def run_weight_ablation(
     ax2.yaxis.set_major_locator(plt.MaxNLocator(integer=True))
     lines1, labels1 = ax1.get_legend_handles_labels()
     lines2, labels2 = ax2.get_legend_handles_labels()
+    # legend placed below the axes so it never sits on top of the curves
     ax1.legend(lines1 + lines2, labels1 + labels2, fontsize=9,
-               facecolor="white", edgecolor="#cccccc")
+               facecolor="white", edgecolor="#cccccc",
+               loc="upper center", bbox_to_anchor=(0.5, -0.16),
+               ncol=3, borderaxespad=0.0)
 
     # Panel 2: Raw RG and RR scores by threshold
     ax = axes[1]
@@ -333,10 +336,12 @@ def run_weight_ablation(
                label=f"Best $\\tau$ = {best_tau}")
     ax.set_xlabel("CKA threshold $\\tau$", fontsize=11, color="#222222")
     ax.set_ylabel("M3 score (equal-weight)", fontsize=11, color="#222222")
-    ax.set_title("Raw $S_\\mathrm{RG}$ and $S_\\mathrm{RR}$ vs.\ CKA threshold $\\tau$",
+    ax.set_title("Raw $S_\\mathrm{RG}$ and $S_\\mathrm{RR}$ vs. CKA threshold $\\tau$",
                  fontsize=11, color="#222222")
     ax.tick_params(colors="#333333")
-    ax.legend(fontsize=9, facecolor="white", edgecolor="#cccccc")
+    ax.legend(fontsize=9, facecolor="white", edgecolor="#cccccc",
+              loc="upper center", bbox_to_anchor=(0.5, -0.16),
+              ncol=3, borderaxespad=0.0)
     ax.grid(alpha=0.35, color="#dddddd")
 
     plt.suptitle(
