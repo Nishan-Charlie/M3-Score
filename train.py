@@ -35,6 +35,10 @@ def main():
     parser.add_argument("--log_file", type=str, default="mri_training_log.csv", help="CSV file for training logs")
     parser.add_argument("--device", type=str, default="cuda:0", help="Device to use for training (e.g., cuda:0, cuda:1, cpu)")
     parser.add_argument("--num_workers", type=int, default=4, help="Number of workers for data loading")
+    parser.add_argument("--cache_rate", type=float, default=1.0,
+                        help="Fraction of the dataset MONAI holds in RAM. 1.0 needs "
+                             "roughly 260 kB per image (~7 GB for 27k slices); lower "
+                             "it when training alongside other jobs")
     parser.add_argument("--num_gpus", type=int, default=1, help="Number of GPUs to use for training (if using multi-GPU environment)")
     parser.add_argument("--no_tqdm", action="store_true", help="Disable tqdm progress bars")
     parser.add_argument("--early_stopping_patience", type=int, default=100, help="Number of epochs to wait for improvement before stopping")
@@ -74,10 +78,11 @@ def main():
     # 1. Setup Data Loader
     print(f"Loading data from {args.data_dir}...")
     loader = get_mri_2d_dataloader(
-        data_dir=args.data_dir, 
-        batch_size=args.batch_size, 
+        data_dir=args.data_dir,
+        batch_size=args.batch_size,
         spatial_size=(args.img_size, args.img_size),
-        num_workers=args.num_workers
+        num_workers=args.num_workers,
+        cache_rate=args.cache_rate
     )
 
     # 2. Setup Model

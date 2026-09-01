@@ -1,0 +1,236 @@
+% =============================================================================
+\section{Discussion}
+\label{sec:discussion}
+% =============================================================================
+
+\subsection{What a reported metric value does and does not mean}
+
+The results in Section~\ref{sec:res_cohort} put a bound on how much a single
+reported number can carry. Two studies can both report ``MMD$^2 = 0.15$ against
+$500$ real BraTS slices'' while differing by a factor of two in the quantity
+they intend to describe, purely through reference composition. Nothing in the
+number, the sample size, or the estimator's unbiasedness reveals the
+difference. Unbiasedness is a property of the estimator with respect to a fixed
+pair of distributions; it says nothing about whether the empirical reference
+represents the population it stands for.
+
+This is the generative-evaluation counterpart of a problem that discriminative
+medical imaging settled some time ago. Subject-level rather than image-level
+splits are standard there, because slices from one subject leak between train
+and test \citep{varoquaux2022machine}, and multi-site datasets are known to
+carry recoverable scanner signatures \citep{glocker2019machine}. Generative
+evaluation inherited neither convention, because it inherited its protocols from
+natural-image benchmarks where neither problem exists. The reference set in a
+generative study plays the structural role that a test split plays in a
+discriminative one, and it deserves the same care.
+
+\subsection{Why the conventional significance test is the wrong instrument}
+
+Attaching a permutation test to a kernel two-sample statistic is technically
+correct and practically uninformative. Its null --- that real and generated
+samples come from the same distribution --- is false by construction for every
+generative model anyone would submit for evaluation. Our measurements bear this
+out: the test assigns $z > 340$ to an in-domain DDPM and to colour fundus
+photography alike (Table~\ref{tab:cohortnull}), separating neither from the
+other nor from anything else.
+
+The behaviour under improving references is worse than merely uninformative.
+Because the permutation null is built by shuffling labels within the pooled
+sample, a more heterogeneous real set inflates the null variance and
+\emph{depresses} the reported statistic. We say heterogeneous rather than
+representative deliberately: we have no sampling frame for the target
+population, so a wider subject draw is demonstrably more diverse but not
+thereby shown to be more representative. A
+practitioner who improves their reference from $17$ to $100$ subjects would see
+the conventional significance of their result fall, from $z = 423$ to $z = 347$,
+while the evaluation actually became better resolved. The inter-cohort
+statistic moves the other way, from $15.7$ to $89.0$.
+
+We do not claim the inter-cohort reference distribution is the only correct construction. It requires
+subject labels, which not every released dataset provides; it is defined at a
+particular cohort size, so two studies must match cohort size to be comparable;
+and with $K$ blocks it rests on $K(K-1)/2$ non-independent pairs, so its tail
+should be read as descriptive rather than as a calibrated $p$-value. We report
+$z_{\mathrm{cohort}}$ and the ratio to the \emph{mean} observed cohort distance
+for that reason, rather than leaning on $p_{\mathrm{cohort}}$, whose resolution
+is bounded by the number of pairs, or on a ratio to the maximum, which is an
+order statistic that is not comparable across conditions contributing different
+numbers of pairs. What we do claim is that a null built from real
+cohorts answers the question a practitioner is actually asking, and that the
+permutation null does not.
+
+\subsection{Reading depth deliberately}
+
+The depth audit yields a practical result and a cautionary one. The practical
+result is that a single frozen encoder supports several evaluation tasks at
+different depths, at no additional cost: all twelve representations come from
+one forward pass, so reading \Lb{8} for fidelity and \Lb{10} for near-duplicate
+detection is free. The cautionary result is that the final block, which is what
+the literature reads by default, is the best choice for none of the four tasks
+we measured, and is $22\%$ below the fidelity plateau. We name \Lb{8} as the
+maximum but not as ``the'' optimal depth: \Lb{7}, \Lb{8} and \Lb{9} are not
+distinguishable from one another, and the defensible statement is that the
+optimum lies in a mid-to-late plateau, not at the final block.
+
+We are explicit that our depth recommendations are empirical rather than
+principled. We do not have a theory that predicts why fidelity discriminability
+should peak at \Lb{8} in this encoder, and we would not expect the specific
+number to transfer to a different backbone or a different modality. What we
+expect to transfer is the methodology: the depth profile is cheap to measure,
+the figures of merit above do not presume an answer, and any study using a
+foundation model as a metric backbone can run the audit for its own setting in
+minutes.
+
+The memorization reversal described in Section~\ref{sec:res_depth} is worth
+restating as a general warning. On a \textsc{head} reference we previously
+concluded that shallow blocks were better than mid-depth blocks for
+near-duplicate detection. On a subject-disjoint reference the ordering reverses
+and becomes monotone in the opposite direction. The reference protocol did not
+shift a number by a few percent; it inverted a methodological conclusion. Any
+depth study, ablation, or backbone comparison conducted on a convenience
+reference is exposed to the same risk.
+
+\subsection{Limitations}
+
+\paragraph{One dataset for the cohort analysis}
+The cohort-heterogeneity results are measured on BraTS, whose multi-site
+composition and subject-ordered filenames make the effect easy to isolate. We
+expect the phenomenon wherever a reference is assembled from a multi-site
+collection of volumetric studies, but we have not measured its magnitude
+elsewhere, and the specific inflation factors reported here should not be
+assumed to transfer. Whether datasets curated from a single site show a
+correspondingly smaller effect is an open question that the protocol in
+Section~\ref{sec:cohortnull} is designed to answer.
+
+\paragraph{One encoder for the depth analysis}
+The depth grid uses RadioDINO-s16. The finding that depth is task-dependent is
+likely general; the specific optima are not claimed to be.
+
+\paragraph{Generators are not state of the art}
+The DDPM and WDM-3D samples serve as objects of measurement, not as
+contributions. A stronger generator would sit closer to the cohort null and
+would make the resolution argument of Section~\ref{sec:res_null} more pressing,
+not less: the closer a generator comes to real data, the more the reference
+protocol determines whether the remaining gap can be detected at all.
+
+\paragraph{Lesion-level specificity is a partial result}
+Using expert glioma masks with area-matched mirror and texture-matched
+controls, the RadioDINO MMD responds $1.4$--$1.8\times$ more strongly to
+perturbation confined to tumour tissue than to matched healthy tissue, where an
+Inception-based MMD responds at $1.05$--$1.08\times$. The effect is measurable
+only in the upper part of the noise sweep: bootstrap intervals exclude unity at
+$\sigma = 60$ ($1.57$, $[1.03, 1.97]$) and $\sigma = 90$ ($1.39$,
+$[1.06, 1.71]$) but not at $\sigma = 45$ ($1.71$, $[0.94, 2.14]$), and at
+$\sigma \le 30$ the ratio is numerically degenerate because the control-region
+response is near zero. We report it as suggestive support for the domain
+backbone rather than as an established property.
+
+\paragraph{Coverage}
+Our coverage result is a negative one about a specific estimator in a specific
+embedding. It does not establish that no coverage diagnostic can work here, and
+we did not evaluate alternatives such as $\alpha$-precision/$\beta$-recall
+\citep{alaa2022faithful} at every depth. The recommendation is to run the
+mode-drop validation before reporting any coverage number, not to abandon
+coverage as a concept.
+
+% =============================================================================
+\section{Recommended protocol}
+\label{sec:protocol}
+% =============================================================================
+
+The following is what we would ask of a paper reporting a distributional metric
+for medical image generation, and what our released code implements by default.
+
+\begin{enumerate}[leftmargin=*, topsep=2pt, itemsep=3pt]
+\item \textbf{Report the number of distinct subjects behind every image set,
+      not only the number of images.} A reference of $500$ slices from $17$
+      subjects and one from $400$ are different instruments. This costs one
+      number in a table and makes the remaining recommendations checkable.
+\item \textbf{Build references by subject, not by filename.} Sample subjects
+      first, then draw slices balanced across them and shuffled within them.
+      Sorted-order convenience selects a site.
+\item \textbf{Keep real-versus-real comparisons subject-disjoint.} A null built
+      by splitting slices within subjects measures near-duplicate distance and
+      is optimistically small.
+\item \textbf{Contextualise against inter-cohort variation.} Report
+      $z_{\mathrm{cohort}}$ and the ratio to the \emph{mean} real-versus-real
+      cohort distance, at a stated cohort size, alongside the raw score. Avoid
+      ratios to the maximum: it is an order statistic whose expectation grows
+      with the number of cohort pairs compared. Report the permutation
+      $p$-value if desired, but do not read it as evidence of generator
+      quality.
+\item \textbf{Audit read-out depth; do not copy ours.} Run the depth audit
+      for your own encoder --- it costs one forward pass. Our optimum
+      (\Lb{7}--\Lb{9} for fidelity, with those three not distinguishable from
+      one another) is a property of this encoder and this data, and should not
+      be transplanted.
+\item \textbf{Validate every diagnostic before reporting it.} Mode drop must
+      reduce measured coverage; injected duplicates must be recovered at the
+      injected rate. A diagnostic that fails its own validation should not
+      appear in a results table.
+\item \textbf{Use one implementation per baseline metric.} FID computed from
+      two different Inception variants differs by tens of points on identical
+      images.
+\end{enumerate}
+
+% =============================================================================
+\section{Conclusion}
+\label{sec:conclusion}
+% =============================================================================
+
+We set out to audit a domain-pretrained embedding for generative medical image
+evaluation and found that the more consequential variable lies upstream of the
+embedding entirely. On BraTS, how the real reference cohort is assembled changes
+the reported discrepancy by up to a factor of two, moves the real-versus-real
+null by more than it moves the real-versus-generated score, and --- in the
+worst case that the most convenient protocol happens to select --- produces a
+distance between two sets of real images that exceeds the distance between real
+and generated ones. Reference composition is not a second-order detail in this
+setting; it is comparable in magnitude to the effect being measured.
+
+We proposed calibrating against a null built from distances between disjoint
+real patient cohorts, which asks whether a generator differs from the reference
+by more than routine inter-cohort variation. Unlike the conventional
+permutation test, which assigns overwhelming significance to every generator and
+becomes \emph{less} significant as the reference improves, the cohort-calibrated
+statistic tracks reference quality in the right direction and yields an
+interpretable effect size.
+
+Within that protocol, a depth-resolved audit of RadioDINO-s16 shows that
+encoder depth is task-dependent and that the final block --- the default
+read-out --- is optimal for none of the four tasks measured, falling $22\%$
+below the fidelity plateau at \Lb{7}--\Lb{9}, whose members are not
+distinguishable from one another. One widely used diagnostic, $k$-NN
+precision/recall coverage, fails its own mode-drop validation at every depth
+through neighbourhood-radius inflation, and we recommend against reporting it
+in this feature space without validation. For per-image scoring, the choice of
+distance matters more than depth.
+
+None of these findings requires a new metric. They ask for a more careful
+account of what an existing one is measured against.
+
+% =============================================================================
+\section*{Code and data availability}
+% =============================================================================
+
+Code implementing the metric, the inter-cohort reference distribution, the
+depth audit, the literature audit record and
+every experiment reported here is available at
+\url{https://github.com/Nishan-Charlie/m3-cohort-audit}. BraTS 2021
+\citep{baid2021rsna} and the LGG collection \citep{buda2019association} are
+available from their respective repositories under their own terms; we
+redistribute no patient data. Scripts to regenerate every table and figure from
+raw data are included, together with the exact subject lists defining each
+cohort block.
+
+\section*{CRediT authorship contribution statement}
+
+\textbf{Sathiyamohan Nishankar:} Conceptualization, Methodology, Software,
+Validation, Formal analysis, Investigation, Data curation, Writing --- original
+draft, Writing --- review \& editing, Visualization.
+
+\section*{Declaration of competing interest}
+
+The author declares no known competing financial interests or personal
+relationships that could have appeared to influence the work reported in this
+paper.

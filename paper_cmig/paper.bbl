@@ -1,0 +1,283 @@
+\begin{thebibliography}{27}
+\expandafter\ifx\csname natexlab\endcsname\relax\def\natexlab#1{#1}\fi
+\providecommand{\url}[1]{\texttt{#1}}
+\providecommand{\href}[2]{#2}
+\providecommand{\path}[1]{#1}
+\providecommand{\DOIprefix}{doi:}
+\providecommand{\ArXivprefix}{arXiv:}
+\providecommand{\URLprefix}{URL: }
+\providecommand{\Pubmedprefix}{pmid:}
+\providecommand{\doi}[1]{\href{http://dx.doi.org/#1}{\path{#1}}}
+\providecommand{\Pubmed}[1]{\href{pmid:#1}{\path{#1}}}
+\providecommand{\bibinfo}[2]{#2}
+\ifx\xfnm\relax \def\xfnm[#1]{\unskip,\space#1}\fi
+%Type = Misc
+\bibitem[{Akbar et~al.(2023)Akbar, Larsson, Blystad and
+  Eklund}]{akbar2025beware}
+\bibinfo{author}{Akbar, M.U.}, \bibinfo{author}{Larsson, M.},
+  \bibinfo{author}{Blystad, I.}, \bibinfo{author}{Eklund, A.},
+  \bibinfo{year}{2023}.
+\newblock \bibinfo{title}{Beware of diffusion models for synthesizing medical
+  images -- a comparison with {GAN}s in terms of memorizing brain {MRI} and
+  chest x-ray images}.
+\newblock \href{http://arxiv.org/abs/2305.07644}{{\tt arXiv:2305.07644}}.
+%Type = Inproceedings
+\bibitem[{Alaa et~al.(2022)Alaa, van Breugel, Saveliev and van~der
+  Schaar}]{alaa2022faithful}
+\bibinfo{author}{Alaa, A.}, \bibinfo{author}{van Breugel, B.},
+  \bibinfo{author}{Saveliev, E.S.}, \bibinfo{author}{van~der Schaar, M.},
+  \bibinfo{year}{2022}.
+\newblock \bibinfo{title}{How faithful is your synthetic data? sample-level
+  metrics for evaluating and auditing generative models}, in:
+  \bibinfo{booktitle}{Proceedings of the 39th International Conference on
+  Machine Learning (ICML)}, pp. \bibinfo{pages}{290--306}.
+%Type = Article
+\bibitem[{Arcones and Gin{\'e}(1992)}]{arcones1992bootstrap}
+\bibinfo{author}{Arcones, M.A.}, \bibinfo{author}{Gin{\'e}, E.},
+  \bibinfo{year}{1992}.
+\newblock \bibinfo{title}{On the bootstrap of {U} and {V} statistics}.
+\newblock \bibinfo{journal}{The Annals of Statistics} \bibinfo{volume}{20},
+  \bibinfo{pages}{655--674}.
+%Type = Article
+\bibitem[{Armato~III et~al.(2011)Armato~III, McLennan, Bidaut, McNitt-Gray,
+  Meyer, Reeves et~al.}]{armato2011lidc}
+\bibinfo{author}{Armato~III, S.G.}, \bibinfo{author}{McLennan, G.},
+  \bibinfo{author}{Bidaut, L.}, \bibinfo{author}{McNitt-Gray, M.F.},
+  \bibinfo{author}{Meyer, C.R.}, \bibinfo{author}{Reeves, A.P.}, et~al.,
+  \bibinfo{year}{2011}.
+\newblock \bibinfo{title}{The lung image database consortium ({LIDC}) and image
+  database resource initiative ({IDRI}): A completed reference database of lung
+  nodules on {CT} scans}.
+\newblock \bibinfo{journal}{Medical Physics} \bibinfo{volume}{38},
+  \bibinfo{pages}{915--931}.
+%Type = Misc
+\bibitem[{Baid et~al.(2021)Baid, Ghodasara, Mohan, Bilello, Calabrese, Colak,
+  Farahani, Kalpathy-Cramer et~al.}]{baid2021rsna}
+\bibinfo{author}{Baid, U.}, \bibinfo{author}{Ghodasara, S.},
+  \bibinfo{author}{Mohan, S.}, \bibinfo{author}{Bilello, M.},
+  \bibinfo{author}{Calabrese, E.}, \bibinfo{author}{Colak, E.},
+  \bibinfo{author}{Farahani, K.}, \bibinfo{author}{Kalpathy-Cramer, J.},
+  et~al., \bibinfo{year}{2021}.
+\newblock \bibinfo{title}{The {RSNA-ASNR-MICCAI} {BraTS} 2021 benchmark on
+  brain tumor segmentation and radiogenomic classification}.
+\newblock \href{http://arxiv.org/abs/2107.02314}{{\tt arXiv:2107.02314}}.
+%Type = Inproceedings
+\bibitem[{Bi{\'n}kowski et~al.(2018)Bi{\'n}kowski, Sutherland, Arbel and
+  Gretton}]{binkowski2018demystifying}
+\bibinfo{author}{Bi{\'n}kowski, M.}, \bibinfo{author}{Sutherland, D.J.},
+  \bibinfo{author}{Arbel, M.N.}, \bibinfo{author}{Gretton, A.},
+  \bibinfo{year}{2018}.
+\newblock \bibinfo{title}{Demystifying {MMD} {GAN}s}, in:
+  \bibinfo{booktitle}{International Conference on Learning Representations
+  ({ICLR})}.
+\newblock \URLprefix \url{https://arxiv.org/abs/1801.01401}.
+  \bibinfo{note}{arXiv:1801.01401}.
+%Type = Article
+\bibitem[{Buda et~al.(2019)Buda, Saha and Mazurowski}]{buda2019association}
+\bibinfo{author}{Buda, M.}, \bibinfo{author}{Saha, A.},
+  \bibinfo{author}{Mazurowski, M.A.}, \bibinfo{year}{2019}.
+\newblock \bibinfo{title}{Association of genomic subtypes of lower-grade
+  gliomas with shape features automatically extracted by a deep learning
+  algorithm}.
+\newblock \bibinfo{journal}{Computers in Biology and Medicine}
+  \bibinfo{volume}{109}, \bibinfo{pages}{218--225}.
+%Type = Inproceedings
+\bibitem[{Carlini et~al.(2023)Carlini, Hayes, Nasr, Jagielski, Sehwag, Tramer,
+  Balle, Ippolito and Wallace}]{carlini2023extracting}
+\bibinfo{author}{Carlini, N.}, \bibinfo{author}{Hayes, J.},
+  \bibinfo{author}{Nasr, M.}, \bibinfo{author}{Jagielski, M.},
+  \bibinfo{author}{Sehwag, V.}, \bibinfo{author}{Tramer, F.},
+  \bibinfo{author}{Balle, B.}, \bibinfo{author}{Ippolito, D.},
+  \bibinfo{author}{Wallace, E.}, \bibinfo{year}{2023}.
+\newblock \bibinfo{title}{Extracting training data from diffusion models}, in:
+  \bibinfo{booktitle}{32nd USENIX Security Symposium}, pp.
+  \bibinfo{pages}{5253--5270}.
+%Type = Inproceedings
+\bibitem[{Chong and Forsyth(2020)}]{chong2020effectively}
+\bibinfo{author}{Chong, M.J.}, \bibinfo{author}{Forsyth, D.},
+  \bibinfo{year}{2020}.
+\newblock \bibinfo{title}{Effectively unbiased {FID} and inception score and
+  where to find them}, in: \bibinfo{booktitle}{IEEE/CVF Conference on Computer
+  Vision and Pattern Recognition (CVPR)}, pp. \bibinfo{pages}{6070--6079}.
+%Type = Article
+\bibitem[{Dohmen et~al.(2025)Dohmen, Klemens, Baltruschat, Truong and
+  Lenga}]{dohmen2025similarity}
+\bibinfo{author}{Dohmen, M.}, \bibinfo{author}{Klemens, M.A.},
+  \bibinfo{author}{Baltruschat, I.M.}, \bibinfo{author}{Truong, T.},
+  \bibinfo{author}{Lenga, M.}, \bibinfo{year}{2025}.
+\newblock \bibinfo{title}{Similarity and quality metrics for mr image-to-image
+  translation}.
+\newblock \bibinfo{journal}{Scientific Reports} \bibinfo{volume}{15},
+  \bibinfo{pages}{3853}.
+%Type = Inproceedings
+\bibitem[{Friedrich et~al.(2024)Friedrich, Wolleb, Bieder, Durrer and
+  Cattin}]{friedrich2024wdm}
+\bibinfo{author}{Friedrich, P.}, \bibinfo{author}{Wolleb, J.},
+  \bibinfo{author}{Bieder, F.}, \bibinfo{author}{Durrer, A.},
+  \bibinfo{author}{Cattin, P.C.}, \bibinfo{year}{2024}.
+\newblock \bibinfo{title}{{WDM}: 3{D} wavelet diffusion models for
+  high-resolution medical image synthesis}, in: \bibinfo{booktitle}{MICCAI
+  Workshop on Deep Generative Models (DGM4MICCAI)}.
+%Type = Misc
+\bibitem[{Glocker et~al.(2019)Glocker, Robinson, Castro, Dou and
+  Konukoglu}]{glocker2019machine}
+\bibinfo{author}{Glocker, B.}, \bibinfo{author}{Robinson, R.},
+  \bibinfo{author}{Castro, D.C.}, \bibinfo{author}{Dou, Q.},
+  \bibinfo{author}{Konukoglu, E.}, \bibinfo{year}{2019}.
+\newblock \bibinfo{title}{Machine learning with multi-site imaging data: An
+  empirical study on the impact of scanner effects}.
+\newblock \href{http://arxiv.org/abs/1910.04597}{{\tt arXiv:1910.04597}}.
+%Type = Article
+\bibitem[{Gretton et~al.(2012)Gretton, Borgwardt, Rasch, Sch{\"o}lkopf and
+  Smola}]{gretton2012kernel}
+\bibinfo{author}{Gretton, A.}, \bibinfo{author}{Borgwardt, K.M.},
+  \bibinfo{author}{Rasch, M.J.}, \bibinfo{author}{Sch{\"o}lkopf, B.},
+  \bibinfo{author}{Smola, A.}, \bibinfo{year}{2012}.
+\newblock \bibinfo{title}{A kernel two-sample test}.
+\newblock \bibinfo{journal}{The journal of machine learning research}
+  \bibinfo{volume}{13}, \bibinfo{pages}{723--773}.
+%Type = Inproceedings
+\bibitem[{Heusel et~al.(2017)Heusel, Ramsauer, Unterthiner, Nessler and
+  Hochreiter}]{heusel2017gans}
+\bibinfo{author}{Heusel, M.}, \bibinfo{author}{Ramsauer, H.},
+  \bibinfo{author}{Unterthiner, T.}, \bibinfo{author}{Nessler, B.},
+  \bibinfo{author}{Hochreiter, S.}, \bibinfo{year}{2017}.
+\newblock \bibinfo{title}{{GAN}s trained by a two time-scale update rule
+  converge to a local {Nash} equilibrium}, in: \bibinfo{booktitle}{Advances in
+  Neural Information Processing Systems ({NeurIPS})},
+  \bibinfo{publisher}{Curran Associates}.
+%Type = Article
+\bibitem[{Ho et~al.(2020)Ho, Jain and Abbeel}]{ho2020denoising}
+\bibinfo{author}{Ho, J.}, \bibinfo{author}{Jain, A.}, \bibinfo{author}{Abbeel,
+  P.}, \bibinfo{year}{2020}.
+\newblock \bibinfo{title}{Denoising diffusion probabilistic models}.
+\newblock \bibinfo{journal}{Advances in neural information processing systems}
+  \bibinfo{volume}{33}, \bibinfo{pages}{6840--6851}.
+%Type = Inproceedings
+\bibitem[{Jayasumana et~al.(2024)Jayasumana, Ramalingam, Veit, Glasner,
+  Chakrabarti and Kumar}]{jayasumana2024cmmd}
+\bibinfo{author}{Jayasumana, S.}, \bibinfo{author}{Ramalingam, S.},
+  \bibinfo{author}{Veit, A.}, \bibinfo{author}{Glasner, D.},
+  \bibinfo{author}{Chakrabarti, A.}, \bibinfo{author}{Kumar, S.},
+  \bibinfo{year}{2024}.
+\newblock \bibinfo{title}{Rethinking {FID}: Towards a better evaluation metric
+  for image generation}, in: \bibinfo{booktitle}{Proceedings of the {IEEE/CVF}
+  Conference on Computer Vision and Pattern Recognition ({CVPR})}, pp.
+  \bibinfo{pages}{9307--9315}.
+\newblock \DOIprefix\doi{10.1109/CVPR52733.2024.00890}.
+%Type = Article
+\bibitem[{Kazerouni et~al.(2023)Kazerouni, Aghdam, Heidari, Azad, Fayyaz,
+  Hacihaliloglu and Merhof}]{kazerouni2023diffusion}
+\bibinfo{author}{Kazerouni, A.}, \bibinfo{author}{Aghdam, E.K.},
+  \bibinfo{author}{Heidari, M.}, \bibinfo{author}{Azad, R.},
+  \bibinfo{author}{Fayyaz, M.}, \bibinfo{author}{Hacihaliloglu, I.},
+  \bibinfo{author}{Merhof, D.}, \bibinfo{year}{2023}.
+\newblock \bibinfo{title}{Diffusion models in medical imaging: A comprehensive
+  survey}.
+\newblock \bibinfo{journal}{Medical image analysis} \bibinfo{volume}{88},
+  \bibinfo{pages}{102846}.
+%Type = Article
+\bibitem[{Kebaili et~al.(2023)Kebaili, Lapuyade-Lahorgue and
+  Ruan}]{kebaili2023deep}
+\bibinfo{author}{Kebaili, A.}, \bibinfo{author}{Lapuyade-Lahorgue, J.},
+  \bibinfo{author}{Ruan, S.}, \bibinfo{year}{2023}.
+\newblock \bibinfo{title}{Deep learning approaches for data augmentation in
+  medical imaging: a review}.
+\newblock \bibinfo{journal}{Journal of imaging} \bibinfo{volume}{9},
+  \bibinfo{pages}{81}.
+%Type = Article
+\bibitem[{Konz et~al.(2026)Konz, Osuala, Verma, Chen, Gu, Dong, Chen, Marshall,
+  Garrucho, Kushibar, Lang, Kim, Grimm, Lewin, Duncan, Schnabel, Diaz, Lekadir
+  and Mazurowski}]{konz2025frd}
+\bibinfo{author}{Konz, N.}, \bibinfo{author}{Osuala, R.},
+  \bibinfo{author}{Verma, P.}, \bibinfo{author}{Chen, Y.}, \bibinfo{author}{Gu,
+  H.}, \bibinfo{author}{Dong, H.}, \bibinfo{author}{Chen, Y.},
+  \bibinfo{author}{Marshall, A.}, \bibinfo{author}{Garrucho, L.},
+  \bibinfo{author}{Kushibar, K.}, \bibinfo{author}{Lang, D.M.},
+  \bibinfo{author}{Kim, G.S.}, \bibinfo{author}{Grimm, L.J.},
+  \bibinfo{author}{Lewin, J.M.}, \bibinfo{author}{Duncan, J.S.},
+  \bibinfo{author}{Schnabel, J.A.}, \bibinfo{author}{Diaz, O.},
+  \bibinfo{author}{Lekadir, K.}, \bibinfo{author}{Mazurowski, M.A.},
+  \bibinfo{year}{2026}.
+\newblock \bibinfo{title}{{Fr\'{e}chet Radiomic Distance (FRD)}: A versatile
+  metric for comparing medical imaging datasets}.
+\newblock \bibinfo{journal}{Medical Image Analysis} \bibinfo{volume}{110}.
+\newblock \DOIprefix\doi{10.1016/j.media.2025.103490}.
+  \bibinfo{note}{arXiv:2412.01496}.
+%Type = Inproceedings
+\bibitem[{Kynk{\"a}{\"a}nniemi et~al.(2019)Kynk{\"a}{\"a}nniemi, Karras, Laine,
+  Lehtinen and Aila}]{kynkaanniemi2019pr}
+\bibinfo{author}{Kynk{\"a}{\"a}nniemi, T.}, \bibinfo{author}{Karras, T.},
+  \bibinfo{author}{Laine, S.}, \bibinfo{author}{Lehtinen, J.},
+  \bibinfo{author}{Aila, T.}, \bibinfo{year}{2019}.
+\newblock \bibinfo{title}{Improved precision and recall metric for assessing
+  generative models}, in: \bibinfo{booktitle}{Advances in Neural Information
+  Processing Systems ({NeurIPS})}, \bibinfo{publisher}{Curran Associates}.
+%Type = Misc
+\bibitem[{Lee and Pak(2026)}]{lee2026rethinking}
+\bibinfo{author}{Lee, Y.}, \bibinfo{author}{Pak, B.}, \bibinfo{year}{2026}.
+\newblock \bibinfo{title}{Rethinking {FID} through the geometry of the
+  reference dataset}.
+\newblock \href{http://arxiv.org/abs/2605.29335}{{\tt arXiv:2605.29335}}.
+%Type = Misc
+\bibitem[{P{\'e}rez-Garc{\'\i}a et~al.()P{\'e}rez-Garc{\'\i}a, Sharma,
+  Bond-Taylor, Bouzid, Salvatelli, Ilse et~al.}]{perezrad}
+\bibinfo{author}{P{\'e}rez-Garc{\'\i}a, F.}, \bibinfo{author}{Sharma, H.},
+  \bibinfo{author}{Bond-Taylor, S.}, \bibinfo{author}{Bouzid, K.},
+  \bibinfo{author}{Salvatelli, V.}, \bibinfo{author}{Ilse, M.}, et~al., .
+\newblock \bibinfo{title}{Rad-dino: Exploring scalable medical image encoders
+  beyond text supervision}.
+%Type = Inproceedings
+\bibitem[{Sajjadi et~al.(2018)Sajjadi, Bachem, Lucic, Bousquet and
+  Gelly}]{sajjadi2018assessing}
+\bibinfo{author}{Sajjadi, M.S.M.}, \bibinfo{author}{Bachem, O.},
+  \bibinfo{author}{Lucic, M.}, \bibinfo{author}{Bousquet, O.},
+  \bibinfo{author}{Gelly, S.}, \bibinfo{year}{2018}.
+\newblock \bibinfo{title}{Assessing generative models via precision and
+  recall}, in: \bibinfo{booktitle}{Advances in Neural Information Processing
+  Systems (NeurIPS)}.
+%Type = Article
+\bibitem[{Varoquaux and Cheplygina(2022)}]{varoquaux2022machine}
+\bibinfo{author}{Varoquaux, G.}, \bibinfo{author}{Cheplygina, V.},
+  \bibinfo{year}{2022}.
+\newblock \bibinfo{title}{Machine learning for medical imaging: methodological
+  failures and recommendations for the future}.
+\newblock \bibinfo{journal}{npj Digital Medicine} \bibinfo{volume}{5},
+  \bibinfo{pages}{48}.
+%Type = Article
+\bibitem[{Wachinger et~al.(2021)Wachinger, Rieckmann and
+  P{\"o}lsterl}]{wachinger2021detect}
+\bibinfo{author}{Wachinger, C.}, \bibinfo{author}{Rieckmann, A.},
+  \bibinfo{author}{P{\"o}lsterl, S.}, \bibinfo{year}{2021}.
+\newblock \bibinfo{title}{Detect and correct bias in multi-site neuroimaging
+  datasets}.
+\newblock \bibinfo{journal}{Medical Image Analysis} \bibinfo{volume}{67},
+  \bibinfo{pages}{101879}.
+%Type = Inproceedings
+\bibitem[{Woodland et~al.(2024)Woodland, Castelo, Al~Taie, Albuquerque
+  Marques~Silva, Eltaher, Mohn, Shieh, Kundu, Yung, Patel
+  et~al.}]{woodland2024feature}
+\bibinfo{author}{Woodland, M.}, \bibinfo{author}{Castelo, A.},
+  \bibinfo{author}{Al~Taie, M.}, \bibinfo{author}{Albuquerque Marques~Silva,
+  J.}, \bibinfo{author}{Eltaher, M.}, \bibinfo{author}{Mohn, F.},
+  \bibinfo{author}{Shieh, A.}, \bibinfo{author}{Kundu, S.},
+  \bibinfo{author}{Yung, J.P.}, \bibinfo{author}{Patel, A.B.}, et~al.,
+  \bibinfo{year}{2024}.
+\newblock \bibinfo{title}{Feature extraction for generative medical imaging
+  evaluation: New evidence against an evolving trend}, in:
+  \bibinfo{booktitle}{International Conference on Medical Image Computing and
+  Computer-Assisted Intervention}, \bibinfo{organization}{Springer}. pp.
+  \bibinfo{pages}{87--97}.
+%Type = Article
+\bibitem[{Yang et~al.(2023)Yang, Shi, Wei, Liu, Zhao, Ke, Pfister and
+  Ni}]{yang2023medmnist}
+\bibinfo{author}{Yang, J.}, \bibinfo{author}{Shi, R.}, \bibinfo{author}{Wei,
+  D.}, \bibinfo{author}{Liu, Z.}, \bibinfo{author}{Zhao, L.},
+  \bibinfo{author}{Ke, B.}, \bibinfo{author}{Pfister, H.}, \bibinfo{author}{Ni,
+  B.}, \bibinfo{year}{2023}.
+\newblock \bibinfo{title}{{MedMNIST} v2 -- a large-scale lightweight benchmark
+  for 2{D} and 3{D} biomedical image classification}.
+\newblock \bibinfo{journal}{Scientific Data} \bibinfo{volume}{10},
+  \bibinfo{pages}{41}.
+
+\end{thebibliography}

@@ -79,14 +79,14 @@
         minimum height=0.28cm, inner sep=0pt, line width=0.4pt]
         at (\x,-2.42) {};
 }
-\foreach \i/\c in {4/cCov, 9/cMem, 12/cFid}{
+\foreach \i/\c in {9/cMem, 12/cFid}{
   \pgfmathsetmacro{\x}{5.02 + (\i-1)*0.35}
   \node[draw=\c, fill=\c!35, minimum width=0.28cm, minimum height=0.28cm,
         inner sep=0pt, line width=1.1pt] at (\x,-2.42) {};
 }
 \node[font=\scriptsize, text=black!60] at (6.95,-2.80) {block 1 \ $\longrightarrow$ \ block 12};
 \node[font=\scriptsize, align=center] at (7.35,-3.22)
-     {read from \textbf{\textcolor{cCov}{L4}},
+     {read from
       \textbf{\textcolor{cMem}{L9}} and \textbf{\textcolor{cFid}{L12}}};
 \draw[black!35, line width=0.6pt] (enc.south) -- (6.95,-2.24);
 
@@ -100,7 +100,7 @@
 
 % ---- the three questions ------------------------------------------
 \node[box, draw=cFid, fill=cFid!7, text width=6.35cm, anchor=west]
-     (qfid) at (13.1,2.02)
+     (qfid) at (13.1,1.30)
      {\textbf{\textcolor{cFid}{1. Fidelity}} \ \ {\scriptsize block \textbf{L12}}\\[2pt]
       \emph{\scriptsize Do the generated images match the real ones}\\[-1pt]
       \emph{\scriptsize as a group?}\\[2pt]
@@ -108,31 +108,23 @@
       {\scriptsize (unbiased multi-bandwidth RBF MMD$^2$)}};
 
 \node[box, draw=cMem, fill=cMem!7, text width=6.35cm, anchor=west]
-     (qmem) at (13.1,-0.42)
+     (qmem) at (13.1,-1.30)
      {\textbf{\textcolor{cMem}{2. Memorisation}} \ \ {\scriptsize block \textbf{L9}}\\[2pt]
       \emph{\scriptsize Has the model simply copied its training images?}\\[2pt]
       {\scriptsize How close each generated image lies to its}\\[-1pt]
       {\scriptsize nearest real image (1-NN distance)}};
 
-\node[box, draw=cCov, fill=cCov!7, text width=6.35cm, anchor=west]
-     (qcov) at (13.1,-2.86)
-     {\textbf{\textcolor{cCov}{3. Coverage}} \ \ {\scriptsize block \textbf{L4}}
-      \ {\scriptsize\itshape --- diagnostic only}\\[2pt]
-      \emph{\scriptsize Does it produce the full variety of real images,}\\[-1pt]
-      \emph{\scriptsize or only a few kinds?}\\[2pt]
-      {\scriptsize $k$-NN precision and recall between the sets}};
 
 \begin{scope}[on background layer]
   \node[rounded corners=5pt, draw=black!35, fill=black!2, line width=1pt,
-        fit=(qfid)(qmem)(qcov), inner sep=10pt] (qbox) {};
+        fit=(qfid)(qmem), inner sep=10pt] (qbox) {};
 \end{scope}
 \node[font=\bfseries\small, anchor=south west]
       at ([shift={(1pt,3pt)}]qbox.north west)
-      {Three separate questions --- each answered at its own block};
+      {Two separate questions --- each answered at its own block};
 
 \draw[ar] (cls.east) -- ++(0.50,0) |- (qfid.west);
 \draw[ar] (cls.east) -- ++(0.50,0) |- (qmem.west);
-\draw[ar] (cls.east) -- ++(0.50,0) |- (qcov.west);
 
 % =====================================================================
 % ROW 2 : post-hoc loop | how the score is formed | report | evidence
@@ -164,10 +156,10 @@
      {\textbf{\textcolor{cRep}{How the M3-Score is formed}}\\[3pt]
       {\scriptsize The headline \textbf{M3-Score is the fidelity}}\\[-1pt]
       {\scriptsize \textbf{number from L12 on its own}.}\\[4pt]
-      {\scriptsize The three axes are \textbf{never averaged}.}\\[-1pt]
+      {\scriptsize The two axes are \textbf{never averaged}.}\\[-1pt]
       {\scriptsize A single mean would hide \emph{which} of the}\\[-1pt]
-      {\scriptsize three failed, so memorisation and}\\[-1pt]
-      {\scriptsize coverage are reported \textbf{beside} it.}};
+      {\scriptsize two failed, so memorisation is}\\[-1pt]
+      {\scriptsize reported \textbf{beside} it.}};
 
 \draw[ar] (qbox.south) -- ++(0,-0.45) -| (comb.north);
 
@@ -176,10 +168,9 @@
      (rep) at (15.35,-4.60)
      {\textbf{\textcolor{cRep}{M3-Score report}}\\[3pt]
       {\scriptsize $\bullet$\ \ \textbf{M3} $=$ L12 fidelity MMD$^2$,}\\[-1pt]
-      {\scriptsize \ \ \ with permutation $p$, bootstrap}\\[-1pt]
-      {\scriptsize \ \ \ 95\% CI and separation $Z$}\\[2pt]
-      {\scriptsize $\bullet$\ \ \textbf{memorisation rate}}\\[2pt]
-      {\scriptsize $\bullet$\ \ \textbf{coverage} (diagnostic)}};
+      {\scriptsize \ \ \ with permutation $p$ and}\\[-1pt]
+      {\scriptsize \ \ \ bootstrap 95\% CI}\\[2pt]
+      {\scriptsize $\bullet$\ \ \textbf{memorisation rate} (L9)}};
 \draw[ar] (comb) -- (rep);
 
 % ---- evidence mini-plots -------------------------------------------

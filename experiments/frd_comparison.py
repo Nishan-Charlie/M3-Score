@@ -77,6 +77,27 @@ def _load_images_from_dir(
 # InceptionV3 feature extraction (shared for FID and KID)
 # ---------------------------------------------------------------------------
 
+def _load_uint8_rgb(directory: str, n: Optional[int] = None) -> torch.Tensor:
+    """uint8 RGB tensors at 256x256, matching evaluation/eval_pipeline.load_rgb.
+
+    torchmetrics' FID/KID expect uint8 input and handle the 299x299 resize and
+    the FID-specific Inception normalisation internally. Keeping this identical
+    to eval_pipeline is what makes the FID reported here comparable with the
+    rest of the paper.
+    """
+    from PIL import Image
+    exts = ("*.jpg", "*.jpeg", "*.png", "*.tif", "*.tiff")
+    paths: list = []
+    for ext in exts:
+        paths.extend(glob.glob(os.path.join(directory, "**", ext), recursive=True))
+    paths = sorted(paths)[:n]
+    imgs = []
+    for p in paths:
+        arr = np.array(Image.open(p).convert("RGB").resize((256, 256)), dtype=np.uint8)
+        imgs.append(torch.from_numpy(arr.transpose(2, 0, 1)))
+    return torch.stack(imgs)
+
+
 def _extract_inception_features(
     imgs: torch.Tensor,
     device: str,
@@ -182,13 +203,29 @@ def _compute_kid_from_features(
 # FRD
 # ---------------------------------------------------------------------------
 
-def _compute_frd(real_dir: str, gen_dir: str, num_images: Optional[int] = None) -> float:
+def _compute_frd(
+    real_dir: str,
+    gen_dir: str,
+    num_images: Optional[int] = None,
+    num_workers: int = 4,
+) -> float:
     """
     Frechet Radiomic Distance using the official frd-score package.
-    
-    If num_images is set, we create temporary directories with copies to 
-    the first num_images to ensure FRD is computed on the same subset as 
+
+    If num_images is set, we create temporary directories with copies to
+    the first num_images to ensure FRD is computed on the same subset as
     other metrics.
+
+    num_workers caps frd-score's multiprocessing pool. Its own default is
+    cpu_count() - 2, which on a 20-core machine spawns 18 processes that each
+    re-import numpy/scipy/pyradiomics; with limited free RAM this exhausts the
+    Windows paging file and dies with
+
+        ImportError: DLL load failed while importing bit_generator:
+        The paging file is too small for this operation to complete.
+
+    Radiomic extraction is I/O- and CPU-bound per image, so a small pool costs
+    little wall-clock time and keeps the run within memory.
     """
     import tempfile
     import shutil
@@ -219,9 +256,9 @@ def _compute_frd(real_dir: str, gen_dir: str, num_images: Optional[int] = None) 
             _copy_subset(gen_dir,  tmp_gen,  num_images)
             
             # Pass list of paths to compute_frd
-            score = frd.compute_frd([tmp_real, tmp_gen])
+            score = frd.compute_frd([tmp_real, tmp_gen], num_workers=num_workers)
         else:
-            score = frd.compute_frd([real_dir, gen_dir])
+            score = frd.compute_frd([real_dir, gen_dir], num_workers=num_workers)
             
         return float(score)
     except Exception as exc:
@@ -363,34 +400,41 @@ def run_frd_comparison(
     results["frd_time_s"] = round(time.time() - t, 2)
     print(f"  FRD = {results['frd']}  ({results['frd_time_s']} s)")
 
-    # ── InceptionV3 features extracted once for FID and KID ────────────────
-    print("\n  Extracting InceptionV3 features (shared for FID and KID) ...")
-    t_feat = time.time()
-    f_r_tensor = _extract_inception_features(real, device)
-    f_g_tensor = _extract_inception_features(gen,  device)
-    feat_time = round(time.time() - t_feat, 2)
-    inception_available = (f_r_tensor is not None and f_g_tensor is not None)
-    if not inception_available:
-        print("  [WARN] pytorch-fid not installed; FID and KID skipped.")
-
-    # ── FID ────────────────────────────────────────────────────────────────
-    print("\n  Computing FID ...")
+    # ── FID and KID via torchmetrics ───────────────────────────────────────
+    # NOTE: this file previously computed FID from torchvision's ImageNet
+    # InceptionV3 with ImageNet mean/std normalisation. That is NOT standard
+    # FID (which uses the FID-specific pt_inception-2015-12-05 weights at
+    # 299x299) and it returned 284.5 where every other experiment in this
+    # repository reports 68.8 for the identical comparison. Ten other modules
+    # use torchmetrics; this one now does too, so the numbers are comparable.
+    print("\n  Computing FID and KID (torchmetrics, uint8 RGB @256) ...")
     t = time.time()
-    if inception_available:
-        results["fid"] = _compute_fid_from_features(
-            f_r_tensor.numpy(), f_g_tensor.numpy()
-        )
-    else:
+    real_u8 = _load_uint8_rgb(real_dir, num_images)
+    gen_u8  = _load_uint8_rgb(gen_dir,  num_images)
+    try:
+        from torchmetrics.image.fid import FrechetInceptionDistance
+        from torchmetrics.image.kid import KernelInceptionDistance
+        _fid = FrechetInceptionDistance(feature=2048).to(device)
+        _fid.update(real_u8.to(device), real=True)
+        _fid.update(gen_u8.to(device),  real=False)
+        results["fid"] = float(_fid.compute().item())
+        inception_available = True
+    except Exception as exc:
+        print(f"  [WARN] torchmetrics FID failed: {exc}")
         results["fid"] = float("nan")
-    # Include shared feature extraction time in the FID timing
-    results["fid_time_s"] = round(time.time() - t + feat_time, 2)
-    print(f"  FID = {results['fid']}  ({results['fid_time_s']} s incl. feature extraction)")
+        inception_available = False
+    results["fid_time_s"] = round(time.time() - t, 2)
+    print(f"  FID = {results['fid']}  ({results['fid_time_s']} s)")
 
     # ── KID ────────────────────────────────────────────────────────────────
     print("\n  Computing KID ...")
     t = time.time()
     if inception_available:
-        results["kid"] = _compute_kid_from_features(f_r_tensor, f_g_tensor)
+        _sub = min(50, len(gen_u8))
+        _kid = KernelInceptionDistance(subset_size=_sub).to(device)
+        _kid.update(real_u8.to(device), real=True)
+        _kid.update(gen_u8.to(device),  real=False)
+        results["kid"] = float(_kid.compute()[0].item())
     else:
         results["kid"] = float("nan")
     results["kid_time_s"] = round(time.time() - t, 2)

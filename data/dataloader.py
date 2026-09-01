@@ -38,7 +38,8 @@ def tensor_collate_fn(batch):
         img_tensors.append(t)
     return torch.stack(img_tensors)
 
-def get_mri_2d_dataloader(data_dir, batch_size=16, spatial_size=(256, 256), num_workers=4):
+def get_mri_2d_dataloader(data_dir, batch_size=16, spatial_size=(256, 256), num_workers=4,
+                          cache_rate=1.0):
     """Loads 2D MRI slices (JPG, PNG, etc.) from class-indexed directories."""
     # Find all images recursively
     extensions = ("*.jpg", "*.jpeg", "*.png", "*.tif", "*.tiff")
@@ -64,7 +65,12 @@ def get_mri_2d_dataloader(data_dir, batch_size=16, spatial_size=(256, 256), num_
         ToTensord(keys=["image"]),
     ])
 
-    ds = CacheDataset(data=data_dicts, transform=train_transforms, cache_rate=1.0, progress=False)
+    # cache_rate=1.0 holds every decoded slice in RAM, which is roughly
+    # 260 kB per 256x256 float32 image -- about 7 GB for a 27k-slice split.
+    # Lower it when training alongside other jobs or on a memory-constrained
+    # machine; the only cost is re-decoding uncached slices each epoch.
+    ds = CacheDataset(data=data_dicts, transform=train_transforms,
+                      cache_rate=cache_rate, progress=False)
 
     return DataLoader(
         ds, 

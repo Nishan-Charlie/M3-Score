@@ -1,0 +1,83 @@
+\subsection{Cross-metric comparison on a single protocol}
+\label{sec:res_baselines}
+
+Table~\ref{tab:unified} reports every metric on one reference protocol and one
+implementation per metric, which Section~\ref{sec:res_cohort} argues is
+necessary for the numbers to be comparable at all. Two rows contain no
+generated images. \textsc{real probe} is a second, subject-disjoint block drawn
+by the same \textsc{balanced} procedure as the reference: the value a metric
+should return when nothing is wrong. \textsc{real head} is the block that the
+default filename-ordered protocol selects --- also entirely real BraTS slices,
+at the same resolution, from the same collection, preprocessed identically.
+
+\paragraph{A real reference can look like a generative model}
+The two real rows are the practical summary of this paper. Drawn correctly, a
+real block sits at $\widehat{\mmd}^2 = 0.002$ and FID $= 36.0$. Drawn by the
+convenient protocol, the same kind of comparison --- real against real ---
+reaches $\widehat{\mmd}^2 = 0.067$ and FID $= 64.6$. The DDPM, an actual
+generative model, sits at $0.079$ and $70.8$. On FID the gap between a misdrawn
+real reference and a real generator is about six points, set against the
+$29$-point spread between the two real rows. A reader given only the scalar
+$64.6$ has no way to tell that no generative model was involved in producing
+it. This holds for every metric in the table, including the two
+natural-image baselines, so it is a property of the protocol rather than of the
+medical backbone.
+
+\paragraph{Ordering, and where the backbones disagree}
+All four metrics order the three generated sets in the same way relative to the
+reference, and all place the weak same-modality generator closer than the
+cross-modality shift (Table~\ref{tab:unified}). The metrics disagree on the
+\emph{far} end of the ordering. The RadioDINO MMD places retinal fundus further
+from brain MRI ($0.463$ at \Lb{12}) than chest CT ($0.403$); FID and KID place
+CT further ($322.2$) than retinal ($248.4$). Neither ordering is wrong in the
+abstract --- they encode different notions of similarity. RadioDINO, trained on
+radiology, treats CT and MRI as neighbouring modalities and ophthalmic
+photography as remote; InceptionV3, trained on natural images, responds to
+surface appearance, and a colour fundus photograph is closer to its training
+distribution than a greyscale CT slice. For evaluating a CT or MRI generator we
+regard the radiological ordering as the more useful of the two, but this is an
+argument about which similarity a practitioner wants, not evidence that one
+backbone is more accurate.
+
+We had previously reported, on a \textsc{head} reference, that CMMD inverts the
+ordering of a weak same-modality generator against a cross-modality CT shift.
+That measurement was made on the reference protocol this paper argues against,
+and we therefore do not carry the claim forward; whether it survives a
+subject-balanced reference is left open.
+
+\begin{table}[t]
+\centering
+\caption{All metrics on one reference protocol (\textsc{balanced}$(100)$,
+$N = 500$) and one implementation each. The first two rows contain only real
+images. Bootstrap intervals ($60$ resamples) are given for comparisons under
+the alternative; none is given for the real rows, where the statistic
+approaches degeneracy and the ordinary bootstrap is not consistent
+(Section~\ref{sec:cohortnull}).}
+\label{tab:unified}
+\small
+\begin{tabular}{llcccc}
+\toprule
+Comparison set & Content & $\widehat{\mmd}^2$ \Lb{8} & $\widehat{\mmd}^2$ \Lb{12}
+ & FID & KID \\
+\midrule
+\textsc{real probe}  & real vs.\ real & $0.0016$ & $0.0015$ & $36.0$  & $0.0009$ \\
+\textsc{real head}   & real vs.\ real & $0.0628$ & $0.0674$ & $64.6$  & $0.0299$ \\
+\midrule
+DDPM           & real vs.\ gen. & $0.1028$ & $0.0792$ & $70.8$  & $0.0380$ \\
+WDM-3D (MRI)   & real vs.\ gen. & $0.2155$ & $0.2204$ & $174.8$ & $0.1574$ \\
+LIDC CT        & real vs.\ gen. & $0.3886$ & $0.4034$ & $322.2$ & $0.3725$ \\
+Retinal        & real vs.\ gen. & $0.5026$ & $0.4632$ & $248.4$ & $0.2851$ \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\paragraph{A note on the degenerate row}
+The bootstrap interval our procedure returns for \textsc{real probe} at \Lb{8}
+is $[0.0025, 0.0047]$ for a point estimate of $0.0016$ --- an interval that does
+not contain the estimate it is meant to bracket. This is not an implementation
+error but the expected behaviour of the ordinary bootstrap on a degenerate
+$U$-statistic \citep{arcones1992bootstrap}, and it is precisely why we
+characterise null behaviour with the empirical inter-cohort distribution of
+Section~\ref{sec:cohortnull} rather than with bootstrap intervals. We report the
+pathology rather than suppressing it, because a reader who applies the
+bootstrap uncritically to a near-null comparison will meet it.
