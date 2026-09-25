@@ -29,7 +29,7 @@ axis also provides a native permutation test and bootstrap confidence interval.
 
 ## Calculation methodology
 
-![M3-Score calculation methodology](docs/assets/m3score-calculation.png)
+[View the M3-Score calculation methodology diagram (PDF)](docs/assets/M3Score-Calculation.pdf)
 
 The diagram summarizes the feature extraction, fixed-layer selection, and separate fidelity, memorization, and coverage calculations used by M3-Score.
 
