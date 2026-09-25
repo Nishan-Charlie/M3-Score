@@ -159,7 +159,7 @@ GitHub Pages can publish this site directly from the `docs/` folder:
 3. Choose the `main` branch and the `/docs` folder.
 4. Save the setting and open the generated Pages URL.
 
-The entry point is [`docs/index.html`](docs/index.html). The page includes a self-contained copy
+The entry point is [`docs/index.html`](docs/index.html). After enabling Pages, the live site will be available at `https://nishan-charlie.github.io/M3-Score/`. The page includes a self-contained copy
 of selected figures under [`docs/assets/`](docs/assets/); the ArXiv link will be added later.
 ## Citation
 

@@ -1,6 +1,6 @@
 # Publication release
 
-This repository is the cleaned companion release for the MICAI paper on M3-Score.
+This repository is a cleaned, pre-publication companion release for the M3-Score research project.
 
 ## Included
 
