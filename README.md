@@ -21,11 +21,17 @@ axis also provides a native permutation test and bootstrap confidence interval.
 
 ![M3-Score overview](paper_release/Images/three_axis_severity.png)
 
-**Read more:** [HTML project page](docs/index.html) · [academic project notes](docs/PROJECT.md) · [paper PDF](paper_release/paper.pdf) ·
+**Read more:** [HTML project page](docs/index.html) · [academic project notes](docs/PROJECT.md) · ArXiv link coming soon ·
 [publication figures](paper_release/Images/) · [release scope](RELEASE.md)
 
 > This is a pre-publication research repository. It does not claim acceptance or submission to
 > MICAI. The repository is organized as a publication-grade companion release for the paper.
+
+## Calculation methodology
+
+![M3-Score calculation methodology](docs/assets/m3score-calculation.png)
+
+The diagram summarizes the feature extraction, fixed-layer selection, and separate fidelity, memorization, and coverage calculations used by M3-Score.
 
 ## Why three axes?
 
@@ -133,7 +139,7 @@ figures/           Publication figures and image assets
 results/           Numeric reports, plots, and retained experiment logs
 tools/             Audits, result tables, and analysis helpers
 external/wdm-3d/  Vendored WDM-3D baseline
-paper_release/    Final paper PDF, figures, and build logs
+paper_release/    Supporting publication figures and retained logs
 docs/              Academic project page and experiment records
 ```
 
@@ -154,7 +160,7 @@ GitHub Pages can publish this site directly from the `docs/` folder:
 4. Save the setting and open the generated Pages URL.
 
 The entry point is [`docs/index.html`](docs/index.html). The page includes a self-contained copy
-of the paper PDF and selected figures under [`docs/assets/`](docs/assets/).
+of selected figures under [`docs/assets/`](docs/assets/); the ArXiv link will be added later.
 ## Citation
 
 ```bibtex

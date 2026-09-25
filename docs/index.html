@@ -100,7 +100,7 @@
         <a href="#results">Results</a>
         <a href="#visuals">Figures</a>
         <a href="#reproduce">Reproduce</a>
-        <a href="assets/paper.pdf">Paper PDF</a>
+        <a href="#citation">ArXiv link coming soon</a>
       </nav>
     </div>
   </header>
@@ -113,7 +113,7 @@
         <p class="lead">M3-Score is a radiology-specific evaluation framework that separates three questions usually hidden inside one generative-image score: whether generated images match the real distribution, whether they resemble individual real examples too closely, and how much of the real manifold they cover.</p>
         <p class="meta"><strong>Sathiyamohan Nishankar</strong> · Department of Computer Engineering, University of Peradeniya, Sri Lanka</p>
         <div class="actions">
-          <a class="button primary" href="assets/paper.pdf">Read the paper</a>
+          <a class="button primary" href="#citation">ArXiv link coming soon</a>
           <a class="button secondary" href="PROJECT.md">View source on GitHub</a>
           <a class="button secondary" href="PROJECT.md">Repository README</a>
         </div>
@@ -129,6 +129,10 @@
         <div class="eyebrow">The framework</div>
         <h2>One evaluation, three interpretable questions.</h2>
         <p class="section-intro">Each axis is defined before the reported test outcomes and is evaluated in frozen RadioDINO-s16 features. The separation is designed to make common generative-model failure modes visible instead of averaging them away.</p>
+        <figure class="hero-figure" style="margin-top: 34px;">
+          <img src="assets/m3score-calculation.png" alt="M3-Score calculation methodology diagram">
+          <figcaption>Calculation methodology: frozen radiology features flow into the three fixed-layer M3-Score axes.</figcaption>
+        </figure>
         <div class="grid-3">
           <article class="card axis">
             <div class="layer">Layer 12 · lower is better</div>
@@ -223,7 +227,7 @@ pip install -r requirements.txt</pre>
 
     <section>
       <div class="shell">
-        <div class="eyebrow">Citation</div>
+        <div id="citation" class="eyebrow">Citation</div>
         <h2>Use the paper and repository together.</h2>
         <p class="section-intro">This project page describes a pre-publication academic release. Venue-specific submission, acceptance, and publication claims should only be added after official confirmation.</p>
         <pre class="code citation">@article{nishankar2026m3score,

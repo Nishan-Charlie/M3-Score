@@ -8,7 +8,7 @@ This repository is the cleaned companion release for the MICAI paper on M3-Score
 - Reproducibility scripts and configuration.
 - Publication figures and result reports.
 - Experimental logs retained for auditability.
-- The final paper PDF and its required figures in `paper_release/`.
+- Supporting publication figures and retained logs in `paper_release/`; the ArXiv link will be added later.
 
 ## Deliberately excluded
 

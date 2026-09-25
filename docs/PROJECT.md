@@ -7,7 +7,7 @@
 **Status:** Pre-publication research project  
 **Repository:** M3-Score reference implementation and experimental record
 
-[Paper PDF](../paper_release/paper.pdf) · [Code](../evaluation/) · [Results](../results/) ·
+ArXiv link coming soon · [Code](../evaluation/) · [Results](../results/) ·
 [Figures](../paper_release/Images/) · [README](../README.md)
 
 ![M3-Score axes](../paper_release/Images/three_axis_severity.png)
@@ -128,7 +128,7 @@ The paper deliberately bounds its claims:
 - [`evaluation/`](../evaluation/) contains the metric and baseline implementations.
 - [`figures/`](../figures/) contains figure assets and supporting reports.
 - [`results/`](../results/) contains numerical outputs, plots, and retained logs.
-- [`paper_release/`](../paper_release/) contains the final paper PDF, figures, and build logs.
+- [`paper_release/`](../paper_release/) contains supporting publication figures and retained logs.
 - [`docs/EXPERIMENT_FINDINGS.md`](EXPERIMENT_FINDINGS.md) contains the dated experiment record.
 - [`RELEASE.md`](../RELEASE.md) describes what is intentionally excluded from publication.
 
