@@ -61,7 +61,7 @@ is the best of six backbones on OOD-AUC and discriminability.
 
 ## Install
 
-```bash
+````bash
 conda create -n mri-diffuser python=3.10 && conda activate mri-diffuser
 pip install -r requirements.txt
 ```
@@ -91,23 +91,21 @@ extraction, set `batch_size=1` — attention-weighted pooling is memory-heavy.
 
 ### Multi-metric evaluation
 
-```bash
+````bash
 python evaluation/eval_pipeline.py \
     --real_dir data_mri/brats_axial_multislice --gen_dir output/generated \
     --output_dir results/evaluation --metrics fid kid ssim m3 alpha
 ```
 
-### Reproduce the main result set
+### Reproduce the curated result set
 
 ```bash
-python run_all_experiments.py   --run_id 5 --seed 42 --device cuda:0   # EXP 1–12
-python run_experiments_13_19.py --run_id 5 --seed 42 --device cuda     # EXP 13–19
-# → results/radiodino-s16_run5/ + master_results.json
-```
+Use the retained JSON reports and logs in `results/` and `docs/EXPERIMENT_FINDINGS.md`.
+`` 
 
 ### Train / generate
 
-```bash
+````bash
 python train.py --data_dir data_mri/brats_axial_multislice \
     --output_dir output/output_unet --model_type unet \
     --batch_size 16 --img_size 256 --lr 1e-5 --epochs 50 --mixed_precision fp16
@@ -125,68 +123,42 @@ the dataloader switched to MONAI's `PILReader`.
 ## Repository layout
 
 ```
-evaluation/            The metric and its baselines
-  m3_score_v2.py         M3EntropyMetric (alias M3V2Metric) — THE metric
-  eval_pipeline.py       Multi-metric CLI: fid | kid | ssim | alpha | m3
-  cmmd_metric.py         CLIP-based CMMD baseline (Jayasumana 2024)
-  frd_wrapper.py         Fréchet RadDino Distance baseline
-  conditional_mmd.py     Intensity-stratified MMD diagnostic
-  statistical_rigor.py   Permutation test + bootstrap CI
-  run_experiments.py     Curated orchestrator → results/master.json
-experiments/           44 validation scripts, one per paper claim
-  _shared_utils.py       Shared transforms and image loaders
-metrics/               Supplementary metrics (alpha-precision/recall, rad-FID, t-SNE, …)
-models/unet.py         get_model(): unet | attention_unet | dit
-data/dataloader.py     MONAI CacheDataset, output range [-1, 1]
-utils/                 DDPM trainer, DDPO RL fine-tuning, reward system
-tools/                 Data prep, WDM-3D drivers, plotting, 3D visualization
-scripts/               Shell runners
-notebooks/             00–04 exploration + dashboard (built by _build_notebooks.py)
-external/wdm-3d/       Vendored WDM-3D 3D wavelet-diffusion baseline
-paper/                 paper.tex, paper.pdf, refs.bib, Images/ (paper-local figures)
-figures/               Figure staging area, copied into paper/Images/
-results/               Experiment outputs (*_report.json + PNGs), versioned per run
-docs/                  See below
-config/global.json     medigan registry metadata — NOT project configuration
+evaluation/            M3-Score and baseline evaluation code
+metrics/                Supplementary image-quality metrics
+models/                 Generator model definitions
+data/                   Dataset loading and preprocessing
+figures/                Publication figures and image assets
+results/                Numeric reports, plots, and retained logs
+tools/                  Result tables, audits, and figure regeneration
+scripts/                Focused evaluation shell runners
+paper_release/          Final paper PDF, figures, and build logs
+docs/                   Experiment findings and reference-cohort audit
+external/wdm-3d/        Vendored WDM-3D baseline
 ```
 
-**Top-level orchestrators** — each is different, pick deliberately:
-
-| Script | Purpose |
-|---|---|
-| `run_all_experiments.py` | Primary master runner; EXP 1–12 + publication plots |
-| `run_experiments_13_19.py` | Tri-axial framework EXP 13–19; merges into `master_results.json` |
-| `run_all_backbones.py` | Runs the above across all 6 backbones into per-backbone dirs |
-| `run_multidataset.py` | Cross-modality: BraTS + RetinaMNIST + PneumoniaMNIST |
-| `evaluation/run_experiments.py` | Separate curated orchestrator → `results/master.json` |
+The release contains evaluation code and recorded outputs. Datasets and model weights are
+not included.
 
 ---
 
 ## Documentation
 
-| File | What it is |
+| File | Purpose |
 |---|---|
-| `docs/EXPERIMENT_FINDINGS.md` | **Authoritative.** Dated log of every experiment result. |
-| `docs/METHODOLOGY_AND_DIRECTION.md` | Honest self-assessment; current defensible framing in Part IV. |
-| `docs/next_note.md` | Research state and what to do next. |
-| `docs/specs/` | Design specs for completed workstreams. |
-| `CLAUDE.md` | Codebase guide for AI coding assistants. |
-
-Precedence for any number: `docs/EXPERIMENT_FINDINGS.md` → `docs/METHODOLOGY_AND_DIRECTION.md`
-→ `paper/paper.tex`.
+| `docs/EXPERIMENT_FINDINGS.md` | Authoritative dated experiment record |
+| `docs/REFERENCE_COHORT_FINDING.md` | Reference-cohort audit and reproducibility notes |
+| `RELEASE.md` | Publication scope and exclusion policy |
 
 ---
 
 ## Data
 
-Datasets live under `data_mri/` and are gitignored. The main real set is
-`brats_axial_multislice/` (38,781 BraTS axial PNGs), prepared from `.nii.gz` volumes with
-`tools/prepare_brats_slices.py`. MedMNIST subsets via `tools/download_medmnist.py`;
-WDM-3D checkpoints via `tools/download_wdm3d.py`.
+Datasets and checkpoints are intentionally excluded from the public repository. Use the
+original dataset sources and place local files under ignored directories before running
+evaluations. The prepared figures, result reports, and logs used for the paper remain in
+`figures/`, `results/`, and `paper_release/`.
 
----
-
-## Citation
+---`r`n`r`n## Citation
 
 ```bibtex
 @article{nishankar2026m3score,

@@ -1,0 +1,90 @@
+{
+  "protocol": {
+    "reference_draw": "patient-disjoint round-robin (subject-diverse)",
+    "n_images": 500,
+    "contamination": 0.05,
+    "isolation_forest_space": "RadioDINO-s16 L12",
+    "seed": 42
+  },
+  "ood_rate_generated": {
+    "RadioDINO-s16": 0.338,
+    "InceptionV3": 0.082
+  },
+  "mean_anomaly_generated": {
+    "RadioDINO-s16": -0.4582715261072635,
+    "InceptionV3": -0.4450095652145397
+  },
+  "mean_anomaly_real": {
+    "RadioDINO-s16": -0.43148176742996336,
+    "InceptionV3": -0.4332228242474979
+  },
+  "correlations": [
+    {
+      "detector_space": "RadioDINO-s16",
+      "measure": "M3-Score (RadioDINO, L2-norm)",
+      "rho": 0.7357970551882207,
+      "p": 2.417298840869899e-86,
+      "ci": [
+        0.6928081659093217,
+        0.7735746884426724
+      ],
+      "same_space": true
+    },
+    {
+      "detector_space": "RadioDINO-s16",
+      "measure": "FID proxy (InceptionV3)",
+      "rho": 0.15530298921195684,
+      "p": 0.0004918489887497031,
+      "ci": [
+        0.06854590149281375,
+        0.23972880368127034
+      ],
+      "same_space": false
+    },
+    {
+      "detector_space": "RadioDINO-s16",
+      "measure": "Pixel MSE",
+      "rho": 0.28831468925875703,
+      "p": 5.003993865240889e-11,
+      "ci": [
+        0.20582794340816907,
+        0.36673334673918206
+      ],
+      "same_space": false
+    },
+    {
+      "detector_space": "InceptionV3",
+      "measure": "M3-Score (RadioDINO, L2-norm)",
+      "rho": 0.14386713546854188,
+      "p": 0.0012566008045144707,
+      "ci": [
+        0.056894314758305455,
+        0.22867283382833292
+      ],
+      "same_space": false
+    },
+    {
+      "detector_space": "InceptionV3",
+      "measure": "FID proxy (InceptionV3)",
+      "rho": 0.6485877143508574,
+      "p": 5.120017868298526e-61,
+      "ci": [
+        0.594721960707879,
+        0.6966559675031401
+      ],
+      "same_space": true
+    },
+    {
+      "detector_space": "InceptionV3",
+      "measure": "Pixel MSE",
+      "rho": 0.36381131124524496,
+      "p": 4.299617079281181e-17,
+      "ci": [
+        0.28522004969493353,
+        0.4375430387255611
+      ],
+      "same_space": false
+    }
+  ],
+  "runtime_s": 14.1
+}

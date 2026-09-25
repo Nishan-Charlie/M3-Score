@@ -1,9 +1,8 @@
-# ─── Core: required for M3-Score and the main train/generate/evaluate pipeline ───
 torch
 torchvision
-timm                    # RadioDino-s16 (timm_vit backend) — was missing, metric fails without it
-open_clip_torch         # BiomedCLIP (open_clip_timm backend) — was missing
-transformers            # rad-dino, dinov2, pubmed-clip backends
+timm
+open_clip_torch
+transformers
 safetensors
 huggingface_hub
 diffusers
@@ -19,37 +18,8 @@ scikit-image
 matplotlib
 seaborn
 tqdm
-
-# ─── Comparison metrics ───
-torchmetrics            # FID / KID
-pytorch_msssim          # MS-SSIM
-lpips                   # LPIPS perceptual baseline
-
-# ─── FRD baseline (Konz et al.) — experiments/frd_comparison.py ───
+torchmetrics
+pytorch_msssim
+lpips
 frd-score
-pyradiomics                # see build note below
-
-# pyradiomics has NO prebuilt wheels on PyPI and is absent from conda-forge
-# (win-64); the `radiomics` conda channel caps at Python 3.9. On Windows with
-# Python 3.10 it must be compiled from source, which needs the MSVC toolchain.
-# If `pip install pyradiomics` fails with "Microsoft Visual C++ 14.0 or greater
-# is required" even though Visual Studio IS installed, setuptools is failing to
-# locate it via vswhere. Build from a shell with the toolchain loaded:
-#
-#   call "C:\Program Files\Microsoft Visual Studio\2022\Community\VC\Auxiliary\Build\vcvars64.bat"
-#   set DISTUTILS_USE_SDK=1
-#   set MSSdk=1
-#   python -m pip install --no-build-isolation pyradiomics
-#
-# (--no-build-isolation is required regardless: pyradiomics' setup.py imports
-# numpy and versioneer at build time, which PEP 517 isolation hides.)
-
-# ─── Optional: individual experiments only (install as needed) ───
-# clean-fid             # experiments/fid_infinity.py     — FID-infinity extrapolation
-# medigan               # experiments/generate_medigan_samples.py — 3rd-party GAN zoo
-# medmnist              # tools/download_medmnist.py      — RetinaMNIST / PneumoniaMNIST
-# datasets              # evaluation/finetune_raddino_classification.py
-# evaluate              # evaluation/finetune_raddino_classification.py
-# gradio                # tools/visualize_3d_web.py       — interactive 3D viewer
-# nbformat              # notebooks/_build_notebooks.py
-# PyWavelets, blobfile  # external/wdm-3d (vendored WDM-3D baseline)
+pyradiomics

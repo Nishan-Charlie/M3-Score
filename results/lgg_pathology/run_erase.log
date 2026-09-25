@@ -1,0 +1,11 @@
+[data] loaded 400 image+mask pairs from C:\Users\nisha\Desktop\Generativemodels\MRI-ImageGenration\data_mri\lgg_with_masks
+[control] usable=200  skipped(bad mirror)=34  mean lesion area=1706px  control area=1706px
+Loading backbone: Snarcy/RadioDino-s16 (backend=timm_vit)
+C:\Users\nisha\Desktop\Generativemodels\MRI-ImageGenration\experiments\lgg_lesion_specificity.py:164: DeprecationWarning: The `disp` argument is deprecated and will be removed in SciPy 1.18.0.
+  covmean, _ = linalg.sqrtm(s1 @ s2, disp=False)
+
+=== LGG lesion-specificity (erase perturbation, N=200) ===
+  M3   Delta_lesion=0.0241  Delta_control=0.0214  ratio=1.13
+  FID  Delta_lesion=65.214  Delta_control=57.076  ratio=1.14
+  => M3 NOT more lesion-specific than FID
+[done] 180.4s -> C:\Users\nisha\Desktop\Generativemodels\MRI-ImageGenration\results\lgg_pathology\lesion_specificity_erase.json

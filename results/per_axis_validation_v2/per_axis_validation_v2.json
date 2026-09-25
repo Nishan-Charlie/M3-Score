@@ -1,0 +1,48 @@
+{
+  "protocol": {
+    "reference_draw": "patient-disjoint round-robin (subject-diverse)",
+    "n_images": 500,
+    "jitter_sigma": 0.0005,
+    "a_priori_depths": {
+      "fidelity": 12,
+      "memorization": 9,
+      "coverage": 4
+    },
+    "knn_k": 5,
+    "seed": 42
+  },
+  "rows": [
+    {
+      "injection_rate": 0.0,
+      "memorization_rate": 0.010000000707805157,
+      "fidelity_mmd2": 0.07316025346517563,
+      "coverage": 0.3840000033378601
+    },
+    {
+      "injection_rate": 0.1,
+      "memorization_rate": 0.1080000028014183,
+      "fidelity_mmd2": 0.05970567464828491,
+      "coverage": 0.6740000247955322
+    },
+    {
+      "injection_rate": 0.2,
+      "memorization_rate": 0.21000000834465027,
+      "fidelity_mmd2": 0.04695246368646622,
+      "coverage": 0.8100000619888306
+    },
+    {
+      "injection_rate": 0.3,
+      "memorization_rate": 0.30800002813339233,
+      "fidelity_mmd2": 0.03456861525774002,
+      "coverage": 0.906000018119812
+    },
+    {
+      "injection_rate": 0.5,
+      "memorization_rate": 0.5060000419616699,
+      "fidelity_mmd2": 0.01729062758386135,
+      "coverage": 0.9820000529289246
+    }
+  ],
+  "mean_abs_recovery_error": 0.008400016389787195,
+  "runtime_s": 10.5
+}

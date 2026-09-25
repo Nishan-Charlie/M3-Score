@@ -1,0 +1,92 @@
+Warning: You are sending unauthenticated requests to the HF Hub. Please set a HF_TOKEN to enable higher rate limits and faster downloads.
+[Robustness] Using 300 real images
+             Noise levels: [0.0, 0.01, 0.02, 0.05, 0.1, 0.2, 0.5]
+             Blur radii:   [0, 1, 2, 3, 4]
+[Robustness] Initialising models ...
+Loading backbone: microsoft/rad-dino
+Loading weights:   0%|          | 0/223 [00:00<?, ?it/s]Loading weights: 100%|##########| 223/223 [00:00<00:00, 2555.16it/s]
+Cache tau=0.95 != current tau=0.8 — recomputing and overwriting cache.
+Running CKA pruning...
+Selected layers: [1, 3, 12]
+CKA layer selection cached: C:\Users\nisha\OneDrive\Desktop\Generativemodels\MRI-ImageGenration\canonical_layers.json
+  M3 active layers: [1, 3, 12]
+Setting up [LPIPS] perceptual loss: trunk [vgg], v[0.1], spatial [off]
+Loading model from: C:\Users\nisha\miniconda3\envs\mri-diffuser\lib\site-packages\lpips\weights\v0.1\vgg.pth
+  Extracting clean InceptionV3 features for Precision/Recall ...
+  Clean InceptionV3 features shape: (300, 2048)
+noise:   0%|          | 0/7 [00:00<?, ?it/s]
+[noise] sigma = 0.0
+Extracting features from 3 layers...
+
+Computing metrics:   0%|          | 0/3 [00:00<?, ?it/s][A
+Computing metrics: 100%|##########| 3/3 [00:00<00:00, 29.09it/s][AComputing metrics: 100%|##########| 3/3 [00:00<00:00, 29.09it/s]
+noise:  14%|#4        | 1/7 [24:57<2:29:42, 1497.11s/it]  {'sigma': 0.0, 'm3': 0.0, 'fid': 0.1084, 'kid': 0.0, 'ssim': 1.0, 'psnr': 100.0, 'ms_ssim': 1.0, 'lpips': 0.0, 'precision': 1.0, 'recall': 1.0}
+
+[noise] sigma = 0.01
+Extracting features from 3 layers...
+
+Computing metrics:   0%|          | 0/3 [00:00<?, ?it/s][AComputing metrics: 100%|##########| 3/3 [00:00<00:00, 62.35it/s]
+noise:  29%|##8       | 2/7 [41:42<1:40:39, 1207.94s/it]  {'sigma': 0.01, 'm3': 0.142718, 'fid': 25.3858, 'kid': 0.017559, 'ssim': 0.88247, 'psnr': 41.9008, 'ms_ssim': 0.996597, 'lpips': 0.199893, 'precision': 1.0, 'recall': 1.0}
+
+[noise] sigma = 0.02
+Extracting features from 3 layers...
+
+Computing metrics:   0%|          | 0/3 [00:00<?, ?it/s][AComputing metrics: 100%|##########| 3/3 [00:00<00:00, 141.90it/s]
+noise:  43%|####2     | 3/7 [54:20<1:06:49, 1002.49s/it]  {'sigma': 0.02, 'm3': 0.215986, 'fid': 34.1955, 'kid': 0.022218, 'ssim': 0.681631, 'psnr': 35.8916, 'ms_ssim': 0.986945, 'lpips': 0.255033, 'precision': 0.9767, 'recall': 0.9667}
+
+[noise] sigma = 0.05
+Extracting features from 3 layers...
+
+Computing metrics:   0%|          | 0/3 [00:00<?, ?it/s][AComputing metrics: 100%|##########| 3/3 [00:00<00:00, 140.71it/s]
+noise:  57%|#####7    | 4/7 [1:02:38<40:09, 803.20s/it]   {'sigma': 0.05, 'm3': 0.687991, 'fid': 73.1253, 'kid': 0.052682, 'ssim': 0.344322, 'psnr': 27.9555, 'ms_ssim': 0.933514, 'lpips': 0.383995, 'precision': 0.3933, 'recall': 0.4633}
+
+[noise] sigma = 0.1
+Extracting features from 3 layers...
+
+Computing metrics:   0%|          | 0/3 [00:00<?, ?it/s][AComputing metrics: 100%|##########| 3/3 [00:00<00:00, 145.21it/s]
+noise:  71%|#######1  | 5/7 [1:10:56<23:06, 693.29s/it]  {'sigma': 0.1, 'm3': 1.558827, 'fid': 147.166, 'kid': 0.138208, 'ssim': 0.187334, 'psnr': 21.9824, 'ms_ssim': 0.821242, 'lpips': 0.514974, 'precision': 0.03, 'recall': 0.03}
+
+[noise] sigma = 0.2
+Extracting features from 3 layers...
+
+Computing metrics:   0%|          | 0/3 [00:00<?, ?it/s][AComputing metrics: 100%|##########| 3/3 [00:00<00:00, 115.52it/s]
+noise:  86%|########5 | 6/7 [1:20:10<10:45, 645.90s/it]  {'sigma': 0.2, 'm3': 1.901861, 'fid': 295.7343, 'kid': 0.382906, 'ssim': 0.095363, 'psnr': 16.127, 'ms_ssim': 0.641276, 'lpips': 0.65027, 'precision': 0.0, 'recall': 0.0}
+
+[noise] sigma = 0.5
+Extracting features from 3 layers...
+
+Computing metrics:   0%|          | 0/3 [00:00<?, ?it/s][AComputing metrics: 100%|##########| 3/3 [00:00<00:00, 131.73it/s]
+noise: 100%|##########| 7/7 [1:29:35<00:00, 619.55s/it]noise: 100%|##########| 7/7 [1:29:35<00:00, 767.99s/it]
+  {'sigma': 0.5, 'm3': 5.373423, 'fid': 518.3223, 'kid': 0.869144, 'ssim': 0.03186, 'psnr': 9.2962, 'ms_ssim': 0.3831, 'lpips': 0.74955, 'precision': 0.0, 'recall': 0.0}
+blur:   0%|          | 0/5 [00:00<?, ?it/s]
+[blur] radius = 0
+Extracting features from 3 layers...
+
+Computing metrics:   0%|          | 0/3 [00:00<?, ?it/s][AComputing metrics: 100%|##########| 3/3 [00:00<00:00, 123.80it/s]
+blur:  20%|##        | 1/5 [09:14<36:58, 554.57s/it]  {'radius': 0.0, 'm3': 0.0, 'fid': 0.1084, 'kid': 0.0, 'ssim': 1.0, 'psnr': 100.0, 'ms_ssim': 1.0, 'lpips': 0.0, 'precision': 1.0, 'recall': 1.0}
+
+[blur] radius = 1
+Extracting features from 3 layers...
+
+Computing metrics:   0%|          | 0/3 [00:00<?, ?it/s][AComputing metrics: 100%|##########| 3/3 [00:00<00:00, 137.93it/s]
+blur:  40%|####      | 2/5 [17:55<26:45, 535.07s/it]  {'radius': 1.0, 'm3': 0.17622, 'fid': 40.3878, 'kid': 0.01819, 'ssim': 0.961752, 'psnr': 33.3384, 'ms_ssim': 0.992813, 'lpips': 0.063496, 'precision': 0.86, 'recall': 0.92}
+
+[blur] radius = 2
+Extracting features from 3 layers...
+
+Computing metrics:   0%|          | 0/3 [00:00<?, ?it/s][AComputing metrics: 100%|##########| 3/3 [00:00<00:00, 47.25it/s]
+blur:  60%|######    | 3/5 [38:03<28:04, 842.01s/it]  {'radius': 2.0, 'm3': 0.37114, 'fid': 145.6972, 'kid': 0.122178, 'ssim': 0.867088, 'psnr': 27.8056, 'ms_ssim': 0.962391, 'lpips': 0.14357, 'precision': 0.01, 'recall': 0.0333}
+
+[blur] radius = 3
+Extracting features from 3 layers...
+
+Computing metrics:   0%|          | 0/3 [00:00<?, ?it/s][AComputing metrics: 100%|##########| 3/3 [00:00<00:00, 42.32it/s]
+blur:  80%|########  | 4/5 [1:23:39<26:29, 1589.86s/it]  {'radius': 3.0, 'm3': 0.379974, 'fid': 221.4616, 'kid': 0.221179, 'ssim': 0.800097, 'psnr': 25.4732, 'ms_ssim': 0.923701, 'lpips': 0.192181, 'precision': 0.0, 'recall': 0.0}
+
+[blur] radius = 4
+Extracting features from 3 layers...
+
+Computing metrics:   0%|          | 0/3 [00:00<?, ?it/s][AComputing metrics: 100%|##########| 3/3 [00:00<00:00, 95.80it/s]
+blur: 100%|##########| 5/5 [10:30:27<00:00, 12847.40s/it]blur: 100%|##########| 5/5 [10:30:27<00:00, 7565.54s/it] 
+  {'radius': 4.0, 'm3': 0.570922, 'fid': 264.3982, 'kid': 0.287755, 'ssim': 0.754102, 'psnr': 24.0658, 'ms_ssim': 0.884701, 'lpips': 0.22984, 'precision': 0.0, 'recall': 0.0}
+[Robustness] Report saved: results/experiments_output_v5/noise_robustness\robustness_report.json

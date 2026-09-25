@@ -1,4 +1,4 @@
-﻿# ─── Datasets and model weights (large, externally downloadable) ───
+# ─── Datasets and model weights (large, externally downloadable) ───
 /data_mri/
 /datasets/
 /pretrained/
@@ -20,27 +20,12 @@ tstr_results.json
 # Local Claude Code permissions — personal, not project config
 .claude/settings.local.json
 
-# ─── Manuscript and internal notes (NOT part of the code release) ───
-# The paper is under review; these are deliberately excluded from the public
-# repository. They remain on disk and are simply untracked.
-#
-# WARNING: .gitignore has NO effect on files git is already tracking. If any of
-# these reappear in `git ls-files`, a `git add -f` or a re-add after a reset has
-# re-tracked them; run `git rm -r --cached <path>` and commit, or they will keep
-# showing up on the remote.
 paper/
-CITATION.cff               # cites the unpublished manuscript; restore on acceptance
-CLAUDE.md                  # AI-assistant guide for this repo, internal
-docs/                      # EXPERIMENT_FINDINGS, METHODOLOGY_AND_DIRECTION, next_note, specs
-.claude/                   # local tooling config
-# figures/ is intentionally NOT ignored -- kept in the code release.
+paper_*/
 
 # ─── Cleanup quarantine (delete once verified) ───
 _quarantine_*/
 
-# ─── Logging ───
-/logs/
-*.log
 nohup.out
 *.nohup.out
 
@@ -49,7 +34,7 @@ __pycache__/
 *.py[cod]
 *$py.class
 venv/
-.venv
+.venv/
 env/
 .env
 .gradio
@@ -59,13 +44,28 @@ env/
 .vscode/
 .idea/
 .DS_Store
+Thumbs.db
+desktop.ini
+*.swp
+*~
+
+# ─── Backups and temporary files ───
+*.bak
+*.tex.bak
+*.tmp
 
 # ─── LaTeX build byproducts ───
-# NOTE: *.pdf and *.bbl are deliberately NOT ignored — paper/paper.pdf is the
-# compiled manuscript and paper/Images/M3Score-Calculation.pdf is a figure the
-# paper needs to compile. paper.bbl is required for arXiv submission.
 *.aux
 *.blg
+*.bbl
+*.spl
+*.bcf
+*.run.xml
+*.nav
+*.snm
+*.vrb
+*.lot
+*.lof
 *.fdb_latexmk
 *.fls
 *.toc
@@ -77,3 +77,6 @@ env/
 # ─── Archives ───
 *.zip
 *.tar.gz
+# Retain the final paper artifact in the public release.
+!paper_release/
+!paper_release/**

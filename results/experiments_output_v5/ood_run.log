@@ -1,0 +1,43 @@
+[OOD] Real: 300 | Gen: 300
+[OOD] Extracting ResNet-18 embeddings ...
+Real embed:   0%|          | 0/5 [00:00<?, ?it/s]Real embed:  20%|##        | 1/5 [00:01<00:04,  1.19s/it]Real embed:  40%|####      | 2/5 [00:02<00:03,  1.08s/it]Real embed:  60%|######    | 3/5 [00:03<00:02,  1.30s/it]Real embed:  80%|########  | 4/5 [00:05<00:01,  1.40s/it]Real embed: 100%|##########| 5/5 [00:06<00:00,  1.26s/it]Real embed: 100%|##########| 5/5 [00:06<00:00,  1.26s/it]
+Gen embed:   0%|          | 0/5 [00:00<?, ?it/s]Gen embed:  20%|##        | 1/5 [00:01<00:05,  1.31s/it]Gen embed:  40%|####      | 2/5 [00:02<00:04,  1.48s/it]Gen embed:  60%|######    | 3/5 [00:04<00:03,  1.54s/it]Gen embed:  80%|########  | 4/5 [00:05<00:01,  1.51s/it]Gen embed: 100%|##########| 5/5 [00:06<00:00,  1.32s/it]Gen embed: 100%|##########| 5/5 [00:06<00:00,  1.40s/it]
+Warning: You are sending unauthenticated requests to the HF Hub. Please set a HF_TOKEN to enable higher rate limits and faster downloads.
+[OOD] Fitting Isolation Forest ...
+[OOD] 32.7% of generated images flagged as OOD
+[OOD] Computing M3-Score V2 per-image distances (RadDINO, L2-normalised) ...
+Loading backbone: microsoft/rad-dino
+Loading weights:   0%|          | 0/223 [00:00<?, ?it/s]Loading weights: 100%|##########| 223/223 [00:00<00:00, 4363.16it/s]
+Cache tau=0.95 != current tau=0.8 — recomputing and overwriting cache.
+Running CKA pruning...
+Selected layers: [1, 3, 12]
+CKA layer selection cached: C:\Users\nisha\OneDrive\Desktop\Generativemodels\MRI-ImageGenration\canonical_layers.json
+  Active layers: [1, 3, 12]
+  Running M3 forward pass to obtain SNR layer weights ...
+Extracting features from 3 layers...
+Computing metrics:   0%|          | 0/3 [00:00<?, ?it/s]Computing metrics: 100%|##########| 3/3 [00:00<00:00, 36.90it/s]
+  Layer weights: {'L1': 0.0667842401331032, 'L3': 0.3599287154988105, 'L12': 0.5732863670456422}
+M3 real:   0%|          | 0/300 [00:00<?, ?it/s]M3 real:   9%|8         | 26/300 [00:00<00:01, 255.07it/s]M3 real:  17%|#7        | 52/300 [00:00<00:01, 220.69it/s]M3 real:  26%|##6       | 79/300 [00:00<00:00, 231.85it/s]M3 real:  34%|###4      | 103/300 [00:00<00:00, 209.58it/s]M3 real:  42%|####1     | 125/300 [00:00<00:00, 190.72it/s]M3 real:  48%|####8     | 145/300 [00:00<00:00, 183.50it/s]M3 real:  55%|#####4    | 164/300 [00:00<00:00, 176.94it/s]M3 real:  61%|######1   | 184/300 [00:00<00:00, 181.33it/s]M3 real:  68%|######7   | 203/300 [00:01<00:00, 179.46it/s]M3 real:  75%|#######5  | 226/300 [00:01<00:00, 193.22it/s]M3 real:  84%|########4 | 253/300 [00:01<00:00, 212.66it/s]M3 real:  92%|#########1| 275/300 [00:01<00:00, 190.40it/s]M3 real:  98%|#########8| 295/300 [00:01<00:00, 186.77it/s]M3 real: 100%|##########| 300/300 [00:01<00:00, 193.58it/s]
+M3 gen:   0%|          | 0/300 [00:00<?, ?it/s]M3 gen:   6%|6         | 19/300 [00:00<00:01, 189.41it/s]M3 gen:  16%|#5        | 47/300 [00:00<00:01, 239.47it/s]M3 gen:  24%|##3       | 71/300 [00:00<00:01, 228.08it/s]M3 gen:  31%|###1      | 94/300 [00:00<00:00, 214.31it/s]M3 gen:  39%|###8      | 116/300 [00:00<00:00, 195.83it/s]M3 gen:  45%|####5     | 136/300 [00:00<00:00, 191.58it/s]M3 gen:  52%|#####2    | 156/300 [00:00<00:00, 190.16it/s]M3 gen:  59%|#####8    | 177/300 [00:00<00:00, 195.53it/s]M3 gen:  66%|######5   | 197/300 [00:01<00:00, 182.30it/s]M3 gen:  75%|#######4  | 224/300 [00:01<00:00, 199.07it/s]M3 gen:  82%|########1 | 245/300 [00:01<00:00, 193.19it/s]M3 gen:  88%|########8 | 265/300 [00:01<00:00, 179.97it/s]M3 gen:  95%|#########4| 284/300 [00:01<00:00, 181.27it/s]M3 gen: 100%|##########| 300/300 [00:01<00:00, 189.63it/s]
+M3 real:   0%|          | 0/300 [00:00<?, ?it/s]M3 real:   6%|5         | 17/300 [00:00<00:01, 165.25it/s]M3 real:  13%|#3        | 39/300 [00:00<00:01, 192.52it/s]M3 real:  21%|##1       | 64/300 [00:00<00:01, 211.84it/s]M3 real:  30%|###       | 90/300 [00:00<00:00, 230.28it/s]M3 real:  38%|###8      | 114/300 [00:00<00:00, 202.72it/s]M3 real:  46%|####5     | 137/300 [00:00<00:00, 210.38it/s]M3 real:  53%|#####3    | 160/300 [00:00<00:00, 213.26it/s]M3 real:  61%|######    | 182/300 [00:00<00:00, 201.06it/s]M3 real:  68%|######7   | 203/300 [00:00<00:00, 196.32it/s]M3 real:  74%|#######4  | 223/300 [00:01<00:00, 191.76it/s]M3 real:  81%|########1 | 243/300 [00:01<00:00, 185.98it/s]M3 real:  87%|########7 | 262/300 [00:01<00:00, 182.47it/s]M3 real:  94%|#########3| 281/300 [00:01<00:00, 177.41it/s]M3 real: 100%|#########9| 299/300 [00:01<00:00, 177.42it/s]M3 real: 100%|##########| 300/300 [00:01<00:00, 191.97it/s]
+M3 gen:   0%|          | 0/300 [00:00<?, ?it/s]M3 gen:   6%|6         | 18/300 [00:00<00:01, 171.69it/s]M3 gen:  20%|#9        | 59/300 [00:00<00:00, 305.68it/s]M3 gen:  35%|###4      | 104/300 [00:00<00:00, 364.48it/s]M3 gen:  47%|####6     | 141/300 [00:00<00:00, 347.55it/s]M3 gen:  59%|#####8    | 176/300 [00:00<00:00, 325.32it/s]M3 gen:  70%|######9   | 209/300 [00:00<00:00, 291.10it/s]M3 gen:  80%|#######9  | 239/300 [00:00<00:00, 277.25it/s]M3 gen:  89%|########9 | 268/300 [00:00<00:00, 266.05it/s]M3 gen:  98%|#########8| 295/300 [00:01<00:00, 260.27it/s]M3 gen: 100%|##########| 300/300 [00:01<00:00, 282.81it/s]
+[OOD] Computing InceptionV3 per-image distances ...
+Inception real:   0%|          | 0/5 [00:00<?, ?it/s]Inception real:  20%|##        | 1/5 [00:03<00:15,  3.98s/it]Inception real:  40%|####      | 2/5 [00:07<00:11,  3.89s/it]Inception real:  60%|######    | 3/5 [00:11<00:07,  3.88s/it]Inception real:  80%|########  | 4/5 [00:15<00:03,  3.84s/it]Inception real: 100%|##########| 5/5 [00:18<00:00,  3.46s/it]Inception real: 100%|##########| 5/5 [00:18<00:00,  3.65s/it]
+Inception gen:   0%|          | 0/5 [00:00<?, ?it/s]Inception gen:  20%|##        | 1/5 [00:03<00:15,  3.92s/it]Inception gen:  40%|####      | 2/5 [00:07<00:11,  3.91s/it]Inception gen:  60%|######    | 3/5 [00:11<00:07,  3.92s/it]Inception gen:  80%|########  | 4/5 [00:15<00:03,  3.93s/it]Inception gen: 100%|##########| 5/5 [00:18<00:00,  3.51s/it]Inception gen: 100%|##########| 5/5 [00:18<00:00,  3.70s/it]
+Inception real:   0%|          | 0/5 [00:00<?, ?it/s]Inception real:  20%|##        | 1/5 [00:03<00:15,  3.76s/it]Inception real:  40%|####      | 2/5 [00:07<00:11,  3.78s/it]Inception real:  60%|######    | 3/5 [00:11<00:07,  3.79s/it]Inception real:  80%|########  | 4/5 [00:15<00:03,  3.90s/it]Inception real: 100%|##########| 5/5 [00:18<00:00,  3.50s/it]Inception real: 100%|##########| 5/5 [00:18<00:00,  3.64s/it]
+Inception gen:   0%|          | 0/5 [00:00<?, ?it/s]Inception gen:  20%|##        | 1/5 [00:03<00:15,  3.91s/it]Inception gen:  40%|####      | 2/5 [00:08<00:12,  4.06s/it]Inception gen:  60%|######    | 3/5 [00:11<00:07,  3.99s/it]Inception gen:  80%|########  | 4/5 [00:15<00:03,  3.91s/it]Inception gen: 100%|##########| 5/5 [00:18<00:00,  3.48s/it]Inception gen: 100%|##########| 5/5 [00:18<00:00,  3.70s/it]
+[OOD] Computing pixel MSE per-image distances ...
+Pixel real:   0%|          | 0/5 [00:00<?, ?it/s]Pixel real:  40%|####      | 2/5 [00:00<00:00, 10.60it/s]Pixel real:  80%|########  | 4/5 [00:00<00:00, 11.28it/s]Pixel real: 100%|##########| 5/5 [00:00<00:00, 11.81it/s]
+Pixel gen:   0%|          | 0/5 [00:00<?, ?it/s]Pixel gen:  40%|####      | 2/5 [00:00<00:00, 11.08it/s]Pixel gen:  80%|########  | 4/5 [00:00<00:00, 11.65it/s]Pixel gen: 100%|##########| 5/5 [00:00<00:00, 12.96it/s]
+[OOD] Saving cache files to results/experiments_output_v5/ood ...
+[OOD] Spearman M3          : r=+0.2740  CI=[+0.1659, +0.3756]  p=1.45e-06  n=300
+[OOD] Spearman FID proxy   : r=+0.2730  CI=[+0.1649, +0.3747]  p=1.58e-06  n=300
+[OOD] Spearman Pixel MSE   : r=-0.2228  CI=[-0.3277, -0.1124]  p=9.97e-05  n=300
+[OOD] Computing ROC-AUC and PR-AUC (RadDINO vs InceptionV3) ...
+  RadDINO (M3):      ROC-AUC=0.9234  PR-AUC=0.9062
+  InceptionV3 (FID): ROC-AUC=0.8249  PR-AUC=0.7804
+  ROC plot saved: results/experiments_output_v5/ood\ood_roc_auc.png
+[OOD] Running t-SNE on 600 images (perplexity=30.0) ...
+[OOD] t-SNE saved: results/experiments_output_v5/ood\tsne_manifold.png
+[OOD] Performing failure analysis (rank-based, OOD images only) ...
+[OOD] Report saved: results/experiments_output_v5/ood\ood_report.json

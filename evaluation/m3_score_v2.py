@@ -807,6 +807,34 @@ class M3EntropyMetric(nn.Module):
         recall     = self._manifold_fraction(real_feats, gen_feats,  gen_radii)
         return precision, recall
 
+    def _compute_coverage(
+        self,
+        real_feats: torch.Tensor,
+        gen_feats: torch.Tensor,
+        k: int = 5,
+    ) -> float:
+        """Coverage (Naeem et al. 2020).
+
+        Fraction of real samples that have at least one generated sample
+        inside the real sample's OWN k-NN radius, where that radius is
+        estimated within the real set.
+
+        This differs from the kNN recall of _compute_precision_recall in
+        where the radii come from.  Recall estimates them on the generated
+        set, so subsampling the generated set makes its points sparser, its
+        k-NN distances larger, and its hyperspheres wider -- which admits
+        MORE real points and drives recall up exactly when diversity is
+        being removed.  Coverage's radii are fixed by the real set, which
+        mode drop does not touch, so removing generated samples can only
+        ever leave real points uncovered: it is monotone non-increasing
+        under mode drop by construction.
+        """
+        r = real_feats.to(self.device).float()
+        g = gen_feats.to(self.device).float()
+        real_radii = self._knn_distances_within(r, k=k)          # (Nr,)
+        min_dist = torch.cdist(r, g, p=2).min(dim=1).values      # (Nr,)
+        return float((min_dist <= real_radii).float().mean().item())
+
     def _compute_memorization(
         self,
         real_feats: torch.Tensor,

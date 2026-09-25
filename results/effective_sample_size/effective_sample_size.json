@@ -1,0 +1,91 @@
+{
+  "experiment": "effective_sample_size",
+  "n_subjects": 120,
+  "n_slices": 3720,
+  "depths": [
+    8,
+    12
+  ],
+  "by_depth": {
+    "L8": {
+      "icc": {
+        "icc_mean": 0.5060680315285623,
+        "icc_median": 0.5013651175517658,
+        "icc_p25": 0.44338338396458227,
+        "icc_p75": 0.5655898589819898,
+        "mean_cluster_size": 31.0,
+        "n_subjects": 120,
+        "n_slices": 3720
+      },
+      "pair_distances": {
+        "within_subject_mean": 0.3495509922504425,
+        "between_subject_mean": 0.5318633913993835,
+        "ratio_within_over_between": 0.6572195291519165,
+        "n_within_pairs": 55800,
+        "n_between_pairs": 6861540
+      },
+      "ess": {
+        "N500_m17": {
+          "slices_per_subject": 29.41176470588235,
+          "design_effect": 15.378285836958563,
+          "effective_sample_size": 32.51337667286378
+        },
+        "N500_m50": {
+          "slices_per_subject": 10.0,
+          "design_effect": 5.55461228375706,
+          "effective_sample_size": 90.0152835981213
+        },
+        "N500_m100": {
+          "slices_per_subject": 5.0,
+          "design_effect": 3.024272126114249,
+          "effective_sample_size": 165.32903758314484
+        },
+        "N500_m400": {
+          "slices_per_subject": 1.25,
+          "design_effect": 1.1265170078821405,
+          "effective_sample_size": 443.84593974306995
+        }
+      }
+    },
+    "L12": {
+      "icc": {
+        "icc_mean": 0.4649181765073774,
+        "icc_median": 0.45625784842395933,
+        "icc_p25": 0.39982964363376,
+        "icc_p75": 0.5310146544052472,
+        "mean_cluster_size": 31.0,
+        "n_subjects": 120,
+        "n_slices": 3720
+      },
+      "pair_distances": {
+        "within_subject_mean": 0.48101356625556946,
+        "between_subject_mean": 0.6944382786750793,
+        "ratio_within_over_between": 0.692665696144104,
+        "n_within_pairs": 55800,
+        "n_between_pairs": 6861540
+      },
+      "ess": {
+        "N500_m17": {
+          "slices_per_subject": 29.41176470588235,
+          "design_effect": 14.209145838415486,
+          "effective_sample_size": 35.18860357166669
+        },
+        "N500_m50": {
+          "slices_per_subject": 10.0,
+          "design_effect": 5.184263588566396,
+          "effective_sample_size": 96.44571335121194
+        },
+        "N500_m100": {
+          "slices_per_subject": 5.0,
+          "design_effect": 2.8596727060295093,
+          "effective_sample_size": 174.84518383721652
+        },
+        "N500_m400": {
+          "slices_per_subject": 1.25,
+          "design_effect": 1.1162295441268444,
+          "effective_sample_size": 447.9365401415874
+        }
+      }
+    }
+  }
+}

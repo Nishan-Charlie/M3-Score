@@ -1,0 +1,41 @@
+{
+  "protocol": {
+    "reference_draw": "patient-disjoint round-robin (subject-diverse)",
+    "n_images": 500,
+    "mask": "64x64 zero-filled center square",
+    "use_real_masks": false,
+    "m3_depth": 12,
+    "seed": 42
+  },
+  "rows": [
+    {
+      "condition": "A: real vs. gen (baseline)",
+      "m3": 0.07316025346517563,
+      "fid": 68.37645721435547,
+      "cmmd": 0.10403645038604736
+    },
+    {
+      "condition": "B: real vs. masked-real",
+      "m3": 0.04399079829454422,
+      "fid": 212.681640625,
+      "cmmd": 0.3339129090309143,
+      "rel_change": {
+        "m3": -39.87063164634347,
+        "fid": 211.0451305750717,
+        "cmmd": 220.95761417451857
+      }
+    },
+    {
+      "condition": "C: real vs. masked-gen",
+      "m3": 0.11922335624694824,
+      "fid": 249.0316162109375,
+      "cmmd": 0.4771881699562073,
+      "rel_change": {
+        "m3": 62.961923448910284,
+        "fid": 264.20666755260595,
+        "cmmd": 358.67402067785696
+      }
+    }
+  ],
+  "runtime_s": 163.8
+}

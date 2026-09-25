@@ -1,0 +1,7 @@
+[data] loaded 400 image+mask pairs from C:\Users\nisha\Desktop\Generativemodels\MRI-ImageGenration\data_mri\lgg_with_masks
+[control] usable=200  skipped(bad mirror)=34  mean matched area=1706px (lesion == control by construction)
+Loading backbone: Snarcy/RadioDino-s16 (backend=timm_vit)
+[erase] M3 ratio=1.130 (les 0.0241/ctl 0.0214)  KID ratio=1.332 (les 0.02930/ctl 0.02200)  => M3 NOT more specific
+[blur ] M3 ratio=2688157605.007 (les 0.0027/ctl 0.0000)  KID ratio=0.000 (les 0.00000/ctl 0.00000)  => M3 MORE specific
+[noise] M3 ratio=2.022 (les 0.0060/ctl 0.0030)  KID ratio=1.047 (les 0.04526/ctl 0.04324)  => M3 MORE specific
+[done] 120.2s -> C:\Users\nisha\Desktop\Generativemodels\MRI-ImageGenration\results\lgg_pathology\lesion_specificity.json

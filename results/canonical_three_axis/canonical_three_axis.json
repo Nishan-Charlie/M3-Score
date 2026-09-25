@@ -1,0 +1,101 @@
+{
+  "protocol": {
+    "reference_draw": "patient-disjoint round-robin (subject-diverse)",
+    "n_images": 500,
+    "n_subjects_reference": 500,
+    "n_subjects_probe": 500,
+    "a_priori_depths": {
+      "fidelity": 12,
+      "memorization": 9,
+      "coverage": 4
+    },
+    "kernel": "multi-bandwidth RBF, median heuristic",
+    "n_permutations": 500,
+    "n_bootstrap": 200,
+    "knn_k": 5,
+    "seed": 42
+  },
+  "rows": [
+    {
+      "set": "real probe",
+      "note": "real vs. real (held-out subjects)",
+      "n": 500,
+      "fidelity_mmd2": 0.0,
+      "fidelity_ci": [
+        0.0009875576884951442,
+        0.002633186581078917
+      ],
+      "fidelity_p": 1.0,
+      "fidelity_z": -0.570359638720476,
+      "fidelity_null_mean": 0.00010908805330552695,
+      "memorization_mean_nn": 40.93444061279297,
+      "memorization_rate": 0.4780000150203705,
+      "coverage": 0.9700000286102295
+    },
+    {
+      "set": "DDPM",
+      "note": "in-domain diffusion",
+      "n": 500,
+      "fidelity_mmd2": 0.07316025346517563,
+      "fidelity_ci": [
+        0.07049341201782226,
+        0.08014457114040852
+      ],
+      "fidelity_p": 0.0,
+      "fidelity_z": 342.3644268890571,
+      "fidelity_null_mean": 0.00011196131897855821,
+      "memorization_mean_nn": 49.75092315673828,
+      "memorization_rate": 0.010000000707805157,
+      "coverage": 0.3840000033378601
+    },
+    {
+      "set": "WDM-3D (MRI)",
+      "note": "weaker same-modality generator",
+      "n": 500,
+      "fidelity_mmd2": 0.21586500108242035,
+      "fidelity_ci": [
+        0.2102040145546198,
+        0.22496479377150536
+      ],
+      "fidelity_p": 0.0,
+      "fidelity_z": 696.9007033124423,
+      "fidelity_null_mean": 0.00014028027286099132,
+      "memorization_mean_nn": 62.37899398803711,
+      "memorization_rate": 0.0,
+      "coverage": 0.0020000000949949026
+    },
+    {
+      "set": "LIDC CT",
+      "note": "cross-modality shift",
+      "n": 500,
+      "fidelity_mmd2": 0.3984275758266449,
+      "fidelity_ci": [
+        0.390878414362669,
+        0.41171494126319885
+      ],
+      "fidelity_p": 0.0,
+      "fidelity_z": 718.3669394213481,
+      "fidelity_null_mean": 0.00022253767663755754,
+      "memorization_mean_nn": 79.23407745361328,
+      "memorization_rate": 0.0,
+      "coverage": 0.0
+    },
+    {
+      "set": "Retinal",
+      "note": "far-domain shift",
+      "n": 500,
+      "fidelity_mmd2": 0.45848384499549866,
+      "fidelity_ci": [
+        0.4524728313088417,
+        0.4677893616259098
+      ],
+      "fidelity_p": 0.0,
+      "fidelity_z": 805.2870812277847,
+      "fidelity_null_mean": 0.00021913072270172051,
+      "memorization_mean_nn": 69.41702270507812,
+      "memorization_rate": 0.0,
+      "coverage": 0.0
+    }
+  ],
+  "runtime_s": 21.3
+}

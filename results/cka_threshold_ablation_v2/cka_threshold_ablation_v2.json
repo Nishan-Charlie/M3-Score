@@ -1,0 +1,135 @@
+{
+  "protocol": {
+    "reference_draw": "patient-disjoint round-robin (subject-diverse)",
+    "n_images": 500,
+    "S_RR_definition": "mean MMD^2 between two subject-disjoint real blocks",
+    "seed": 42
+  },
+  "rows": [
+    {
+      "tau": 0.7,
+      "M": 3,
+      "active_layers": [
+        2,
+        5,
+        12
+      ],
+      "S_RG": 0.09148594985405605,
+      "S_RR": 0.00011614759569056332,
+      "discriminability": 786.6697688843251
+    },
+    {
+      "tau": 0.8,
+      "M": 4,
+      "active_layers": [
+        1,
+        2,
+        6,
+        12
+      ],
+      "S_RG": 0.08656850084662437,
+      "S_RR": 6.093829870223999e-05,
+      "discriminability": 1419.592676366304
+    },
+    {
+      "tau": 0.85,
+      "M": 5,
+      "active_layers": [
+        1,
+        2,
+        4,
+        7,
+        12
+      ],
+      "S_RG": 0.09069043248891831,
+      "S_RR": 2.1710396686103196e-05,
+      "discriminability": 4176.281226140339
+    },
+    {
+      "tau": 0.9,
+      "M": 6,
+      "active_layers": [
+        1,
+        2,
+        4,
+        6,
+        8,
+        12
+      ],
+      "S_RG": 0.08789981653292973,
+      "S_RR": 4.385411739349365e-05,
+      "discriminability": 2003.3686147921621
+    },
+    {
+      "tau": 0.92,
+      "M": 6,
+      "active_layers": [
+        1,
+        2,
+        4,
+        6,
+        8,
+        12
+      ],
+      "S_RG": 0.08789981653292973,
+      "S_RR": 4.385411739349365e-05,
+      "discriminability": 2003.3686147921621
+    },
+    {
+      "tau": 0.95,
+      "M": 7,
+      "active_layers": [
+        1,
+        2,
+        4,
+        5,
+        7,
+        9,
+        12
+      ],
+      "S_RG": 0.08996587459530149,
+      "S_RR": 6.528496721460084e-05,
+      "discriminability": 1377.0488592354047
+    },
+    {
+      "tau": 0.97,
+      "M": 8,
+      "active_layers": [
+        1,
+        2,
+        4,
+        5,
+        6,
+        7,
+        9,
+        12
+      ],
+      "S_RG": 0.08904474135488272,
+      "S_RR": 8.759349566389574e-05,
+      "discriminability": 1015.5679618102644
+    },
+    {
+      "tau": 0.99,
+      "M": 12,
+      "active_layers": [
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8,
+        9,
+        10,
+        11,
+        12
+      ],
+      "S_RG": 0.08741591001550357,
+      "S_RR": 6.000995623859732e-05,
+      "discriminability": 1455.6901143527118
+    }
+  ],
+  "l12_always_retained": true,
+  "runtime_s": 33.6
+}
