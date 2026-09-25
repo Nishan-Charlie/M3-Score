@@ -5,7 +5,7 @@
 [![Python](https://img.shields.io/badge/Python-3.10%2B-3776AB?logo=python&logoColor=white)](https://www.python.org/)
 [![PyTorch](https://img.shields.io/badge/PyTorch-2.0%2B-EE4C2C?logo=pytorch&logoColor=white)](https://pytorch.org/)
 [![License](https://img.shields.io/badge/License-MIT-green.svg)](LICENSE)
-[![Project page](https://img.shields.io/badge/Project%20page-academic-6f42c1.svg)](docs/PROJECT.md)
+[![Project page](https://img.shields.io/badge/Project%20page-academic-6f42c1.svg)](docs/index.html)
 
 M3-Score is a medical-image evaluation framework for generative radiology models. It does not
 collapse quality into a single number. Instead, it reports three interpretable axes in a
@@ -21,7 +21,7 @@ axis also provides a native permutation test and bootstrap confidence interval.
 
 ![M3-Score overview](paper_release/Images/three_axis_severity.png)
 
-**Read more:** [academic project page](docs/PROJECT.md) · [paper PDF](paper_release/paper.pdf) ·
+**Read more:** [HTML project page](docs/index.html) · [academic project notes](docs/PROJECT.md) · [paper PDF](paper_release/paper.pdf) ·
 [publication figures](paper_release/Images/) · [release scope](RELEASE.md)
 
 > This is a pre-publication research repository. It does not claim acceptance or submission to
@@ -144,6 +144,17 @@ claims. Medical datasets and model weights are not redistributed. Obtain them fr
 original sources, verify their licenses and access conditions, and keep local copies in ignored
 directories. See [`RELEASE.md`](RELEASE.md) for the publication boundary.
 
+## Publish the project page
+
+GitHub Pages can publish this site directly from the `docs/` folder:
+
+1. Open the repository on GitHub and go to **Settings -> Pages**.
+2. Select **Deploy from a branch**.
+3. Choose the `main` branch and the `/docs` folder.
+4. Save the setting and open the generated Pages URL.
+
+The entry point is [`docs/index.html`](docs/index.html). The page includes a self-contained copy
+of the paper PDF and selected figures under [`docs/assets/`](docs/assets/).
 ## Citation
 
 ```bibtex
