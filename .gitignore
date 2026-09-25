@@ -9,7 +9,7 @@
 /output/
 
 # ─── Regenerable experiment caches ───
-# pert_*/ are perturbed-image caches reused across runs (see experiments/noise_robustness.py).
+# pert_*/ are perturbed-image caches reused across runs (see the corresponding retained result reports).
 # They hold no results of record — every number lives in the sibling *_report.json.
 **/pert_*/
 **/calibration_sanity/

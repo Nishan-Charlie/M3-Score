@@ -146,7 +146,6 @@ class M3EntropyMetric(nn.Module):
         seed:                 int            = 42,
         single_layer:         Optional[int]  = 12,
     ):
-        # NOTE (validated 2026-07-26, experiments/debug_metric_ablation.py):
         #   * `single_layer=12` is the shipping default. Single-layer L12 unbiased
         #     multi-bandwidth RBF MMD^2 matches or beats the legacy
         #     entropy*stability*uniqueness weighting on both decisiveness (permutation Z)
