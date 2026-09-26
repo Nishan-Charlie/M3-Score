@@ -21,7 +21,7 @@ axis also provides a native permutation test and bootstrap confidence interval.
 
 ![M3-Score overview](paper_release/Images/three_axis_severity.png)
 
-**Read more:** [HTML project page](docs/index.html) · [academic project notes](docs/PROJECT.md) · ArXiv link coming soon ·
+**Read more:** [Project page](https://nishan-charlie.github.io/M3-Score/) · [academic project notes](docs/PROJECT.md) · ArXiv link coming soon ·
 [publication figures](paper_release/Images/) · [release scope](RELEASE.md)
 
 > This is a pre-publication research repository. It does not claim acceptance or submission to
