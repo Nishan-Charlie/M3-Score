@@ -13,6 +13,7 @@ import torch
 from .. import protocol
 from .arrays import ArraySource
 from .base import ImageSource, ItemSource, SkippedItem
+from .dicom import dicom_items, is_dicom
 from .images import IMAGE_SUFFIXES, ImageFile
 from .nifti import is_nifti, nifti_items
 from .sampling import sample_indices
@@ -27,7 +28,7 @@ __all__ = [
     "sample_indices",
 ]
 
-_SUPPORTED = ", ".join(sorted(IMAGE_SUFFIXES)) + ", .nii, .nii.gz"
+_SUPPORTED = ", ".join(sorted(IMAGE_SUFFIXES)) + ", .nii, .nii.gz and DICOM"
 
 
 def open_source(
@@ -90,6 +91,7 @@ def _open_path(
     labels: list[str] = []
     groups: list[str | None] = []
     notes: list[str] = []
+    dicom_files: list[tuple[Path, str]] = []
     for path, label in _list_files(root, include):
         if path.suffix.lower() in IMAGE_SUFFIXES:
             items.append(ImageFile(path, label))
@@ -100,6 +102,15 @@ def _open_path(
                 items.append(item)
                 labels.append(label)
                 groups.append(label)  # one volume file is one subject
+        elif is_dicom(path):
+            dicom_files.append((path, label))
+    if dicom_files:
+        # DICOM files are handled together because slices of one series form a volume
+        found, found_labels, found_groups, found_notes = dicom_items(dicom_files, band, window)
+        items += found
+        labels += found_labels
+        groups += found_groups
+        notes += found_notes
     if not items:
         matching = f" matching {include!r}" if include else ""
         raise FileNotFoundError(
