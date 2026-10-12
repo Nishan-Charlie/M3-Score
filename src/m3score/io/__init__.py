@@ -10,10 +10,13 @@ from pathlib import Path
 import numpy as np
 import torch
 
+from .. import protocol
 from .arrays import ArraySource
 from .base import ImageSource, ItemSource, SkippedItem
 from .images import IMAGE_SUFFIXES, ImageFile
+from .nifti import is_nifti, nifti_items
 from .sampling import sample_indices
+from .volumes import check_band, check_window
 
 __all__ = [
     "ArraySource",
@@ -24,7 +27,7 @@ __all__ = [
     "sample_indices",
 ]
 
-_SUPPORTED = ", ".join(sorted(IMAGE_SUFFIXES))
+_SUPPORTED = ", ".join(sorted(IMAGE_SUFFIXES)) + ", .nii, .nii.gz"
 
 
 def open_source(
@@ -80,6 +83,9 @@ def _open_path(
     slice_band: tuple[float, float] | None,
     window: tuple[float, float] | None,
 ) -> ImageSource:
+    band = check_band(slice_band) if slice_band is not None else protocol.SLICE_BAND
+    window = check_window(window) if window is not None else None
+
     items: list = []
     labels: list[str] = []
     groups: list[str | None] = []
@@ -89,6 +95,11 @@ def _open_path(
             items.append(ImageFile(path, label))
             labels.append(label)
             groups.append(None)
+        elif is_nifti(path):
+            for item in nifti_items(path, label, band, window):
+                items.append(item)
+                labels.append(label)
+                groups.append(label)  # one volume file is one subject
     if not items:
         matching = f" matching {include!r}" if include else ""
         raise FileNotFoundError(
