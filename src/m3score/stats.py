@@ -7,6 +7,9 @@ operation for operation; ``tests/test_parity.py`` holds the two together.
 
 from __future__ import annotations
 
+from collections.abc import Sequence
+
+import numpy as np
 import torch
 
 from . import protocol
@@ -119,3 +122,146 @@ def precision_recall(
     precision = inside_any(gen, real, _kth_nn_dist_within(real, k))
     recall = inside_any(real, gen, _kth_nn_dist_within(gen, k))
     return precision, recall
+
+
+def _pooled_kernel(real: torch.Tensor, gen: torch.Tensor) -> torch.Tensor:
+    """Bandwidth-averaged RBF kernel on the pooled sample, real rows first.
+
+    Held in float64 so that sums over millions of entries keep their precision.
+    Averaging the kernels equals averaging the per-bandwidth MMD^2 estimates.
+    """
+    pooled = _l2_normalise(torch.cat([real.float(), gen.float()], dim=0))
+    d = _sq_dist(pooled, pooled)
+    sigma2 = _median_bandwidth(d)
+    dtype = torch.float32 if d.device.type == "mps" else torch.float64
+    kernel = torch.zeros(d.shape, dtype=dtype, device=d.device)
+    for scale in protocol.RBF_BANDWIDTH_SCALES:
+        kernel += torch.exp(-d / (2.0 * (sigma2 * scale))).to(dtype)
+    return kernel / len(protocol.RBF_BANDWIDTH_SCALES)
+
+
+def bootstrap_ci(
+    real: torch.Tensor,
+    gen: torch.Tensor,
+    *,
+    n_bootstrap: int = protocol.N_BOOTSTRAP,
+    alpha: float = protocol.CI_ALPHA,
+    seed: int = 0,
+) -> tuple[float, float]:
+    """Percentile bootstrap interval for the fidelity MMD^2.
+
+    Real and generated sets are resampled independently with replacement. The kernel
+    is the one used for the point estimate. A resample contains repeated images;
+    within-set pairs that are two copies of the same original are left out of the
+    within-set averages, which keeps the bootstrap distribution centred on the point
+    estimate. (Counting them, as the research code does, shifts the interval upward.)
+    """
+    nr, ng = real.shape[0], gen.shape[0]
+    kernel = _pooled_kernel(real, gen)
+    k_rr, k_gg, k_rg = kernel[:nr, :nr], kernel[nr:, nr:], kernel[:nr, nr:]
+    diag_r, diag_g = k_rr.diagonal(), k_gg.diagonal()
+
+    rng = torch.Generator().manual_seed(seed)
+    values = []
+    for _ in range(n_bootstrap):
+        # multiplicity of each original image in this resample
+        c_r = torch.bincount(torch.randint(0, nr, (nr,), generator=rng), minlength=nr).to(kernel)
+        c_g = torch.bincount(torch.randint(0, ng, (ng,), generator=rng), minlength=ng).to(kernel)
+        pairs_r = nr * nr - float((c_r * c_r).sum())
+        pairs_g = ng * ng - float((c_g * c_g).sum())
+        if pairs_r <= 0 or pairs_g <= 0:  # a resample made of one image repeated
+            continue
+        t_rr = (torch.dot(c_r, k_rr @ c_r) - torch.dot(c_r * c_r, diag_r)) / pairs_r
+        t_gg = (torch.dot(c_g, k_gg @ c_g) - torch.dot(c_g * c_g, diag_g)) / pairs_g
+        t_rg = torch.dot(c_r, k_rg @ c_g) / (nr * ng)
+        values.append(float(t_rr + t_gg - 2.0 * t_rg))
+    if not values:
+        return 0.0, 0.0
+    arr = np.array(values)
+    low = max(float(np.percentile(arr, 100 * alpha / 2)), 0.0)
+    high = max(float(np.percentile(arr, 100 * (1 - alpha / 2))), 0.0)
+    return low, high
+
+
+def permutation_test(
+    real: torch.Tensor,
+    gen: torch.Tensor,
+    *,
+    n_permutations: int = protocol.N_PERMUTATIONS,
+    seed: int = 0,
+) -> tuple[float, float, float]:
+    """One-sided permutation test of H0: MMD^2(real, gen) = 0.
+
+    Returns ``(p_value, z_score, null_mean)``. The pooled median, and so every
+    bandwidth, is unchanged by relabelling, so the null is evaluated on one pooled
+    kernel matrix: each permutation costs a single matrix-vector product.
+    """
+    nr, ng = real.shape[0], gen.shape[0]
+    n = nr + ng
+    observed = mmd2_rbf(real, gen)
+    kernel = _pooled_kernel(real, gen)
+    diag = kernel.diagonal().clone()
+    total, diag_total = kernel.sum(), diag.sum()
+
+    rng = torch.Generator().manual_seed(seed)
+    null = []
+    for _ in range(n_permutations):
+        perm = torch.randperm(n, generator=rng)
+        is_real = torch.zeros(n, dtype=kernel.dtype, device=kernel.device)
+        is_real[perm[:nr].to(kernel.device)] = 1.0
+        k_real = kernel @ is_real
+        sum_rr = torch.dot(is_real, k_real)
+        sum_rg = k_real.sum() - sum_rr
+        sum_gg = total - sum_rr - 2.0 * sum_rg
+        trace_r = torch.dot(is_real, diag)
+        value = (
+            (sum_rr - trace_r) / (nr * (nr - 1))
+            + (sum_gg - (diag_total - trace_r)) / (ng * (ng - 1))
+            - 2.0 * sum_rg / (nr * ng)
+        )
+        null.append(max(float(value), 0.0))
+    arr = np.array(null)
+    exceed = int((arr >= observed).sum())
+    p_value = (1 + exceed) / (1 + n_permutations)
+    z_score = float((observed - arr.mean()) / max(float(arr.std()), 1e-10))
+    return float(p_value), z_score, float(arr.mean())
+
+
+def real_floor(
+    real: torch.Tensor,
+    groups: Sequence[str] | None = None,
+    *,
+    n_splits: int = protocol.FLOOR_SPLITS,
+    seed: int = 0,
+) -> tuple[float, float, bool] | None:
+    """Real-vs-real MMD^2 over random halvings of the real set.
+
+    Gives the fidelity value a scale: this is what the metric reads when both sides
+    are real. With two or more known subjects the halves are subject-disjoint.
+    Returns ``(mean clamped at 0, sample std, subject_disjoint)``, or ``None`` when no
+    split leaves two images on each side.
+    """
+    real = real.float()
+    n = real.shape[0]
+    subjects = sorted(set(groups)) if groups is not None else []
+    by_subject = len(subjects) >= 2
+    rng = np.random.default_rng(seed)
+
+    values = []
+    for _ in range(n_splits):
+        if by_subject:
+            order = rng.permutation(len(subjects))
+            half = {subjects[i] for i in order[: len(subjects) // 2]}
+            in_a = np.fromiter((g in half for g in groups), dtype=bool, count=n)
+        else:
+            in_a = np.zeros(n, dtype=bool)
+            in_a[rng.permutation(n)[: n // 2]] = True
+        if in_a.sum() < 2 or (~in_a).sum() < 2:
+            continue
+        mask = torch.from_numpy(in_a).to(real.device)
+        values.append(mmd2_rbf(real[mask], real[~mask], clamp=False))
+    if not values:
+        return None
+    arr = np.array(values)
+    std = float(arr.std(ddof=1)) if len(arr) > 1 else 0.0
+    return max(float(arr.mean()), 0.0), std, by_subject

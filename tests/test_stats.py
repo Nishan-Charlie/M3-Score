@@ -116,3 +116,124 @@ def test_precision_recall_uses_any_reference_ball():
 def test_precision_recall_needs_more_than_k_points():
     with pytest.raises(ValueError, match="more than k"):
         stats.precision_recall(_features(0, 5), _features(1, 5), k=5)
+
+
+def _slow_bootstrap_values(real, gen, n_bootstrap, seed):
+    """Reference: build each resample explicitly and skip pairs sharing an original index."""
+    nr, ng = real.shape[0], gen.shape[0]
+    kernel = stats._pooled_kernel(real, gen).numpy()
+    rng = torch.Generator().manual_seed(seed)
+    out = []
+    for _ in range(n_bootstrap):
+        ri = torch.randint(0, nr, (nr,), generator=rng).numpy()
+        gi = torch.randint(0, ng, (ng,), generator=rng).numpy()
+        rr = [kernel[a, b] for a in ri for b in ri if a != b]
+        gg = [kernel[nr + a, nr + b] for a in gi for b in gi if a != b]
+        rg = [kernel[a, nr + b] for a in ri for b in gi]
+        out.append(sum(rr) / len(rr) + sum(gg) / len(gg) - 2.0 * sum(rg) / len(rg))
+    return np.array(out)
+
+
+def test_bootstrap_matches_a_slow_reference():
+    real, gen = _features(1, 25), _features(2, 20, shift=0.3)
+    values = _slow_bootstrap_values(real, gen, 8, seed=4)
+    expected = (max(np.percentile(values, 2.5), 0.0), max(np.percentile(values, 97.5), 0.0))
+    assert stats.bootstrap_ci(real, gen, n_bootstrap=8, seed=4) == pytest.approx(expected, abs=1e-9)
+
+
+def test_bootstrap_interval_contains_the_point_estimate():
+    g = torch.Generator().manual_seed(2)
+    real = torch.randn(300, 64, generator=g)
+    gen = torch.randn(300, 64, generator=g) + 0.15
+    low, high = stats.bootstrap_ci(real, gen, seed=0)
+    assert low <= stats.mmd2_rbf(real, gen) <= high
+
+
+def test_bootstrap_interval_reaches_zero_for_one_distribution():
+    g = torch.Generator().manual_seed(2)
+    real = torch.randn(300, 64, generator=g)
+    gen = torch.randn(300, 64, generator=g)
+    low, _ = stats.bootstrap_ci(real, gen, seed=0)
+    assert low == 0.0
+
+
+def test_bootstrap_is_deterministic_per_seed():
+    real, gen = _features(0, 50), _features(1, 50, shift=0.2)
+    assert stats.bootstrap_ci(real, gen, seed=3) == stats.bootstrap_ci(real, gen, seed=3)
+    assert stats.bootstrap_ci(real, gen, seed=3) != stats.bootstrap_ci(real, gen, seed=4)
+
+
+def test_permutation_test_separates_shifted_from_identical_distributions():
+    real = _features(0, 80, d=32)
+    same = _features(1, 80, d=32)
+    shifted = _features(1, 80, d=32, shift=0.5)
+    p_same, _, _ = stats.permutation_test(real, same, n_permutations=100, seed=1)
+    p_shift, z_shift, _ = stats.permutation_test(real, shifted, n_permutations=100, seed=1)
+    assert p_same > 0.05
+    assert p_shift == pytest.approx(1 / 101)
+    assert z_shift > 5
+
+
+def test_permutation_null_equals_recomputation():
+    real, gen = _features(3, 30), _features(4, 25, shift=0.2)
+    _, _, null_mean = stats.permutation_test(real, gen, n_permutations=20, seed=7)
+    pooled = torch.cat([real, gen])
+    rng = torch.Generator().manual_seed(7)
+    slow = []
+    for _ in range(20):
+        perm = torch.randperm(55, generator=rng)
+        slow.append(stats.mmd2_rbf(pooled[perm[:30]], pooled[perm[30:]]))
+    assert null_mean == pytest.approx(float(np.mean(slow)), abs=1e-5)
+
+
+def test_floor_is_small_for_one_distribution_and_deterministic():
+    real = _features(0, 200, d=32)
+    mean, std, disjoint = stats.real_floor(real, seed=0)
+    assert not disjoint
+    assert 0.0 <= mean < 0.01
+    assert std >= 0.0
+    assert stats.real_floor(real, seed=0) == (mean, std, disjoint)
+
+
+def test_floor_splits_are_subject_disjoint(monkeypatch):
+    # Column 0 carries the subject index so the two halves can be traced back.
+    subjects = [f"s{i:02d}" for i in range(10) for _ in range(6)]
+    real = _features(0, 60)
+    real[:, 0] = torch.tensor([float(s[1:]) for s in subjects])
+    seen = []
+    original = stats.mmd2_rbf
+
+    def spy(a, b, **kwargs):
+        seen.append((set(a[:, 0].tolist()), set(b[:, 0].tolist())))
+        return original(a, b, **kwargs)
+
+    monkeypatch.setattr(stats, "mmd2_rbf", spy)
+    _, _, disjoint = stats.real_floor(real, subjects, n_splits=5, seed=0)
+    assert disjoint
+    assert len(seen) == 5
+    assert all(not (a & b) for a, b in seen)
+
+
+def test_floor_falls_back_to_images_with_one_subject():
+    result = stats.real_floor(_features(0, 40), ["only"] * 40, seed=0)
+    assert result is not None and result[2] is False
+
+
+def test_floor_is_none_without_enough_images():
+    assert stats.real_floor(_features(0, 3)) is None
+
+
+def test_statistics_stay_finite_on_degenerate_features():
+    normal = _features(0, 40)
+    constant = torch.ones(12, 16)
+    for real, gen in ((normal, normal.clone()), (normal, constant), (constant, constant)):
+        values = [
+            stats.mmd2_rbf(real, gen),
+            *stats.bootstrap_ci(real, gen, n_bootstrap=10),
+            *stats.permutation_test(real, gen, n_permutations=10),
+            *stats.memorization(real, gen),
+            stats.coverage(real, gen),
+        ]
+        assert all(np.isfinite(v) for v in values), values
+    assert stats.mmd2_rbf(normal, normal.clone()) == 0.0
+    assert stats.coverage(normal, normal.clone()) == 1.0
