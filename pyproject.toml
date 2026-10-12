@@ -1,0 +1,70 @@
+[build-system]
+requires = ["hatchling>=1.27"]
+build-backend = "hatchling.build"
+
+[project]
+name = "m3-score"
+version = "0.1.0"
+description = "M3-Score: fidelity, memorization and coverage as separate axes for evaluating generative radiology image models"
+readme = "README.md"
+requires-python = ">=3.10"
+license = "MIT"
+license-files = ["LICENSE"]
+authors = [{ name = "Nishankar Sathiyamohan" }]
+keywords = [
+  "generative models",
+  "evaluation metric",
+  "medical imaging",
+  "radiology",
+  "maximum mean discrepancy",
+  "diffusion models",
+]
+classifiers = [
+  "Development Status :: 4 - Beta",
+  "Intended Audience :: Science/Research",
+  "Programming Language :: Python :: 3",
+  "Programming Language :: Python :: 3.10",
+  "Programming Language :: Python :: 3.11",
+  "Programming Language :: Python :: 3.12",
+  "Programming Language :: Python :: 3.13",
+  "Topic :: Scientific/Engineering :: Artificial Intelligence",
+  "Topic :: Scientific/Engineering :: Medical Science Apps.",
+  "Typing :: Typed",
+]
+dependencies = [
+  "torch>=2.0",
+  "timm>=1.0",
+  "numpy>=1.23",
+  "pillow>=9.1",
+  "tqdm>=4.60",
+]
+
+[project.optional-dependencies]
+nifti = ["nibabel>=4.0"]
+dicom = ["pydicom>=2.4"]
+all = ["m3-score[nifti,dicom]"]
+dev = ["m3-score[all]", "pytest>=7", "ruff>=0.4", "build>=1.0", "twine>=5"]
+
+[project.urls]
+Homepage = "https://nishan-charlie.github.io/M3-Score/"
+Repository = "https://github.com/Nishan-Charlie/M3-Score"
+Issues = "https://github.com/Nishan-Charlie/M3-Score/issues"
+
+[tool.hatch.build.targets.wheel]
+packages = ["src/m3score"]
+
+[tool.hatch.build.targets.sdist]
+include = ["/src", "/tests", "/README.md", "/LICENSE", "/CITATION.cff", "/pyproject.toml"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+addopts = "-ra"
+markers = ["network: needs the real backbone weights (Hugging Face Hub or a local cache)"]
+
+[tool.ruff]
+line-length = 100
+target-version = "py310"
+src = ["src", "tests"]
+
+[tool.ruff.lint]
+select = ["E", "F", "I", "UP", "B"]
