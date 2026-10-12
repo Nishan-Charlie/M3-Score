@@ -1,6 +1,7 @@
 import numpy as np
 import pytest
 import torch
+from PIL import Image
 
 from _images import write_png, write_pngs
 from m3score.io import ArraySource, ImageSource, SkippedItem, open_source
@@ -120,3 +121,24 @@ def test_tensors_arrays_and_sources_pass_through():
 def test_other_types_are_rejected():
     with pytest.raises(TypeError, match="path"):
         open_source(42)
+
+
+def test_a_32bit_integer_image_within_16bit_range_is_scaled(tmp_path):
+    Image.fromarray(np.array([[0, 65535], [13107, 32768]], dtype=np.int32)).save(tmp_path / "a.tif")
+    image = open_source(tmp_path).load(0)
+    assert image.shape == (1, 2, 2)
+    assert image.flatten().tolist() == pytest.approx([0.0, 1.0, 0.2, 32768 / 65535], abs=1e-4)
+
+
+@pytest.mark.parametrize("values", [[[0, 100000]], [[-5, 1000]]])
+def test_a_32bit_integer_image_outside_16bit_range_is_skipped_not_clamped(tmp_path, values):
+    Image.fromarray(np.array(values, dtype=np.int32)).save(tmp_path / "wide.tif")
+    with pytest.raises(SkippedItem, match=r"wide\.tif.*outside"):
+        open_source(tmp_path).load(0)
+
+
+def test_an_image_over_the_decoder_pixel_limit_is_skipped(tmp_path, monkeypatch):
+    write_png(tmp_path / "huge.png", np.zeros((10, 10), dtype=np.uint8))
+    monkeypatch.setattr(Image, "MAX_IMAGE_PIXELS", 10)  # 100 pixels is over twice the limit
+    with pytest.raises(SkippedItem, match=r"huge\.png.*too large"):
+        open_source(tmp_path).load(0)
