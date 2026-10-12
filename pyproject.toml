@@ -45,6 +45,9 @@ dicom = ["pydicom>=2.4"]
 all = ["m3-score[nifti,dicom]"]
 dev = ["m3-score[all]", "pytest>=7", "ruff>=0.4", "build>=1.0", "twine>=5"]
 
+[project.scripts]
+m3score = "m3score.cli:main"
+
 [project.urls]
 Homepage = "https://nishan-charlie.github.io/M3-Score/"
 Repository = "https://github.com/Nishan-Charlie/M3-Score"
