@@ -47,9 +47,27 @@ result reports stay in the repository and are not part of the wheel.
 A version number can be published only once, and a project name cannot be released
 by anyone else afterwards. Check the built wheel before publishing the release.
 
+The publishing job in `.github/workflows/publish.yml` pins its two actions to exact
+commit hashes, with the version in a trailing comment. To move to a newer version,
+look up the commit behind its tag (`git ls-remote --tags <repository URL>`) and change
+the hash and the comment together.
+
 ### Changing the protocol
 
 Any change to a constant in `src/m3score/protocol.py`, or to the arithmetic in
 `src/m3score/stats.py`, changes what an M3-Score means. Give it a new
 `PROTOCOL_VERSION`, regenerate the golden values with `python tools/make_golden.py`,
 and say so in the release notes.
+
+## Project page
+
+GitHub Pages publishes the site from the `docs/` folder:
+
+1. Open the repository on GitHub and go to **Settings -> Pages**.
+2. Select **Deploy from a branch**.
+3. Choose the `main` branch and the `/docs` folder.
+4. Save the setting and open the generated Pages URL.
+
+The entry point is `docs/index.html`, served at
+`https://nishan-charlie.github.io/M3-Score/`. The page uses its own copy of selected
+figures under `docs/assets/`.

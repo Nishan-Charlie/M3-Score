@@ -1,21 +1,24 @@
 cff-version: 1.2.0
 message: "If you use M3-Score or this codebase, please cite the following."
-title: "M3-Score: A Medical-Backbone MMD Metric with Native Hypothesis Testing for Generative MRI Evaluation"
+title: "M3-Score: Fidelity, Memorization and Coverage as Separate Axes for Evaluating Generative Radiology Image Models"
 authors:
   - family-names: Sathiyamohan
     given-names: Nishankar
 type: software
+version: "0.1.0"
 license: MIT
-repository-code: "https://github.com/nishan-charlie/MRI-ImageGenration"
+repository-code: "https://github.com/Nishan-Charlie/M3-Score"
+url: "https://nishan-charlie.github.io/M3-Score/"
 keywords:
   - generative model evaluation
   - medical imaging
+  - radiology
   - diffusion models
   - maximum mean discrepancy
   - MRI
 preferred-citation:
   type: article
-  title: "M3-Score: A Medical-Backbone MMD Metric with Native Hypothesis Testing for Generative MRI Evaluation"
+  title: "M3-Score: Fidelity, Memorization and Coverage as Separate Axes for Evaluating Generative Radiology Image Models"
   authors:
     - family-names: Sathiyamohan
       given-names: Nishankar

@@ -204,21 +204,18 @@
       <div class="shell">
         <div class="eyebrow">Reproducibility</div>
         <h2>Inspect the code and recorded evidence.</h2>
-        <p class="section-intro">This GitHub Pages site is a presentation layer for the repository. The source release contains the evaluation implementation, figures, numerical reports, and retained logs. Medical datasets and model checkpoints are intentionally not redistributed.</p>
+        <p class="section-intro">M3-Score is available as the Python package <code>m3-score</code>, with a command line and an API for 2D images, NIfTI and DICOM. The repository also holds the research implementation, figures, numerical reports, and retained logs behind the paper. Medical datasets and model checkpoints are intentionally not redistributed.</p>
         <div class="grid-2">
           <article class="card">
             <h3>Install</h3>
-            <pre class="code">conda create -n m3score python=3.10
-conda activate m3score
-pip install -r requirements.txt</pre>
+            <pre class="code">pip install m3-score
+
+# with NIfTI and DICOM support
+pip install "m3-score[all]"</pre>
           </article>
           <article class="card">
-            <h3>Evaluate two image directories</h3>
-            <pre class="code">python evaluation/eval_pipeline.py \
-  --real_dir /path/to/real_images \
-  --gen_dir /path/to/generated_images \
-  --output_dir results/evaluation \
-  --metrics fid kid ssim m3 alpha</pre>
+            <h3>Score two image folders</h3>
+            <pre class="code">m3score /path/to/real /path/to/generated</pre>
           </article>
         </div>
         <p class="meta">See the <a href="PROJECT.md">academic project notes</a>, <a href="EXPERIMENT_FINDINGS.md">experiment record</a>, <a href="https://github.com/Nishan-Charlie/M3-Score/tree/main/results">retained results</a>, and <a href="https://github.com/Nishan-Charlie/M3-Score/blob/main/RELEASE.md">release policy</a>.</p>
