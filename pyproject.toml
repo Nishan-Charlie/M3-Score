@@ -53,10 +53,14 @@ Homepage = "https://nishan-charlie.github.io/M3-Score/"
 Repository = "https://github.com/Nishan-Charlie/M3-Score"
 Issues = "https://github.com/Nishan-Charlie/M3-Score/issues"
 
+# Nothing here needs a newer metadata version than 2.4 (licence expressions). Pinning
+# it keeps the files readable by validators and indexes that predate 2.5.
 [tool.hatch.build.targets.wheel]
 packages = ["src/m3score"]
+core-metadata-version = "2.4"
 
 [tool.hatch.build.targets.sdist]
+core-metadata-version = "2.4"
 include = ["/src", "/tests", "/README.md", "/LICENSE", "/CITATION.cff", "/pyproject.toml"]
 
 [tool.pytest.ini_options]
