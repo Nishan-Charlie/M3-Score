@@ -144,6 +144,13 @@ generated image within their radius (Naeem et al. 2020).
    synthetic check the point estimate was 0.0050 and the research interval was
    [0.0067, 0.0100]. The fidelity value itself is unaffected. Intervals from the
    package therefore differ from the paper's [0.071, 0.080], and the README says so.
+7. Resizing keeps floating-point precision. The research pipeline resizes each 8-bit
+   image with Pillow, which rounds the result back to whole grey levels; the package's
+   resize is numerically the same bilinear filter without that rounding (a Pillow
+   resize in float mode gives the identical fidelity to six digits). On two local
+   pairs this moved fidelity by -0.06% and -1.19% and left memorization and coverage
+   unchanged. Scoring a PNG folder therefore lands within about 1% of the research
+   pipeline, not on it. Not measured on real BraTS data.
 
 ### Behaviour preserved on purpose, for parity with the paper
 
@@ -460,8 +467,12 @@ backbone.
 Acceptance check run once by hand before release, recorded in the final report:
 
 - Package against the research pipeline (PIL resize) end to end on the local
-  500-image generated sets: fidelity within 1% relative, memorization and coverage
+  500-image generated sets: fidelity within 2% relative, memorization and coverage
   within 0.02 absolute. A larger gap is reported to the maintainer, not tuned away.
+  The fidelity tolerance was first set at 1%. The measured gaps were -0.06% and
+  -1.19%, traced entirely to the research pipeline rounding resized images to 8 bits
+  (section 4, item 7). The maintainer chose to keep the float resize and accept the
+  gap, and the tolerance was set to 2% on that decision.
 - The wheel installed into a clean virtual environment, `m3score` run from a directory
   outside the repository.
 
