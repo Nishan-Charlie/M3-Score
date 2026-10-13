@@ -142,3 +142,24 @@ def test_an_image_over_the_decoder_pixel_limit_is_skipped(tmp_path, monkeypatch)
     monkeypatch.setattr(Image, "MAX_IMAGE_PIXELS", 10)  # 100 pixels is over twice the limit
     with pytest.raises(SkippedItem, match=r"huge\.png.*too large"):
         open_source(tmp_path).load(0)
+
+
+def test_optional_include_that_matches_nothing_is_not_applied_and_says_so(tmp_path):
+    write_pngs(tmp_path, 3, name="generated_{:04d}.png")
+    source = open_source(tmp_path, include="*_flair.nii.gz", include_optional=True)
+    assert len(source) == 3
+    assert any("*_flair.nii.gz" in note and "not applied" in note for note in source.warnings)
+
+
+def test_optional_include_that_matches_something_is_applied(tmp_path):
+    write_pngs(tmp_path, 3, name="keep_{:04d}.png")
+    write_pngs(tmp_path, 2, name="drop_{:04d}.png")
+    source = open_source(tmp_path, include="keep_*", include_optional=True)
+    assert len(source) == 3
+    assert source.warnings == []
+
+
+def test_required_include_that_matches_nothing_is_an_error(tmp_path):
+    write_pngs(tmp_path, 3)
+    with pytest.raises(FileNotFoundError, match=r"matching '\*_flair\.nii\.gz'"):
+        open_source(tmp_path, include="*_flair.nii.gz")

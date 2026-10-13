@@ -35,6 +35,7 @@ def open_source(
     source,
     *,
     include: str | None = None,
+    include_optional: bool = False,
     group_pattern: str | None = None,
     group_pattern_optional: bool = False,
     slice_band: tuple[float, float] | None = None,
@@ -44,9 +45,11 @@ def open_source(
 
     ``include`` is a glob on each file's path relative to the folder.
     ``group_pattern`` is a regex whose first capture group names the subject of each
-    file. It must match every file, unless ``group_pattern_optional`` is set, in which
-    case a pattern that matches no file at all is ignored. ``slice_band`` and
-    ``window`` apply to volumes.
+    file and must match every file. Both describe one particular folder layout, so
+    each has an ``_optional`` switch for a second folder laid out differently: with
+    it set, a pattern that matches no file at all is left unapplied, and for
+    ``include`` the source's warnings say so. ``slice_band`` and ``window`` apply to
+    volumes.
     """
     if isinstance(source, ImageSource):
         return source
@@ -54,7 +57,13 @@ def open_source(
         return ArraySource(source)
     if isinstance(source, str | os.PathLike):
         return _open_path(
-            Path(source), include, group_pattern, group_pattern_optional, slice_band, window
+            Path(source),
+            include,
+            include_optional,
+            group_pattern,
+            group_pattern_optional,
+            slice_band,
+            window,
         )
     raise TypeError(
         f"cannot read images from {type(source).__name__}; "
@@ -62,23 +71,35 @@ def open_source(
     )
 
 
-def _list_files(root: Path, include: str | None) -> list[tuple[Path, str]]:
-    """Files under ``root`` with their labels (posix paths relative to it), sorted by label."""
+def _list_files(
+    root: Path, include: str | None, include_optional: bool = False
+) -> tuple[list[tuple[Path, str]], bool]:
+    """Files under ``root`` with their labels (posix paths relative to it), sorted by label.
+
+    Also returns whether ``include`` was applied: an optional pattern that matches
+    nothing leaves the listing unfiltered.
+    """
     if root.is_dir():
         found = [(p, p.relative_to(root).as_posix()) for p in root.rglob("*") if p.is_file()]
     elif root.is_file():
         found = [(root, root.name)]
     else:
         raise FileNotFoundError(f"no such file or directory: {root}")
+    applied = include is not None
     if include is not None:
-        found = [(p, label) for p, label in found if fnmatch.fnmatch(label, include)]
+        kept = [(p, label) for p, label in found if fnmatch.fnmatch(label, include)]
+        if kept or not include_optional:
+            found = kept
+        else:
+            applied = False
     # sort on the label string so the order is the same on every platform
-    return sorted(found, key=lambda entry: entry[1])
+    return sorted(found, key=lambda entry: entry[1]), applied
 
 
 def _open_path(
     root: Path,
     include: str | None,
+    include_optional: bool,
     group_pattern: str | None,
     group_pattern_optional: bool,
     slice_band: tuple[float, float] | None,
@@ -92,7 +113,12 @@ def _open_path(
     groups: list[str | None] = []
     notes: list[str] = []
     dicom_files: list[tuple[Path, str]] = []
-    for path, label in _list_files(root, include):
+    files, include_applied = _list_files(root, include, include_optional)
+    if include is not None and not include_applied:
+        notes.append(
+            f"include pattern {include!r} matched no file under {root} and was not applied to it"
+        )
+    for path, label in files:
         if path.suffix.lower() in IMAGE_SUFFIXES:
             items.append(ImageFile(path, label))
             labels.append(label)
@@ -112,7 +138,7 @@ def _open_path(
         groups += found_groups
         notes += found_notes
     if not items:
-        matching = f" matching {include!r}" if include else ""
+        matching = f" matching {include!r}" if include_applied else ""
         raise FileNotFoundError(
             f"no readable images under {root}{matching}; supported: {_SUPPORTED}"
         )

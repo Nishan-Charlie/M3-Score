@@ -239,3 +239,19 @@ def test_module_level_score(offline_backbone):
         _images(0, 20), _images(1, 20), device="cpu", stats=False, progress=False
     )
     assert isinstance(result, M3Result)
+
+
+def test_include_need_not_match_the_generated_set(metric, tmp_path):
+    write_pngs(tmp_path / "real", 12, seed=0, name="scan_flair_{:04d}.png")
+    write_pngs(tmp_path / "real", 5, seed=1, name="scan_seg_{:04d}.png")
+    write_pngs(tmp_path / "gen", 10, seed=2, name="generated_{:04d}.png")
+    result = metric.score(tmp_path / "real", tmp_path / "gen", include="*_flair_*", stats=False)
+    assert (result.n_real, result.n_gen) == (12, 10)
+    assert any("not applied" in note for note in result.warnings)
+
+
+def test_include_must_match_the_real_set(metric, tmp_path):
+    write_pngs(tmp_path / "real", 10)
+    write_pngs(tmp_path / "gen", 10, seed=1)
+    with pytest.raises(FileNotFoundError, match="matching"):
+        metric.score(tmp_path / "real", tmp_path / "gen", include="*_flair_*")

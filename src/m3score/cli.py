@@ -38,7 +38,10 @@ def build_parser() -> argparse.ArgumentParser:
     parser.add_argument(
         "--include",
         metavar="GLOB",
-        help='only read files whose path inside the folder matches, e.g. "*_flair.nii.gz"',
+        help=(
+            'only read files whose path inside REAL matches, e.g. "*_flair.nii.gz"; '
+            "applied to GEN too when it matches files there"
+        ),
     )
     parser.add_argument(
         "--group-pattern",

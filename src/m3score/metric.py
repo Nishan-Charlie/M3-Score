@@ -250,14 +250,16 @@ class M3Score:
 
         Each of ``real`` and ``gen`` is a folder or file path, a tensor, or an array.
         ``n`` images are drawn at random from each set (default: all, up to 5,000).
-        ``group_pattern`` must match every file of the real set; it is applied to the
-        generated set only if it matches there too.
+        ``include`` and ``group_pattern`` describe the real set and must match it.
+        Each is applied to the generated set only if it matches there too, because
+        generated files are usually named differently.
         """
         self.reset()
         for is_real, origin, seed in ((True, real, self.seed), (False, gen, self.seed + 1)):
             source = open_source(
                 origin,
                 include=include,
+                include_optional=not is_real,
                 group_pattern=group_pattern,
                 group_pattern_optional=not is_real,
                 slice_band=slice_band,
