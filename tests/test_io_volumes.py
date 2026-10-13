@@ -46,3 +46,8 @@ def test_an_explicit_window_is_applied_exactly():
 def test_empty_or_constant_volumes_cannot_be_scaled():
     assert scale_intensity(np.zeros((4, 4, 4), dtype=np.float32), None) is None
     assert scale_intensity(np.full((4, 4, 4), 7.0, dtype=np.float32), None) is None
+
+
+def test_a_constant_volume_cannot_be_scaled_even_with_a_window():
+    assert scale_intensity(np.zeros((4, 4, 4), dtype=np.float32), (-1000.0, 400.0)) is None
+    assert scale_intensity(np.full((4, 4, 4), 7.0, dtype=np.float32), (0.0, 10.0)) is None

@@ -40,7 +40,8 @@ class ItemSource(ImageSource):
     ) -> None:
         self._items = list(items)
         self.groups = list(groups) if groups is not None else None
-        self.warnings = list(warnings)
+        # kept as the same list when one is given: readers append to it while loading
+        self.warnings = warnings if isinstance(warnings, list) else list(warnings)
 
     def __len__(self) -> int:
         return len(self._items)

@@ -1,12 +1,12 @@
 {
   "protocol": "m3-v1",
   "backbone": "Snarcy/RadioDino-s16@773d28d873455153495d39179fc42ea816aa1212",
-  "fidelity": 0.05399852246046066,
+  "fidelity": 0.05285299941897392,
   "fidelity_ci": [
-    0.03552481781961868,
-    0.07467755011107374
+    0.03459952274742443,
+    0.0725709381666678
   ],
   "memorization": 0.25,
-  "memorization_nn_dist": 19.174959182739258,
-  "coverage": 0.796875
+  "memorization_nn_dist": 19.229389190673828,
+  "coverage": 0.765625
 }

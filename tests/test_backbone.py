@@ -1,7 +1,10 @@
+import numpy as np
 import pytest
 import timm
 import torch
 import torch.nn as nn
+import torch.nn.functional as F
+from PIL import Image
 
 from _legacy import load_legacy_metric, load_legacy_module
 from m3score import M3ScoreError, protocol
@@ -94,3 +97,19 @@ def test_backbone_download_failure_explains_itself(monkeypatch):
         load_backbone(None, "cpu")
     assert "HF_HUB_OFFLINE" in str(info.value)
     assert "connection refused" in str(info.value)
+
+
+def test_prepare_is_a_pillow_bilinear_resize_in_float(tiny_backbone):
+    # the resize is a frozen part of the protocol: same filter as Pillow, no 8-bit rounding
+    image = torch.rand(1, 1, 100, 80, generator=torch.Generator().manual_seed(0))
+    pillow = Image.fromarray(image[0, 0].numpy()).resize((32, 32), Image.BILINEAR)
+    prepared = tiny_backbone.prepare(image)
+    assert np.allclose(prepared[0, 0].numpy(), np.asarray(pillow, dtype=np.float32), atol=1e-4)
+
+
+def test_prepare_antialiases_when_shrinking(tiny_backbone):
+    image = torch.rand(1, 3, 128, 128, generator=torch.Generator().manual_seed(0))
+    aliased = F.interpolate(
+        image, size=(32, 32), mode="bilinear", antialias=False, align_corners=False
+    )
+    assert float((tiny_backbone.prepare(image) - aliased).abs().max()) > 0.05

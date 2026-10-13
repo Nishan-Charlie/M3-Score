@@ -16,7 +16,7 @@ from . import stats as _stats
 from ._errors import M3ScoreWarning
 from ._version import __version__
 from .backbone import Backbone, load_backbone
-from .io import ImageSource, SkippedItem, open_source, sample_indices
+from .io import ImageSource, SkippedItem, clear_volume_caches, open_source, sample_indices
 from .io.arrays import check_images, to_float
 
 _log = logging.getLogger("m3score")
@@ -31,6 +31,13 @@ class M3Result:
     ``memorization`` the near-duplicate rate (lower is better), ``coverage`` the
     real-radius coverage (higher is better). The statistics are ``None`` when they
     were skipped.
+
+    ``fidelity_floor`` is the same statistic between random halves of the real set,
+    with its standard deviation over the halvings; ``fidelity_floor_by_subject`` says
+    whether the halves were subject-disjoint. Because each half is half the size of
+    the real set, the floor overstates what a full-size real-vs-real comparison would
+    read. When the split is by image its mean is zero by construction and only the
+    spread carries information.
     """
 
     fidelity: float
@@ -44,6 +51,7 @@ class M3Result:
     fidelity_z: float | None = None
     fidelity_floor: float | None = None
     fidelity_floor_std: float | None = None
+    fidelity_floor_by_subject: bool | None = None
     n_real_subjects: int | None = None
     n_gen_subjects: int | None = None
     protocol: str = _protocol.PROTOCOL_VERSION
@@ -51,12 +59,25 @@ class M3Result:
     layers: tuple[int, int, int] = _protocol.LAYERS
     warnings: tuple[str, ...] = ()
 
+    @property
+    def fidelity_noise_level(self) -> float | None:
+        """Floor plus two standard deviations.
+
+        A fidelity value at or below this cannot be told apart from real-vs-real
+        variation at this sample size.
+        """
+        if self.fidelity_floor is None or self.fidelity_floor_std is None:
+            return None
+        return self.fidelity_floor + 2.0 * self.fidelity_floor_std
+
     def to_dict(self) -> dict:
         """A JSON-serialisable copy."""
-        return {
+        fields = {
             key: list(value) if isinstance(value, tuple) else value
             for key, value in dataclasses.asdict(self).items()
         }
+        fields["fidelity_noise_level"] = self.fidelity_noise_level
+        return fields
 
     def __str__(self) -> str:
         return _format(self)
@@ -80,8 +101,10 @@ def _format(result: M3Result) -> str:
         low, high = result.fidelity_ci
         detail.append(f"95% CI [{low:.4f}, {high:.4f}]")
     if result.fidelity_floor is not None:
+        split = "by subject" if result.fidelity_floor_by_subject else "by image"
         detail.append(
-            f"real-vs-real floor {result.fidelity_floor:.4f} +/- {result.fidelity_floor_std:.4f}"
+            f"real-vs-real floor {result.fidelity_floor:.4f} "
+            f"+/- {result.fidelity_floor_std:.4f} ({split})"
         )
     lines.append(
         f"  {'fidelity':<14}{result.fidelity:<9.4f}{'lower':<9}{'; '.join(detail)}".rstrip()
@@ -93,9 +116,16 @@ def _format(result: M3Result) -> str:
     lines.append(
         f"  {'coverage':<14}{result.coverage:<9.3f}{'higher':<9}k = {_protocol.COVERAGE_K}"
     )
-    if result.fidelity_p is not None:
+    noise_level = result.fidelity_noise_level
+    if noise_level is not None:
+        verdict = "above" if result.fidelity > noise_level else "not above"
         lines += [
             "",
+            f"  noise level: {noise_level:.4f} (floor + 2 sd, from halves of the real set); "
+            f"fidelity is {verdict} it",
+        ]
+    if result.fidelity_p is not None:
+        lines += [
             f"  permutation test: z = {result.fidelity_z:.1f}, p = {result.fidelity_p:.3g} "
             f"(descriptive, not a model-selection tool)",
         ]
@@ -181,7 +211,19 @@ class M3Score:
             self._backbone = backbone
         return self._backbone
 
+    def _count(self, real: bool) -> int:
+        return sum(f.shape[0] for f in self._features[real][self.layers[0]])
+
     def _ingest(self, prepared: torch.Tensor, real: bool, groups: Sequence | None) -> None:
+        total = self._count(True) + self._count(False) + prepared.shape[0]
+        if total > _protocol.MAX_TOTAL_IMAGES:
+            raise ValueError(
+                f"{total:,} images accumulated, more than the {_protocol.MAX_TOTAL_IMAGES:,} "
+                f"this metric holds: its statistics need memory that grows with the square of "
+                f"that number (about {24 * total * total / 1e9:.0f} GB here). Keep each set to "
+                f"about {_protocol.MAX_IMAGES:,} images: draw a random subset before update(), "
+                f"or use score(..., n=...)"
+            )
         features = self._get_backbone().extract(prepared, self.layers, self.device)
         for layer, value in features.items():
             self._features[real][layer].append(value)
@@ -255,32 +297,35 @@ class M3Score:
         generated files are usually named differently.
         """
         self.reset()
-        for is_real, origin, seed in ((True, real, self.seed), (False, gen, self.seed + 1)):
-            source = open_source(
-                origin,
-                include=include,
-                include_optional=not is_real,
-                group_pattern=group_pattern,
-                group_pattern_optional=not is_real,
-                slice_band=slice_band,
-                window=window,
-            )
-            self._notes[is_real].extend(source.warnings)
-            indices = sample_indices(len(source), n, source.groups, seed)
-            _log.info(
-                "%s set: scoring %d of %d images",
-                "real" if is_real else "generated",
-                len(indices),
-                len(source),
-            )
-            if is_real and source.groups is None and len(indices) < len(source):
-                self._notes[True].append(
-                    f"real set: {len(indices):,} of {len(source):,} images drawn at random with "
-                    f"subjects unknown; pass group_pattern (--group-pattern) to balance the "
-                    f"draw across subjects"
+        try:
+            # Both inputs are opened and sampled before any image is decoded, so a
+            # mistake in the generated path does not cost the whole real extraction.
+            opened = []
+            for is_real, origin, seed in ((True, real, self.seed), (False, gen, self.seed + 1)):
+                source = open_source(
+                    origin,
+                    include=include,
+                    include_optional=not is_real,
+                    group_pattern=group_pattern,
+                    group_pattern_optional=not is_real,
+                    slice_band=slice_band,
+                    window=window,
                 )
-            self._ingest_source(source, indices, is_real)
-        return self.compute(stats=stats)
+                indices = sample_indices(len(source), n, source.groups, seed)
+                _log.info(
+                    "%s set: scoring %d of %d images",
+                    "real" if is_real else "generated",
+                    len(indices),
+                    len(source),
+                )
+                opened.append((is_real, source, indices))
+            for is_real, source, indices in opened:
+                self._ingest_source(source, indices, is_real)
+                # read after loading: readers add notes about what they find in the files
+                self._notes[is_real].extend(source.warnings)
+            return self.compute(stats=stats)
+        finally:
+            clear_volume_caches()
 
     # ---------------------------------------------------------------- compute
 
@@ -308,21 +353,36 @@ class M3Score:
 
         real_f, gen_f = features(True, fidelity_layer), features(False, fidelity_layer)
         fidelity = _stats.mmd2_rbf(real_f, gen_f)
-        interval = p_value = z_score = floor = floor_std = None
+        interval = p_value = z_score = floor = floor_std = floor_by_subject = None
         if stats:
             interval = _stats.bootstrap_ci(real_f, gen_f, seed=self.seed)
             p_value, z_score, _ = _stats.permutation_test(real_f, gen_f, seed=self.seed)
             floor_result = _stats.real_floor(real_f, real_groups, seed=self.seed)
             if floor_result is not None:
-                floor, floor_std, subject_disjoint = floor_result
-                if real_groups is not None and not subject_disjoint:
+                floor, floor_std, floor_by_subject = floor_result
+                if real_groups is not None and not floor_by_subject:
                     notes.append(
                         "the real-vs-real floor was split by image, not by subject, "
                         "because only one subject is known"
                     )
-        memorization, nn_dist = _stats.memorization(
-            features(True, memorization_layer), features(False, memorization_layer)
-        )
+        if real_groups is None:
+            # The reference-cohort finding: a real set drawn from few subjects inflates
+            # every distance, and without subject labels that cannot be detected.
+            notes.append(
+                "real subjects unknown: subject diversity could not be checked, a random draw "
+                "could not be balanced across subjects, and the real-vs-real floor is split by "
+                "image; name them with group_pattern (--group-pattern) or update(groups=...)"
+            )
+        real_m = features(True, memorization_layer)
+        duplicated = _stats.duplicate_fraction(real_m)
+        if duplicated > 0.01:
+            notes.append(
+                f"{duplicated:.0%} of the real images have an exact duplicate in the real set: "
+                f"duplicates shrink the nearest-neighbour distances the axes are measured "
+                f"against, so memorization reads low (0 once more than half are duplicated) "
+                f"and coverage is distorted; remove them"
+            )
+        memorization, nn_dist = _stats.memorization(real_m, features(False, memorization_layer))
         coverage = _stats.coverage(features(True, coverage_layer), features(False, coverage_layer))
 
         n_real_subjects = len(set(real_groups)) if real_groups is not None else None
@@ -355,6 +415,7 @@ class M3Score:
             fidelity_z=z_score,
             fidelity_floor=floor,
             fidelity_floor_std=floor_std,
+            fidelity_floor_by_subject=floor_by_subject,
             n_real_subjects=n_real_subjects,
             n_gen_subjects=n_gen_subjects,
             protocol=self.protocol,

@@ -1,3 +1,4 @@
+import io
 import json
 import subprocess
 import sys
@@ -81,3 +82,30 @@ def test_module_entry_point():
     )
     assert done.returncode == 0
     assert __version__ in done.stdout
+
+
+def test_output_survives_a_console_that_cannot_encode_a_file_name(
+    offline_backbone, tmp_path, monkeypatch
+):
+    write_pngs(tmp_path / "real", 12, seed=0)
+    # an unreadable file is skipped, so its name is printed with the result
+    unencodable = chr(0x60A3) + chr(0x8005) + ".png"  # two CJK characters, not in cp1252
+    (tmp_path / "real" / unencodable).write_bytes(b"not a png")
+    write_pngs(tmp_path / "gen", 12, seed=1)
+    stream = io.TextIOWrapper(io.BytesIO(), encoding="cp1252")
+    monkeypatch.setattr(sys, "stdout", stream)
+    arguments = [str(tmp_path / "real"), str(tmp_path / "gen"), "--device", "cpu", "--quiet"]
+    assert main([*arguments, "--no-stats"]) == 0
+    stream.flush()
+    assert b"skipped" in stream.buffer.getvalue()
+
+
+def test_unreadable_input_exits_2_with_one_line(monkeypatch, folders, capsys):
+    def truncated(self, *args, **kwargs):
+        raise EOFError("Compressed file ended before the end-of-stream marker was reached")
+
+    monkeypatch.setattr(M3Score, "score", truncated)
+    assert main([*folders, "--device", "cpu", "--quiet"]) == 2
+    err = capsys.readouterr().err
+    assert err.startswith("m3score: error: ")
+    assert err.count(chr(10)) == 1

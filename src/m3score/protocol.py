@@ -38,3 +38,7 @@ MIN_IMAGES_WARN = 500
 MIN_SUBJECTS_WARN = 50
 MIN_REAL_IMAGES = COVERAGE_K + 1
 MIN_GEN_IMAGES = 2
+# The statistics hold a kernel over every accumulated image, so memory grows with the
+# square of the total. Accumulation stops here with an explanation instead of running
+# out of memory after all the features have been extracted.
+MAX_TOTAL_IMAGES = 4 * MAX_IMAGES

@@ -12,14 +12,28 @@ from .base import SkippedItem
 
 IMAGE_SUFFIXES = frozenset({".png", ".jpg", ".jpeg", ".tif", ".tiff", ".bmp"})
 _SIXTEEN_BIT_MODES = frozenset({"I;16", "I;16L", "I;16B", "I"})
+_LOW_RANGE_NOTE = "16-bit image files whose values stay within 12 bits"
 
 
 class ImageFile:
     """One image file, decoded on demand."""
 
-    def __init__(self, path: Path, label: str) -> None:
+    def __init__(self, path: Path, label: str, notes: list[str] | None = None) -> None:
         self.path = path
         self.label = label
+        self._notes = notes  # the owning source's warnings, shared by all its files
+
+    def _flag_low_range(self, maximum: float) -> None:
+        """12-bit data in a 16-bit file is common from DICOM exports and loads almost black."""
+        if self._notes is None or not 0.0 < maximum <= 4095.0:
+            return
+        if any(note.startswith(_LOW_RANGE_NOTE) for note in self._notes):
+            return
+        self._notes.append(
+            f"{_LOW_RANGE_NOTE} are divided by 65535 and will look almost black "
+            f"(first seen: {self.label}, maximum {int(maximum)}); rescale them to the full "
+            f"16-bit range or convert them to 8-bit"
+        )
 
     def load(self) -> torch.Tensor:
         try:
@@ -33,6 +47,7 @@ class ImageFile:
                             f"{self.label}: integer image with values outside "
                             f"the 16-bit range [0, 65535]"
                         )
+                    self._flag_low_range(float(array.max()))
                     return torch.from_numpy(array / 65535.0)[None]
                 if image.mode == "F":
                     array = np.asarray(image, dtype=np.float32)

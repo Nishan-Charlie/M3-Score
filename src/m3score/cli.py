@@ -79,6 +79,19 @@ def build_parser() -> argparse.ArgumentParser:
     return parser
 
 
+def _print(text: str) -> None:
+    """Print, escaping characters the output encoding cannot represent.
+
+    File names appear in the warnings. A name outside the console's code page must not
+    turn a finished run into a traceback.
+    """
+    try:
+        print(text)
+    except UnicodeEncodeError:
+        encoding = getattr(sys.stdout, "encoding", None) or "ascii"
+        print(text.encode(encoding, errors="backslashreplace").decode(encoding))
+
+
 def main(argv: Sequence[str] | None = None) -> int:
     args = build_parser().parse_args(argv)
     try:
@@ -101,14 +114,14 @@ def main(argv: Sequence[str] | None = None) -> int:
                 slice_band=tuple(args.slice_band) if args.slice_band else None,
                 window=tuple(args.window) if args.window else None,
             )
-    except (ValueError, TypeError, FileNotFoundError, ImportError) as exc:
+    except (ValueError, TypeError, OSError, EOFError, ImportError) as exc:
         print(f"m3score: error: {exc}", file=sys.stderr)
         return 2
     except M3ScoreError as exc:
         print(f"m3score: error: {exc}", file=sys.stderr)
         return 1
 
-    print(result)
+    _print(str(result))
     if args.json:
         with open(args.json, "w", encoding="utf-8") as handle:
             json.dump({"m3score_version": __version__, **result.to_dict()}, handle, indent=2)

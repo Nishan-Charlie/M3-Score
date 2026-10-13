@@ -60,30 +60,103 @@ def _stored_window(ds) -> tuple[float, float] | None:
     return center - width / 2.0, center + width / 2.0
 
 
+def clear_cache() -> None:
+    _load_stack.cache_clear()
+
+
+def _is_compressed(ds) -> bool:
+    syntax = getattr(getattr(ds, "file_meta", None), "TransferSyntaxUID", None)
+    try:
+        return bool(syntax.is_compressed)
+    except Exception:  # no file meta, or a UID that is not a transfer syntax
+        return False
+
+
 def _raw_pixels(ds, label: str) -> np.ndarray:
+    """Decoded pixel data.
+
+    A failure on compressed data almost always means a missing decoder and affects
+    every file, so it stops the run with the fix. A failure on uncompressed data is a
+    damaged file, which is left out.
+    """
     try:
         return ds.pixel_array
     except Exception as exc:
-        raise M3ScoreError(
-            f"{label}: could not decode DICOM pixel data ({exc}); {_DECODER_HINT}"
-        ) from exc
+        if _is_compressed(ds):
+            raise M3ScoreError(
+                f"{label}: could not decode DICOM pixel data ({exc}); {_DECODER_HINT}"
+            ) from exc
+        raise SkippedItem(f"{label}: unreadable pixel data ({type(exc).__name__}: {exc})") from exc
+
+
+def _functional_rescale(group) -> tuple[float, float] | None:
+    sequence = getattr(group, "PixelValueTransformationSequence", None)
+    if not sequence:
+        return None
+    item = sequence[0]
+    return (
+        _number(getattr(item, "RescaleSlope", None), 1.0),
+        _number(getattr(item, "RescaleIntercept", None), 0.0),
+    )
+
+
+def _rescale(ds, n_frames: int):
+    """Slope and intercept: scalars, or per-frame arrays shaped ``(frames, 1, 1)``.
+
+    Classic objects carry them at the top level. Enhanced multi-frame objects keep
+    them in the shared functional group, or in one functional group per frame.
+    """
+    slope = _number(getattr(ds, "RescaleSlope", None), None)
+    intercept = _number(getattr(ds, "RescaleIntercept", None), None)
+    if slope is not None or intercept is not None:
+        return (1.0 if slope is None else slope), (0.0 if intercept is None else intercept)
+    shared = getattr(ds, "SharedFunctionalGroupsSequence", None)
+    if shared:
+        found = _functional_rescale(shared[0])
+        if found is not None:
+            return found
+    per_frame = getattr(ds, "PerFrameFunctionalGroupsSequence", None)
+    if per_frame and len(per_frame) == n_frames:
+        found = [_functional_rescale(group) for group in per_frame]
+        if all(item is not None for item in found):
+            slopes = np.array([item[0] for item in found], dtype=np.float32)
+            intercepts = np.array([item[1] for item in found], dtype=np.float32)
+            return slopes.reshape(-1, 1, 1), intercepts.reshape(-1, 1, 1)
+    return 1.0, 0.0
 
 
 def _pixels(ds, label: str) -> np.ndarray:
     """Stored values after the modality rescale, as float32."""
-    slope = _number(getattr(ds, "RescaleSlope", None), 1.0)
-    intercept = _number(getattr(ds, "RescaleIntercept", None), 0.0)
-    return _raw_pixels(ds, label).astype(np.float32) * slope + intercept
+    array = _raw_pixels(ds, label).astype(np.float32)
+    slope, intercept = _rescale(ds, array.shape[0] if array.ndim == 3 else 1)
+    return array * slope + intercept
 
 
-def _to_unit_range(array: np.ndarray, ds, window: tuple[float, float] | None):
-    """Explicit window, else the stored window, else the percentile rule; MONOCHROME1 inverted."""
-    scaled = scale_intensity(array, window if window is not None else _stored_window(ds))
+def _is_inverted(ds) -> bool:
+    return str(getattr(ds, "PhotometricInterpretation", "MONOCHROME2")) == "MONOCHROME1"
+
+
+def _common_window(datasets) -> tuple[float, float] | None:
+    """The stored window of a volume: the median over its slices.
+
+    Some scanners write a window per slice; the median keeps one unusual slice, such
+    as the first of the stack, from setting the contrast of the whole volume.
+    """
+    windows = [w for w in (_stored_window(ds) for ds in datasets) if w is not None]
+    if not windows:
+        return None
+    return (
+        float(np.median([low for low, _ in windows])),
+        float(np.median([high for _, high in windows])),
+    )
+
+
+def _to_unit_range(array: np.ndarray, window: tuple[float, float] | None, inverted: bool):
+    """Clip to ``window`` (or apply the percentile rule) and invert MONOCHROME1."""
+    scaled = scale_intensity(array, window)
     if scaled is None:
         return None
-    if str(getattr(ds, "PhotometricInterpretation", "MONOCHROME2")) == "MONOCHROME1":
-        scaled = 1.0 - scaled
-    return scaled
+    return 1.0 - scaled if inverted else scaled
 
 
 def _subject(ds, label: str) -> str:
@@ -103,6 +176,10 @@ def _placement(ds) -> tuple[float, tuple[float, ...]] | None:
     axes = np.asarray(orientation, dtype=np.float64)
     normal = np.cross(axes[:3], axes[3:])
     along = float(np.dot(np.asarray(position, dtype=np.float64), normal))
+    # Order slices along the positive patient axis whichever way the normal points, so
+    # the slice band selects the same anatomy for either stacking direction.
+    if normal[int(np.argmax(np.abs(normal)))] < 0:
+        along = -along
     return along, tuple(float(v) for v in np.round(axes, 2))
 
 
@@ -116,11 +193,17 @@ class DicomImage:
 
     def load(self) -> torch.Tensor:
         pydicom = _require_pydicom()
-        ds = pydicom.dcmread(str(self.path))
+        try:
+            ds = pydicom.dcmread(str(self.path))
+        except Exception as exc:
+            raise SkippedItem(
+                f"{self.label}: unreadable DICOM file ({type(exc).__name__}: {exc})"
+            ) from exc
         if int(_number(getattr(ds, "SamplesPerPixel", None), 1.0)) == 3:
             colour = np.ascontiguousarray(_raw_pixels(ds, self.label))
             return torch.from_numpy(colour).permute(2, 0, 1).float() / 255.0
-        scaled = _to_unit_range(_pixels(ds, self.label), ds, self.window)
+        window = self.window if self.window is not None else _stored_window(ds)
+        scaled = _to_unit_range(_pixels(ds, self.label), window, _is_inverted(ds))
         if scaled is None:
             raise SkippedItem(f"{self.label}: image is empty or constant")
         return torch.from_numpy(scaled)[None]
@@ -129,14 +212,30 @@ class DicomImage:
 @functools.lru_cache(maxsize=2)
 def _load_stack(
     paths: tuple[str, ...], label: str, window: tuple[float, float] | None
-) -> np.ndarray | None:
-    """A whole volume as (slices, H, W) in [0, 1], scaled as one unit."""
+) -> tuple[np.ndarray | None, str]:
+    """A whole volume as (slices, H, W) in [0, 1], scaled as one unit.
+
+    Returns ``None`` and the reason when the volume has to be left out. The reason is
+    returned, not raised, so that it is cached with the result.
+    """
     pydicom = _require_pydicom()
-    datasets = [pydicom.dcmread(path) for path in paths]
-    frames = [_pixels(ds, label) for ds in datasets]
-    # a multi-frame instance already decodes to (frames, H, W)
-    stack = frames[0] if len(frames) == 1 else np.stack(frames)
-    return _to_unit_range(stack, datasets[0], window)
+    try:
+        datasets = [pydicom.dcmread(path) for path in paths]
+    except Exception as exc:
+        return None, f"{label}: unreadable DICOM file ({type(exc).__name__}: {exc})"
+    try:
+        frames = [_pixels(ds, label) for ds in datasets]
+        # a multi-frame instance already decodes to (frames, H, W)
+        stack = frames[0] if len(frames) == 1 else np.stack(frames)
+    except SkippedItem as skipped:
+        return None, str(skipped)
+    except ValueError as exc:
+        return None, f"{label}: slices cannot be stacked into a volume ({exc})"
+    stored = window if window is not None else _common_window(datasets)
+    scaled = _to_unit_range(stack, stored, _is_inverted(datasets[0]))
+    if scaled is None:
+        return None, f"{label}: volume is empty or constant"
+    return scaled, ""
 
 
 class DicomSlice:
@@ -151,9 +250,9 @@ class DicomSlice:
         self.window = window
 
     def load(self) -> torch.Tensor:
-        volume = _load_stack(self.paths, self.label, self.window)
+        volume, reason = _load_stack(self.paths, self.label, self.window)
         if volume is None:
-            raise SkippedItem(f"{self.label}: volume is empty or constant")
+            raise SkippedItem(reason)
         return torch.from_numpy(np.ascontiguousarray(volume[self.index]))[None]
 
 

@@ -163,3 +163,21 @@ def test_required_include_that_matches_nothing_is_an_error(tmp_path):
     write_pngs(tmp_path, 3)
     with pytest.raises(FileNotFoundError, match=r"matching '\*_flair\.nii\.gz'"):
         open_source(tmp_path, include="*_flair.nii.gz")
+
+
+def test_16bit_files_that_stay_within_12_bits_are_flagged_once(tmp_path):
+    for i in range(3):
+        write_png(tmp_path / f"dark{i}.png", np.full((4, 4), 4000, dtype=np.uint16))
+    source = open_source(tmp_path)
+    for i in range(3):
+        source.load(i)
+    notes = [note for note in source.warnings if "16-bit" in note]
+    assert len(notes) == 1
+    assert "dark0.png" in notes[0]
+
+
+def test_full_range_16bit_files_are_not_flagged(tmp_path):
+    write_png(tmp_path / "a.png", np.array([[0, 65535]], dtype=np.uint16))
+    source = open_source(tmp_path)
+    source.load(0)
+    assert source.warnings == []

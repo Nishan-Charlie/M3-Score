@@ -5,7 +5,7 @@ import pytest
 import torch
 
 from m3score import M3ScoreError
-from m3score.io import open_source
+from m3score.io import SkippedItem, dicom, open_source
 from m3score.io.dicom import _require_pydicom, is_dicom
 
 pydicom = pytest.importorskip("pydicom")
@@ -129,6 +129,7 @@ def test_undecodable_pixel_data_names_the_decoder_packages(tmp_path, monkeypatch
         raise RuntimeError("no available image handler")
 
     monkeypatch.setattr(pydicom.dataset.Dataset, "pixel_array", property(no_handler))
+    monkeypatch.setattr(dicom, "_is_compressed", lambda ds: True)
     with pytest.raises(M3ScoreError, match="pylibjpeg"):
         open_source(tmp_path).load(0)
 
@@ -151,3 +152,67 @@ def test_dicom_over_the_voxel_limit_is_skipped_with_a_warning(tmp_path, monkeypa
     notes = " | ".join(source.warnings)
     assert "too large" in notes
     assert "wide.dcm" in notes and "series/" in notes
+
+
+def _mean_values(source, scale=4000.0, offset=0.0):
+    return [round(float(source.load(i).mean()) * scale + offset) for i in range(len(source))]
+
+
+def test_a_volume_uses_the_window_most_slices_agree_on(tmp_path):
+    pixels = np.full((8, 8), 1000, dtype=np.uint16)
+    pixels[0, 0] = 0  # a constant volume would be left out as blank
+    for k in range(20):
+        write_dicom(
+            tmp_path / f"s{k:02d}.dcm",
+            pixels,
+            series_uid="1.2.9",
+            study_uid="1.2.826.0.1.1",
+            position=float(k),
+            instance=k + 1,
+            window=(5.0, 2.0) if k == 0 else (1000.0, 2000.0),  # the end slice disagrees
+        )
+    source = open_source(tmp_path)
+    assert float(source.load(0)[0, 4, 4]) == pytest.approx(0.5)  # (1000 - 0) / 2000
+
+
+def test_slice_order_does_not_depend_on_the_direction_of_the_slice_normal(tmp_path):
+    flipped = [1.0, 0.0, 0.0, 0.0, -1.0, 0.0]
+    for folder, uid, orientation in (("up", "1.2.31", None), ("down", "1.2.32", flipped)):
+        for k in range(20):
+            write_dicom(
+                tmp_path / folder / f"s{k:02d}.dcm",
+                np.full((8, 8), 100 * (k + 1), dtype=np.uint16),
+                series_uid=uid,
+                study_uid="1.2.826.0.1.1",
+                position=2.5 * k,
+                instance=k + 1,
+                orientation=orientation,
+            )
+    up = _mean_values(open_source(tmp_path / "up", window=(0.0, 4000.0)))
+    down = _mean_values(open_source(tmp_path / "down", window=(0.0, 4000.0)))
+    assert up == down == [800, 900, 1000, 1100]
+
+
+def test_enhanced_multiframe_rescale_is_read_from_the_shared_functional_group(tmp_path):
+    frames = np.full((20, 4, 4), 1024, dtype=np.uint16)  # 0 HU after an intercept of -1024
+    frames[:, 0, 0] = 0  # a constant volume would be left out as blank
+    write_dicom(tmp_path / "shared.dcm", frames, frames=20, shared_rescale=(1.0, -1024.0))
+    image = open_source(tmp_path, window=(-1000.0, 1000.0)).load(0)
+    assert float(image[0, 2, 2]) == pytest.approx(0.5)
+
+
+def test_per_frame_rescale_is_applied_frame_by_frame(tmp_path):
+    frames = np.full((20, 4, 4), 1000, dtype=np.uint16)
+    rescale = [(1.0, float(-100 * k)) for k in range(20)]  # frame k holds 1000 - 100 k
+    write_dicom(tmp_path / "perframe.dcm", frames, frames=20, per_frame_rescale=rescale)
+    source = open_source(tmp_path, window=(-2000.0, 2000.0))
+    assert _mean_values(source, offset=-2000.0) == [300, 200, 100, 0]  # frames 7 to 10
+
+
+def test_a_truncated_dicom_file_is_skipped_with_its_name(tmp_path):
+    path = write_dicom(tmp_path / "cut.dcm", _ramp((64, 64)))
+    data = path.read_bytes()
+    path.write_bytes(data[: len(data) - 2000])
+    source = open_source(tmp_path)
+    with pytest.raises(SkippedItem, match="cut.dcm"):
+        source.load(0)

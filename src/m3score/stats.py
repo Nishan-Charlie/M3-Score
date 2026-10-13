@@ -87,6 +87,22 @@ def memorization(real: torch.Tensor, gen: torch.Tensor) -> tuple[float, float]:
     return float((gen_to_real < threshold).float().mean()), float(gen_to_real.mean())
 
 
+def duplicate_fraction(features: torch.Tensor, rel_tol: float = 1e-3) -> float:
+    """Fraction of rows whose nearest other row is the same point, up to numerical noise.
+
+    Exact duplicates inside a real set collapse the nearest-neighbour distances that
+    memorization and coverage are measured against. Once more than half of the real
+    images have a twin, the memorization threshold is zero and the rate reads 0 even
+    for a generated set made of copies.
+    """
+    features = features.float()
+    if features.shape[0] < 2:
+        return 0.0
+    nearest = _kth_nn_dist_within(features, 1)
+    scale = max(float(features.norm(dim=1).mean()), 1e-12)
+    return float((nearest <= rel_tol * scale).float().mean())
+
+
 def coverage(real: torch.Tensor, gen: torch.Tensor, k: int = protocol.COVERAGE_K) -> float:
     """Fraction of real points with a generated point inside their own k-NN radius.
 

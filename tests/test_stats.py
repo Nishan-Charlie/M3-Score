@@ -237,3 +237,10 @@ def test_statistics_stay_finite_on_degenerate_features():
         assert all(np.isfinite(v) for v in values), values
     assert stats.mmd2_rbf(normal, normal.clone()) == 0.0
     assert stats.coverage(normal, normal.clone()) == 1.0
+
+
+def test_duplicate_fraction_counts_real_images_with_an_exact_twin():
+    base = _features(0, 40)
+    assert stats.duplicate_fraction(base) == 0.0
+    doubled = torch.cat([base[:30], base[:30], base[30:]])  # 60 of 70 rows have a twin
+    assert stats.duplicate_fraction(doubled) == pytest.approx(60 / 70)

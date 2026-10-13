@@ -135,10 +135,55 @@ def test_volumes_are_scored_end_to_end(offline_backbone, tmp_path):
     assert any("blank.nii.gz" in note for note in result.warnings)
 
 
-def test_a_volume_over_the_voxel_limit_is_an_error_naming_the_file(tmp_path, monkeypatch):
+def test_a_volume_over_the_voxel_limit_is_left_out_with_a_note(tmp_path, monkeypatch):
     from m3score.io import volumes
 
-    _save(tmp_path / "giant.nii.gz", _ras_volume())
-    monkeypatch.setattr(volumes, "MAX_VOXELS", 100)  # the test volume has 840 voxels
-    with pytest.raises(ValueError, match=r"giant\.nii\.gz.*too large"):
-        open_source(tmp_path)
+    _save(tmp_path / "giant.nii.gz", _ras_volume())  # 840 voxels
+    _save(tmp_path / "small.nii.gz", _ras_volume()[:2, :2, :].copy())  # 80 voxels
+    monkeypatch.setattr(volumes, "MAX_VOXELS", 100)
+    source = open_source(tmp_path)
+    assert set(source.groups) == {"small.nii.gz"}
+    assert any("giant.nii.gz" in note and "too large" in note for note in source.warnings)
+
+
+def test_a_truncated_volume_is_skipped_with_its_name(tmp_path):
+    noise = np.random.default_rng(0).random((40, 40, 40)).astype(np.float32)
+    path = _save(tmp_path / "cut.nii.gz", noise)
+    data = path.read_bytes()
+    path.write_bytes(data[: len(data) // 2])
+    source = open_source(tmp_path)  # the header is intact, so the file is listed
+    with pytest.raises(SkippedItem, match="cut.nii.gz"):
+        source.load(0)
+
+
+def test_a_file_that_is_not_nifti_is_left_out_with_a_note(tmp_path):
+    _save(tmp_path / "good.nii.gz", _ras_volume())
+    (tmp_path / "bad.nii.gz").write_bytes(b"this is not a nifti file")
+    source = open_source(tmp_path)
+    assert len(source) == len(BAND)
+    assert any("bad.nii.gz" in note for note in source.warnings)
+
+
+def test_several_volumes_in_one_subject_folder_are_flagged(tmp_path):
+    for subject in ("S1", "S2"):
+        for kind in ("t1", "flair", "seg"):
+            _save(tmp_path / subject / f"{subject}_{kind}.nii.gz", _ras_volume())
+    assert any("several volumes" in note for note in open_source(tmp_path).warnings)
+    filtered = open_source(tmp_path, include="*_flair.nii.gz")
+    assert not any("several volumes" in note for note in filtered.warnings)
+    named = open_source(tmp_path, group_pattern=r"(S\d)")
+    assert not any("several volumes" in note for note in named.warnings)
+
+
+def test_one_volume_per_subject_is_not_flagged(tmp_path):
+    for name in ("a", "b", "c"):
+        _save(tmp_path / f"{name}.nii.gz", _ras_volume())
+    assert open_source(tmp_path).warnings == []
+
+
+def test_a_file_overwritten_in_place_is_read_again(tmp_path):
+    _save(tmp_path / "v.nii.gz", _ras_volume(seed=0))
+    first = open_source(tmp_path, window=WINDOW).load(0)
+    _save(tmp_path / "v.nii.gz", _ras_volume(seed=0) * 0.5)
+    second = open_source(tmp_path, window=WINDOW).load(0)
+    assert not torch.allclose(first, second)

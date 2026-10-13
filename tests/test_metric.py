@@ -255,3 +255,68 @@ def test_include_must_match_the_real_set(metric, tmp_path):
     write_pngs(tmp_path / "gen", 10, seed=1)
     with pytest.raises(FileNotFoundError, match="matching"):
         metric.score(tmp_path / "real", tmp_path / "gen", include="*_flair_*")
+
+
+def test_unknown_real_subjects_are_always_flagged(metric):
+    result = metric.score(_images(0, 20), _images(1, 20), stats=False)  # nothing is subsampled
+    assert any("subjects unknown" in note for note in result.warnings)
+    metric.reset()
+    metric.update(_images(0, 20), real=True, groups=[f"s{i}" for i in range(20)])
+    metric.update(_images(1, 20), real=False)
+    labelled = metric.compute(stats=False)
+    assert not any("subjects unknown" in note for note in labelled.warnings)
+
+
+def test_result_says_how_the_floor_was_split_and_prints_a_noise_level(metric):
+    by_image = metric.score(_images(0, 24), _images(1, 24))
+    assert by_image.fidelity_floor_by_subject is False
+    assert "by image" in str(by_image)
+    assert "noise level" in str(by_image)
+    metric.reset()
+    metric.update(_images(0, 24), real=True, groups=[f"s{i % 6}" for i in range(24)])
+    metric.update(_images(1, 24), real=False)
+    by_subject = metric.compute()
+    assert by_subject.fidelity_floor_by_subject is True
+    assert "by subject" in str(by_subject)
+    assert metric.compute(stats=False).fidelity_floor_by_subject is None
+
+
+def test_generated_path_errors_surface_before_any_extraction(monkeypatch, tmp_path):
+    from m3score import metric as metric_module
+
+    def must_not_load(spec=None, device="cpu"):
+        raise AssertionError("the backbone was loaded before the generated set was checked")
+
+    monkeypatch.setattr(metric_module, "load_backbone", must_not_load)
+    write_pngs(tmp_path / "real", 10)
+    with pytest.raises(FileNotFoundError, match="no such file or directory"):
+        M3Score(device="cpu").score(tmp_path / "real", tmp_path / "absent")
+
+
+def test_duplicated_real_images_are_flagged(metric):
+    real = _images(0, 20)
+    result = metric.score(torch.cat([real, real]), _images(1, 20), stats=False)
+    assert any("duplicate" in note for note in result.warnings)
+    clean = metric.score(real, _images(1, 20), stats=False)
+    assert not any("duplicate" in note for note in clean.warnings)
+
+
+def test_accumulating_too_many_images_fails_early_with_the_fix(metric, monkeypatch):
+    from m3score import protocol
+
+    monkeypatch.setattr(protocol, "MAX_TOTAL_IMAGES", 30)
+    metric.update(_images(0, 20), real=True)
+    with pytest.raises(ValueError, match="draw a random subset"):
+        metric.update(_images(1, 20), real=False)
+
+
+def test_dark_16bit_files_are_flagged(metric, tmp_path):
+    rng = np.random.default_rng(0)
+    for i in range(8):
+        pixels = rng.integers(0, 4096, size=(40, 40)).astype(np.uint16)
+        write_png(tmp_path / "real" / f"r{i}.png", pixels)
+    write_pngs(tmp_path / "gen", 8, seed=1)
+    result = metric.score(tmp_path / "real", tmp_path / "gen", stats=False)
+    notes = [note for note in result.warnings if "16-bit" in note]
+    assert len(notes) == 1
+    assert "65535" in notes[0]

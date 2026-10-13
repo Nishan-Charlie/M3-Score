@@ -54,6 +54,8 @@ def scale_intensity(volume: np.ndarray, window: tuple[float, float] | None) -> n
     Returns ``None`` when the volume is empty or constant.
     """
     volume = np.nan_to_num(volume.astype(np.float32, copy=False), nan=0.0, posinf=0.0, neginf=0.0)
+    if volume.size == 0 or float(volume.min()) == float(volume.max()):
+        return None  # nothing to show, whatever window is asked for
     if window is not None:
         low, high = window
     else:

@@ -11,6 +11,8 @@ import numpy as np
 import torch
 
 from .. import protocol
+from . import dicom as _dicom
+from . import nifti as _nifti
 from .arrays import ArraySource
 from .base import ImageSource, ItemSource, SkippedItem
 from .dicom import dicom_items, is_dicom
@@ -24,11 +26,22 @@ __all__ = [
     "ImageSource",
     "ItemSource",
     "SkippedItem",
+    "clear_volume_caches",
     "open_source",
     "sample_indices",
 ]
 
 _SUPPORTED = ", ".join(sorted(IMAGE_SUFFIXES)) + ", .nii, .nii.gz and DICOM"
+
+
+def clear_volume_caches() -> None:
+    """Forget decoded volumes.
+
+    Frees their memory, and makes sure a file that changed on disk is read again the
+    next time a source is opened.
+    """
+    _nifti.clear_cache()
+    _dicom.clear_cache()
 
 
 def open_source(
@@ -107,12 +120,14 @@ def _open_path(
 ) -> ImageSource:
     band = check_band(slice_band) if slice_band is not None else protocol.SLICE_BAND
     window = check_window(window) if window is not None else None
+    clear_volume_caches()
 
     items: list = []
     labels: list[str] = []
     groups: list[str | None] = []
     notes: list[str] = []
     dicom_files: list[tuple[Path, str]] = []
+    volumes_per_folder: dict[str, int] = {}
     files, include_applied = _list_files(root, include, include_optional)
     if include is not None and not include_applied:
         notes.append(
@@ -120,11 +135,19 @@ def _open_path(
         )
     for path, label in files:
         if path.suffix.lower() in IMAGE_SUFFIXES:
-            items.append(ImageFile(path, label))
+            items.append(ImageFile(path, label, notes))
             labels.append(label)
             groups.append(None)
         elif is_nifti(path):
-            for item in nifti_items(path, label, band, window):
+            try:
+                found_slices = nifti_items(path, label, band, window)
+            except SkippedItem as skipped:
+                notes.append(f"skipped {skipped}")
+                continue
+            if "/" in label:
+                folder = label.rsplit("/", 1)[0]
+                volumes_per_folder[folder] = volumes_per_folder.get(folder, 0) + 1
+            for item in found_slices:
                 items.append(item)
                 labels.append(label)
                 groups.append(label)  # one volume file is one subject
@@ -141,6 +164,16 @@ def _open_path(
         matching = f" matching {include!r}" if include_applied else ""
         raise FileNotFoundError(
             f"no readable images under {root}{matching}; supported: {_SUPPORTED}"
+        )
+
+    crowded = {folder: count for folder, count in volumes_per_folder.items() if count > 1}
+    if crowded and not include_applied and group_pattern is None:
+        example = sorted(crowded)[0]
+        notes.append(
+            f"{len(crowded)} folders hold several volumes each (for example {example} holds "
+            f"{crowded[example]}): every volume is scored and counted as its own subject, "
+            f"including other modalities or segmentations of one subject. Select one kind "
+            f"with include (--include) and name subjects with group_pattern (--group-pattern)"
         )
 
     if group_pattern is not None:
