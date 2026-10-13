@@ -80,3 +80,10 @@ desktop.ini
 # Retain the final paper artifact in the public release.
 !paper_release/
 !paper_release/**
+
+# ─── Python packaging ───
+dist/
+build/
+*.egg-info/
+.pytest_cache/
+.ruff_cache/

@@ -19,3 +19,65 @@ locally using the documented scripts and external dataset instructions.
 
 The repository does not contain patient data. Do not add datasets, checkpoints, or other
 private artifacts before publishing.
+
+## Python package
+
+The `m3-score` distribution contains only `src/m3score/`. Experiment code, figures and
+result reports stay in the repository and are not part of the wheel.
+
+### One-time setup
+
+1. Create an account on https://pypi.org and enable two-factor authentication.
+2. Under "Publishing", add a pending trusted publisher with:
+   - PyPI project name: `m3-score`
+   - Owner: `Nishan-Charlie`
+   - Repository: `M3-Score`
+   - Workflow: `publish.yml`
+   - Environment: `pypi`
+3. In the GitHub repository, create an environment named `pypi` (Settings -> Environments).
+
+**Claim the name before the README is public.** Until 0.1.0 is uploaded, `m3-score` is not
+registered on PyPI, and a pending trusted publisher does not reserve it. The README and the
+project page tell people to run `pip install m3-score`, so anyone could register that name
+first. Merge this work to the public default branch and publish the first release in one
+sitting, then confirm that https://pypi.org/project/m3-score/ shows your upload.
+
+### Each release
+
+1. Set `version` in `pyproject.toml`, `CITATION.cff` and the expected value in
+   `tests/test_protocol.py`, and merge to `main` with CI green.
+2. Locally: `pytest` including the network-marked test (`pytest -m network`, which checks
+   the real backbone against stored values), then `python -m build` and `twine check dist/*`.
+   Optionally run the "Publish to PyPI" workflow by hand from the Actions tab: a manual run
+   builds and checks the distributions and stops before publishing.
+3. On GitHub, publish a release whose tag is `v` followed by the version, for example
+   `v0.1.0`. The "Publish to PyPI" workflow builds and uploads it. The workflow refuses
+   to run when the tag and the version differ.
+
+A version number can be published only once, and a project name cannot be released
+by anyone else afterwards. Check the built wheel before publishing the release.
+
+Both workflows pin every action to an exact commit hash, with the version in a trailing
+comment. To move to a newer version, look up the commit behind its tag
+(`git ls-remote --tags <repository URL>`) and change the hash and the comment together.
+Neither workflow has run yet; the first push will be their first test.
+
+### Changing the protocol
+
+Any change to a constant in `src/m3score/protocol.py`, or to the arithmetic in
+`src/m3score/stats.py`, changes what an M3-Score means. Give it a new
+`PROTOCOL_VERSION`, regenerate the golden values with `python tools/make_golden.py`,
+and say so in the release notes.
+
+## Project page
+
+GitHub Pages publishes the site from the `docs/` folder:
+
+1. Open the repository on GitHub and go to **Settings -> Pages**.
+2. Select **Deploy from a branch**.
+3. Choose the `main` branch and the `/docs` folder.
+4. Save the setting and open the generated Pages URL.
+
+The entry point is `docs/index.html`, served at
+`https://nishan-charlie.github.io/M3-Score/`. The page uses its own copy of selected
+figures under `docs/assets/`.
