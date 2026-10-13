@@ -36,10 +36,20 @@ result reports stay in the repository and are not part of the wheel.
    - Environment: `pypi`
 3. In the GitHub repository, create an environment named `pypi` (Settings -> Environments).
 
+**Claim the name before the README is public.** Until 0.1.0 is uploaded, `m3-score` is not
+registered on PyPI, and a pending trusted publisher does not reserve it. The README and the
+project page tell people to run `pip install m3-score`, so anyone could register that name
+first. Merge this work to the public default branch and publish the first release in one
+sitting, then confirm that https://pypi.org/project/m3-score/ shows your upload.
+
 ### Each release
 
-1. Set `version` in `pyproject.toml` and `CITATION.cff`, and merge to `main` with CI green.
-2. Locally: `python -m build` and `twine check dist/*`.
+1. Set `version` in `pyproject.toml`, `CITATION.cff` and the expected value in
+   `tests/test_protocol.py`, and merge to `main` with CI green.
+2. Locally: `pytest` including the network-marked test (`pytest -m network`, which checks
+   the real backbone against stored values), then `python -m build` and `twine check dist/*`.
+   Optionally run the "Publish to PyPI" workflow by hand from the Actions tab: a manual run
+   builds and checks the distributions and stops before publishing.
 3. On GitHub, publish a release whose tag is `v` followed by the version, for example
    `v0.1.0`. The "Publish to PyPI" workflow builds and uploads it. The workflow refuses
    to run when the tag and the version differ.
@@ -47,10 +57,10 @@ result reports stay in the repository and are not part of the wheel.
 A version number can be published only once, and a project name cannot be released
 by anyone else afterwards. Check the built wheel before publishing the release.
 
-The publishing job in `.github/workflows/publish.yml` pins its two actions to exact
-commit hashes, with the version in a trailing comment. To move to a newer version,
-look up the commit behind its tag (`git ls-remote --tags <repository URL>`) and change
-the hash and the comment together.
+Both workflows pin every action to an exact commit hash, with the version in a trailing
+comment. To move to a newer version, look up the commit behind its tag
+(`git ls-remote --tags <repository URL>`) and change the hash and the comment together.
+Neither workflow has run yet; the first push will be their first test.
 
 ### Changing the protocol
 

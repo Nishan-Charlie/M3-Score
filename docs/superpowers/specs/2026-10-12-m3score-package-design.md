@@ -514,3 +514,65 @@ coverage 38%), because the BraTS reference set is not present.
 - The layer-weighting scheme and CKA pruning in the research code.
 - Multi-process decoding.
 - conda-forge.
+
+## 15. Changes made after the whole-branch review (2026-10-13)
+
+A fresh reviewer examined the finished branch. Its findings changed the behaviour
+below; where an earlier section says otherwise, this section is current.
+
+**What the result tells the user**
+
+- When the real set's subjects are unknown, every result says so, not only when a
+  subset was drawn (section 8). Without subject labels the diversity safeguard cannot
+  operate, and a plain folder of PNGs is the common case.
+- `M3Result` gains `fidelity_floor_by_subject` and a `fidelity_noise_level` property
+  (floor plus two standard deviations). The printed table shows how the floor was split
+  and whether fidelity is above the noise level. The floor is a half-size quantity and
+  reads roughly twice a full-size real-vs-real comparison; a by-image split has mean
+  zero by construction, so only its spread is informative (section 4).
+- A warning is raised when more than 1% of real images have an exact duplicate in the
+  real set. Duplicates collapse the nearest-neighbour thresholds, and memorization
+  reads 0 once more than half are duplicated. The arithmetic is unchanged, for parity.
+- A warning is raised when 16-bit image files stay within 12 bits, since they are
+  divided by 65535 and load almost black (section 7).
+- A warning is raised when a folder holds several NIfTI volumes per sub-folder and
+  neither `include` nor `group_pattern` was given.
+
+**Input handling: one policy**
+
+- A file that cannot be read, is blank, or claims an implausible size is left out and
+  named in the warnings; the run fails only if too few images remain. This now covers
+  truncated or non-NIfTI `.nii.gz` files, truncated DICOM files, and volumes above
+  2**30 voxels in either format (previously a NIfTI above the limit was an error).
+  A 4D NIfTI is still an error, as section 7 says.
+- A constant or all-zero volume is left out even when an explicit window is given.
+- Undecodable DICOM pixel data stops the run with the decoder hint only when the
+  transfer syntax is compressed; on uncompressed data it is a damaged file and is
+  left out.
+- `score` opens and samples both inputs before decoding any image, so a mistake in the
+  generated path fails immediately.
+- Decoded volumes are forgotten whenever a source is opened and when `score` returns,
+  so a file overwritten in place is read again.
+- Accumulating more than 20,000 images in total (`protocol.MAX_TOTAL_IMAGES`) raises
+  an error that explains the memory cost and the fix.
+
+**DICOM**
+
+- A volume's stored window is the median over its slices, not the first slice's.
+- Slices are ordered along the positive patient axis whichever way the slice normal
+  points, so the band selects the same anatomy for either stacking direction.
+- Rescale slope and intercept are read from the shared or per-frame functional groups
+  of enhanced multi-frame objects when the top-level tags are absent.
+
+**Command line and release tooling**
+
+- Output that the console encoding cannot represent is escaped instead of raising.
+  `OSError` and `EOFError` exit with status 2 and one line.
+- Both workflows pin every action to a commit, give jobs a read-only token by default,
+  and `publish.yml` can be run by hand to build without publishing.
+
+**Tests**
+
+- `Backbone.prepare` is pinned against a Pillow float-mode bilinear resize and against
+  the unantialiased result. The golden inputs are 256x256, so the regression test
+  passes through the resize.

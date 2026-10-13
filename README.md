@@ -49,10 +49,11 @@ M3-Score  protocol m3-v1  (m3-score 0.1.0)
   generated  2,000 images
 
   axis          value    better   detail
-  fidelity      0.0731   lower    95% CI [0.0689, 0.0774]; real-vs-real floor 0.0015 +/- 0.0004
+  fidelity      0.0731   lower    95% CI [0.0689, 0.0774]; real-vs-real floor 0.0015 +/- 0.0004 (by subject)
   memorization  0.012    lower    mean nearest-real distance 14.2
   coverage      0.380    higher   k = 5
 
+  noise level: 0.0023 (floor + 2 sd, from halves of the real set); fidelity is above it
   permutation test: z = 347.2, p = 0.00498 (descriptive, not a model-selection tool)
 ```
 
@@ -98,7 +99,7 @@ result = m3score.score(real_tensor, generated_tensor, device="cuda")
 from m3score import M3Score
 
 metric = M3Score(device="cuda")
-for batch in real_loader:
+for batch in real_loader:            # a random subset of the real set, about 5,000 images
     metric.update(batch, real=True)
 
 for epoch in range(epochs):
@@ -113,6 +114,11 @@ for epoch in range(epochs):
 uses the method names of `torchmetrics` without depending on it. It does not synchronise
 across processes.
 
+It keeps every image you pass, and the statistics need memory that grows with the square of
+the total. Give each set a random subset of about 5,000 images, which is what `score` draws
+by default; past 20,000 images in total it stops with an explanation instead of running out
+of memory. Pass `groups=` to `update` when you know each image's subject.
+
 ## NIfTI and DICOM
 
 ```bash
@@ -123,15 +129,23 @@ m3score BraTS2021/ generated/ --include "*_flair.nii.gz" --group-pattern "(BraTS
 - **NIfTI.** Each volume is reoriented to one display convention (anterior up,
   radiological), so stored orientation does not matter. The central axial band is kept
   (slices 55 to 85 of a 155-slice BraTS volume, scaled to other depths) and each volume is
-  scaled by the 0.5 to 99.5 percentile of its non-zero voxels. One file is one subject.
-- **DICOM.** A series of positioned slices is a volume and follows the same rules, ordered
-  by position. Single images such as chest radiographs are scored as they are. The stored
-  window is used when present; `MONOCHROME1` is inverted. The subject is `PatientID`.
-  Compressed files need a pydicom decoder plugin such as `pylibjpeg`.
+  scaled by the 0.5 to 99.5 percentile of its non-zero voxels. One file is one subject, so
+  a folder that holds several files per subject needs `--include` and `--group-pattern`;
+  the result says so when it sees that layout.
+- **DICOM.** A series of positioned slices is a volume: its slices are ordered by position
+  and the same band is kept along the direction they were acquired in. Slices are not
+  resampled to another plane, so a sagittal series is scored as sagittal slices. Single
+  images such as chest radiographs are scored as they are. The stored window is used when
+  present (for a volume, the median over its slices); `MONOCHROME1` is inverted. The subject
+  is `PatientID`, so a dataset anonymised to one shared ID counts as one subject unless you
+  pass `--group-pattern`. Compressed files need a pydicom decoder plugin such as `pylibjpeg`.
 - **CT.** Pass an explicit window, for example `--window -1000 400`.
 
 A dataset folder that holds several modalities and segmentations per subject must be
 filtered with `--include`, or they will be mixed.
+
+Files that cannot be read, are blank, or claim an implausible size are left out and named in
+the warnings. The image counts in the result are what was actually scored.
 
 `--include` and `--group-pattern` describe the real folder and must match it. Generated
 files are usually named differently, so each is applied to the generated folder only if it
@@ -154,8 +168,12 @@ The package is built around that finding:
 - A subset is always a seeded random draw, never the head of a sorted folder.
 - When subjects are known, the draw is balanced across them. NIfTI files and DICOM
   `PatientID` provide subjects automatically; for image folders pass `--group-pattern`.
-- The result reports distinct subjects next to the image count, and warns below 50 subjects
-  or 500 images.
+- The result reports distinct subjects next to the image count, warns below 50 subjects or
+  500 images, and says so whenever the real set's subjects are unknown, because then none of
+  this can be checked. That is the normal case for a plain folder of PNGs, so pass
+  `--group-pattern` when the file names carry a subject identifier.
+- It warns when real images are exact duplicates of each other, which distorts memorization
+  and coverage.
 
 Report both counts with any M3-Score you publish, and keep generator training data and the
 reference set subject-disjoint.
@@ -163,9 +181,15 @@ reference set subject-disjoint.
 ## Reading the result
 
 - **Fidelity** is an unbiased MMD² and has no natural scale. Read it against the
-  **real-vs-real floor**: the same statistic between random, subject-disjoint halves of your
-  real set. A generator at a few times the floor is close to the real distribution; one at
-  fifty times is not.
+  **real-vs-real floor**, the same statistic between random halves of your real set (mean
+  and spread over ten halvings), and the **noise level** printed under the table, which is
+  the floor plus two standard deviations. A fidelity at or below the noise level cannot be
+  told apart from real data at this sample size; the further above it, the clearer the gap.
+  - The floor is conservative. Each half is half the size of the real set, so it reads
+    roughly twice what a full-size real-vs-real comparison would.
+  - With known subjects the halves are subject-disjoint, and the floor includes genuine
+    variation between subjects. With unknown subjects the split is by image: its mean is
+    zero by construction and only the spread is informative.
 - The **permutation test** rejects for every generator tested in the paper. Treat it as
   descriptive, not as a way to choose between models.
 - **Memorization** is the fraction of generated images closer to a real image than real
@@ -189,8 +213,11 @@ reference set subject-disjoint.
 ### Differences from the paper's research code
 
 The package reproduces the research code's fidelity, memorization and coverage values
-exactly on identical features (`tests/test_parity.py`). It differs deliberately in five places:
+exactly on identical features (`tests/test_parity.py`). It differs deliberately in seven places:
 
+- **Coverage axis.** `compute_axes()` in the research code returns k-NN precision and recall
+  at block 4. The package returns real-radius coverage, the estimator the paper validates.
+- **The real-vs-real floor and noise level** are new.
 - **Confidence interval.** The research code's bootstrap counted duplicated images as
   distinct pairs, which shifts the interval upward. The package leaves those pairs out. The
   paper's interval [0.071, 0.080] was computed with the earlier procedure.
@@ -264,6 +291,10 @@ python evaluation/eval_pipeline.py \
   --output_dir results/evaluation \
   --metrics fid kid ssim m3 alpha
 ```
+
+With `--num_images N` that pipeline takes the first N files in sorted order, the selection
+the reference-cohort finding above warns against. Point it at a folder that already holds
+the sample you want.
 
 ## Repository map
 
